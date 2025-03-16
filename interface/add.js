@@ -59,6 +59,10 @@ const alunos = [
     "id": "kalebe"
   },
   {
+    "complete": "Gabriel Castro",
+    "id": "gabriel"
+  },
+  {
     "complete": "Isaías Nascimento",
     "id": "isaias"
   },
@@ -173,6 +177,10 @@ const alunos = [
   {
     "complete": "Vitória Lavínia",
     "id": "vitoria"
+  },
+  {
+    "complete": "Wilmones",
+    "id": "wilmones"
   }
 ]
 
