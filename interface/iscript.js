@@ -1,3 +1,6 @@
+const urlParams = new URLSearchParams(window.location.search);
+const isAdmin = urlParams.get('admin')
+
 function pmaiuscula(string) {
 		return string.charAt(0).toUpperCase() + string.slice(1);
 }
@@ -66,7 +69,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 			
 			const id = task._id
 			const ae = document.createElement("a")
-			ae.href = `/tarefa?id=${id}`
+			ae.href = isAdmin ? `/tarefa?id=${id}&admin=true` : `/tarefa?id=${id}`
 			ae.innerHTML = pmaiuscula(task.title)
 						
 			/*tipoCell.textContent = pmaiuscula(task.tipo)*/
@@ -103,7 +106,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
 			const id2 = task._id
 			const ae2 = document.createElement("a")
-			ae2.href = `/tarefa?id=${id2}`
+			ae2.href = isAdmin ? `/tarefa?id=${id2}&admin=true` : `/tarefa?id=${id2}`
 			ae2.innerHTML = pmaiuscula(task.title)
 
 			const p1 = document.createElement("p");
