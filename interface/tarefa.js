@@ -249,7 +249,7 @@ async function fetchdel(id){
 			console.log("Reason add dias", rr.reason)
 		}else{
 			alert("Deletada com sucesso!")
-			window.location.href = `/`
+			window.location.href = `/?admin=true`
 		}
 	})
 }
