@@ -3,7 +3,7 @@ const tarefaId = urlParams.get('id');
 const isAdmin = urlParams.get('admin')
 
 document.getElementById('btnVoltar').addEventListener('click', function() {
-	isAdmin == "true" ? window.location.href = '/?admin=true';  : window.location.href = '/'; 
+	isAdmin == "true" ? window.location.href = '/?admin=true' : window.location.href = '/'
 });
 
 document.getElementById('menuIcon').addEventListener('click', function () {
