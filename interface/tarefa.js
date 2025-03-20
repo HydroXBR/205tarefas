@@ -241,6 +241,19 @@ async function fetchadd(id, days){
 	})
 }
 
+async function fetchdel(id){
+	await fetch(`/apagar?id=${id}&token=22222`).then(async response => {
+		const rr = await response.json()
+		if(rr.success == false){
+			alert("Erro ao deletar tarefa! Contate o Isaías, por favor.")
+			console.log("Reason add dias", rr.reason)
+		}else{
+			alert("Deletada com sucesso!")
+			window.location.href = `/`
+		}
+	})
+}
+
 async function createAdminButtons(){
 	const urlParams = new URLSearchParams(window.location.search);
 	const tarefaId = urlParams.get('id');
@@ -265,6 +278,12 @@ async function createAdminButtons(){
 	ndiv.appendChild(nbtn)
 
 	document.getElementById("entregabox").appendChild(ndiv)
+
+	document.getElementById('deletediv').style.display = 'block'
+	let delbtn = document.getElementById("delete")
+	delbtn.addEventListener('click', async function() {
+		fetchdel(tarefaId)
+	})
 }
 
 
