@@ -1,6 +1,11 @@
+const urlParams = new URLSearchParams(window.location.search);
+const tarefaId = urlParams.get('id');
+const isAdmin = urlParams.get('admin')
+
 document.getElementById('btnVoltar').addEventListener('click', function() {
-		window.location.href = '/'; 
+	isAdmin == "true" ? window.location.href = '/?admin=true';  : window.location.href = '/'; 
 });
+
 document.getElementById('menuIcon').addEventListener('click', function () {
     const navLinks = document.getElementById('navLinks');
     navLinks.classList.toggle('active'); 
@@ -255,9 +260,6 @@ async function fetchdel(id){
 }
 
 async function createAdminButtons(){
-	const urlParams = new URLSearchParams(window.location.search);
-	const tarefaId = urlParams.get('id');
-	
 	const ndiv = document.createElement("div")
 	ndiv.id = "setdate"
 
@@ -333,15 +335,12 @@ document.addEventListener('DOMContentLoaded', async function() {
 		}
 	}
 
-		const urlParams = new URLSearchParams(window.location.search);
-		const tarefaId = urlParams.get('id');
-
 	
 		if (tarefaId) {
 			carregarTarefa(tarefaId);
 		}
 
-		if(urlParams.get("admin")) createAdminButtons()
+		if(isAdmin == "true") createAdminButtons()
 
 		const enviarComentarioBtn = document.getElementById('enviar-comentario');
 		enviarComentarioBtn.addEventListener('click', async function() {
