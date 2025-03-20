@@ -236,3 +236,15 @@ body {
 #btnVoltar:hover {
     background-color: #9a67ea;
 }
+
+#delete, #adddays {
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background-color: #bb86fc;
+    color: white;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    transition: background 0.3s;
+}
