@@ -162,7 +162,8 @@ document.addEventListener('DOMContentLoaded', async function() {
 		for(var i in lembretesHoje){
 			let dataLembrete = formatarData2(new Date(i.date + "T00:00:00"));
 			if(incluirOntem && dataLembrete === ontem){
-				i.desc.replace(/[Aa]manh[ãa]/gmi, "Hoje")
+				let e = i.desc.replace(/[Aa]manh[ãa]/gmi, "Hoje")
+				i.desc = e
 			}
 		}
 	
