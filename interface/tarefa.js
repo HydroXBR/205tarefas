@@ -13,7 +13,7 @@ document.getElementById('menuIcon').addEventListener('click', function () {
 
 const alunos = [
   {
-    "complete": "Addlynes Avelino",
+    "complete": "Adllynes Avelino",
     "id": "addlynes"
   },
   {
@@ -40,17 +40,13 @@ const alunos = [
     "complete": "Carla Isabela",
     "id": "carla"
   },
+	{
+    "complete": "Caio Furtado",
+    "id": "caio"
+  },
   {
     "complete": "Carlos Eduardo",
     "id": "ceduardo"
-  },
-  {
-    "complete": "Derick Mendes",
-    "id": "derick"
-  },
-  {
-    "complete": "Emanuel Kalebe",
-    "id": "kalebe"
   },
   {
     "complete": "Gabriel Castro",
@@ -68,9 +64,9 @@ const alunos = [
     "complete": "Jaqueline Catunda",
     "id": "jaque"
   },
-  {
-    "complete": "Jennifer Gurgel",
-    "id": "jennifer"
+	{
+    "complete": "João Christhofer",
+    "id": "jchris"
   },
   {
     "complete": "João Diego",
@@ -81,12 +77,8 @@ const alunos = [
     "id": "jhenri"
   },
   {
-    "complete": "Josué Souto",
+    "complete": "Josué Guerra",
     "id": "josue"
-  },
-  {
-    "complete": "Júlia Dianny",
-    "id": "juliad"
   },
   {
     "complete": "Laura Albuquerque",
@@ -156,6 +148,10 @@ const alunos = [
     "complete": "Roberta Cambriai",
     "id": "roberta"
   },
+	  {
+    "complete": "Ronald Ezequiel",
+    "id": "ronald"
+  },
   {
     "complete": "Safira Tomiko",
     "id": "safira"
@@ -176,7 +172,7 @@ const alunos = [
     "complete": "Wilmones",
     "id": "wilmones"
   }
-];
+]
 
 const disciplinas = [
 	{ value: "art", label: "Artes" },
