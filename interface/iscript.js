@@ -377,27 +377,35 @@ async function loadLembretes() {
         const containerLembretes = document.getElementById('container-lembretes');
         containerLembretes.innerHTML = '';
         
-        function formatarData2(data) {
-            const ano = data.getFullYear();
-            const mes = String(data.getMonth() + 1).padStart(2, '0');
-            const dia = String(data.getDate()).padStart(2, '0');
+        // Função para formatar data no padrão YYYY-MM-DD usando UTC
+        function formatarDataUTC(data) {
+            const ano = data.getUTCFullYear();
+            const mes = String(data.getUTCMonth() + 1).padStart(2, '0');
+            const dia = String(data.getUTCDate()).padStart(2, '0');
             return `${ano}-${mes}-${dia}`;
         }
         
-        const agoraUTC4 = new Date();
-        const hojeUTC4 = new Date(agoraUTC4);
-        hojeUTC4.setHours(3, 0, 0, 0);
-        const amanhaUTC4 = new Date(hojeUTC4);
-        amanhaUTC4.setDate(hojeUTC4.getDate() + 1);
+        // Data atual em UTC
+        const agora = new Date();
+        const hojeUTC = formatarDataUTC(agora);
         
-        let agora = new Date();
-        let incluirOntem = agora.getHours() < 7;
-        let ontem = formatarData2(new Date(agora.setDate(agora.getDate() - 1)));
+        // Verificar se deve incluir ontem (antes das 7h no horário de Brasília)
+        // Brasília é UTC-3
+        const horaBrasilia = agora.getUTCHours() - 3;
+        const incluirOntem = horaBrasilia < 8;
         
+        let ontemUTC = '';
+        if (incluirOntem) {
+            const dataOntem = new Date(agora);
+            dataOntem.setUTCDate(dataOntem.getUTCDate() - 1);
+            ontemUTC = formatarDataUTC(dataOntem);
+        }
+        
+        // Filtrar lembretes que são para hoje ou para ontem (se for antes das 8h)
         const lembretesHoje = lembretes.filter(lembrete => {
-            let dataLembrete = formatarData2(new Date(lembrete.date + "T00:00:00"));
-            const hoje = formatarData2(new Date());
-            return dataLembrete === hoje || (incluirOntem && dataLembrete === ontem);
+            // A data do lembrete já está no formato YYYY-MM-DD
+            const dataLembrete = lembrete.date;
+            return dataLembrete === hojeUTC || (incluirOntem && dataLembrete === ontemUTC);
         });
         
         if (lembretesHoje.length > 0) {
@@ -413,11 +421,12 @@ async function loadLembretes() {
                     <i class="fas fa-sticky-note"></i>
                     <div class="lembrete-content">
                         <strong>${lembrete.title}</strong>
-                        <span>${lembrete.desc}</span>
+                        <span style="white-space: pre-wrap;">${lembrete.desc}</span>
                     </div>
                 `;
                 containerLembretes.appendChild(divLembrete);
             });
+            containerLembretes.style.display = 'block';
         } else {
             containerLembretes.style.display = 'none';
         }
