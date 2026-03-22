@@ -735,28 +735,37 @@
     </footer>
 
     <script>
-        // Alternância entre turmas
-        const tabs = document.querySelectorAll('.turma-tab');
-        const scheduleT1T3 = document.getElementById('schedule-t1t3');
-        const scheduleT4T6 = document.getElementById('schedule-t4t6');
+    // Menu hamburguer
+    const menuIcon = document.getElementById('menuIcon');
+    const navLinks = document.getElementById('navLinks');
+    
+    if (menuIcon && navLinks) {
+        menuIcon.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+        });
+    }
 
+    // Alternância entre turmas
+    const tabs = document.querySelectorAll('.turma-tab');
+    const scheduleT1T3 = document.getElementById('schedule-t1t3');
+    const scheduleT4T6 = document.getElementById('schedule-t4t6');
+
+    if (tabs.length > 0) {
         tabs.forEach(tab => {
             tab.addEventListener('click', () => {
-                // Remove active class from all tabs
                 tabs.forEach(t => t.classList.remove('active'));
-                // Add active class to clicked tab
                 tab.classList.add('active');
                 
-                // Show/hide schedules based on selected turma
                 if (tab.dataset.turma === 't1t3') {
-                    scheduleT1T3.style.display = 'block';
-                    scheduleT4T6.style.display = 'none';
+                    if (scheduleT1T3) scheduleT1T3.style.display = 'block';
+                    if (scheduleT4T6) scheduleT4T6.style.display = 'none';
                 } else {
-                    scheduleT1T3.style.display = 'none';
-                    scheduleT4T6.style.display = 'block';
+                    if (scheduleT1T3) scheduleT1T3.style.display = 'none';
+                    if (scheduleT4T6) scheduleT4T6.style.display = 'block';
                 }
             });
         });
-    </script>
+    }
+</script>
 </body>
 </html>
