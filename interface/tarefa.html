@@ -675,7 +675,7 @@
                                     <div class="turma-name" style="color: ${info.turma === 't1-t3' ? 'var(--primary-green)' : '#3b82f6'}">
                                         <i class="fas ${info.turma === 't1-t3' ? 'fa-users' : 'fa-user-md'}"></i> ${turmaLabel}
                                     </div>
-                                    ${info.observacao ? `<div class="turma-obs"><i class="fas fa-info-circle"></i> ${info.observacao}</div>` : ''}
+                                    ${info.observacao ? `<div class="turma-obs"><i class="fas fa-info-circle"></i> <span style="white-space: pre-wrap;">${info.observacao.replace(/\n/g, '<br>')}</span></div>` : ''}
                                 </div>
                                 <div class="turma-date">
                                     <div class="date">${formatarData(info.entrega)}</div>
@@ -716,7 +716,8 @@
                 
                 const observacaoGeralHtml = tarefa.observacaoGeral ? `
                     <div class="observacao-geral">
-                        <i class="fas fa-info-circle"></i> <strong>Observação Geral:</strong> ${tarefa.observacaoGeral}
+                        <i class="fas fa-info-circle"></i> <strong>Observação Geral:</strong> 
+                        <span style="white-space: pre-wrap;">${tarefa.observacaoGeral.replace(/\n/g, '<br>')}</span>
                     </div>
                 ` : '';
                 
