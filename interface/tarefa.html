@@ -595,11 +595,12 @@
             try {
                 const response = await fetch(`/moredays?id=${id}&days=${days}`);
                 const result = await response.json();
-                if (result.success === false) {
-                    alert('Erro ao adicionar os dias! Tente novamente.');
+                
+                if (result.success) {
+                    alert(`✅ ${days} dia(s) adicionado(s) a todas as turmas com sucesso!`);
+                    carregarTarefa(id); // Recarregar a página para mostrar as novas datas
                 } else {
-                    alert('Data alterada com sucesso!');
-                    carregarTarefa(id);
+                    alert('Erro ao adicionar os dias: ' + (result.reason || 'Tente novamente.'));
                 }
             } catch (err) {
                 console.error('Erro:', err);
