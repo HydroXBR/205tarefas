@@ -529,8 +529,8 @@
                 previewContent.innerHTML = `
                     <div style="background: var(--bg-dark); padding: 0.75rem; border-radius: 8px;">
                         <p><strong>📝 ${titulo || 'Título não definido'}</strong></p>
-                        <p style="font-size: 0.85rem; color: var(--text-secondary);">${desc || 'Descrição não definida'}</p>
-                        ${observacaoGeral ? `<p style="font-size: 0.85rem; background: rgba(59,130,246,0.1); padding: 0.5rem; border-radius: 6px; margin: 0.5rem 0;"><i class="fas fa-info-circle"></i> ${observacaoGeral}</p>` : ''}
+                        <p style="font-size: 0.85rem; color: var(--text-secondary); white-space: pre-wrap;">${desc || 'Descrição não definida'}</p>
+                        ${observacaoGeral ? `<p style="font-size: 0.85rem; background: rgba(59,130,246,0.1); padding: 0.5rem; border-radius: 6px; margin: 0.5rem 0; white-space: pre-wrap;"><i class="fas fa-info-circle"></i> ${observacaoGeral.replace(/\n/g, '<br>')}</p>` : ''}
                         <hr style="border-color: var(--border-color); margin: 0.5rem 0;">
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.85rem;">
                             <span>👤 Autor: ${author ? alunos.find(a => a.id === author)?.complete || author : '—'}</span>
