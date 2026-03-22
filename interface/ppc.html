@@ -204,6 +204,69 @@
                 font-size: 1rem;
             }
         }
+
+        /* Botões de Download */
+.download-buttons {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.btn-download, .btn-download-pdf {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.btn-download {
+    background: rgba(59, 130, 246, 0.2);
+    border: 2px solid #3b82f6;
+    color: #3b82f6;
+}
+
+.btn-download:hover {
+    background: #3b82f6;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+}
+
+.btn-download-pdf {
+    background: var(--primary-green);
+    border: 2px solid var(--primary-green);
+    color: white;
+}
+
+.btn-download-pdf:hover {
+    background: var(--primary-green-light);
+    border-color: var(--primary-green-light);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(105, 120, 37, 0.3);
+}
+
+.btn-download i, .btn-download-pdf i {
+    font-size: 1.1rem;
+}
+
+/* Para dispositivos móveis */
+@media (max-width: 768px) {
+    .download-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .btn-download, .btn-download-pdf {
+        justify-content: center;
+    }
+}
     </style>
 </head>
 <body>
@@ -243,7 +306,14 @@
         <div class="ppc-header">
             <h1><i class="fas fa-graduation-cap"></i> Matriz Curricular 2024</h1>
             <p>Baseado nas Diretrizes Curriculares Nacionais (Resolução Nº 3, de 20 de junho de 2014)</p>
-            
+            <div class="download-buttons" style="margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+        <a href="/src/medppc.pdf" class="btn-download" target="_blank">
+            <i class="fas fa-file-pdf"></i> Visualizar PPC Completo
+        </a>
+        <a href="/download/medppc.pdf" class="btn-download-pdf">
+            <i class="fas fa-download"></i> Baixar PPC em PDF
+        </a>
+    </div>
             <div class="ppc-stats">
                 <div class="stat-card">
                     <div class="stat-number">10</div>
