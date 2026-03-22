@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>PPC - Medicina UFAM</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/G4fhsmDV/621823196-17845841154672863-5964764644452470845-n.jpg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* PPC Specific Styles */
+        .ppc-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .ppc-header {
+            background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-elevated) 100%);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+        }
+        
+        .ppc-header h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .ppc-header h1 i {
+            color: var(--primary-green);
+        }
+        
+        .ppc-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .stat-card {
+            background: var(--bg-dark);
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary-green);
+        }
+        
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+        
+        .period-section {
+            margin-bottom: 2rem;
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+        
+        .period-header {
+            background: var(--bg-elevated);
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .period-header:hover {
+            background: var(--border-color);
+        }
+        
+        .period-header h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .period-header h2 i {
+            color: var(--primary-green);
+        }
+        
+        .period-badge {
+            background: var(--primary-green);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .period-content {
+            display: none;
+            padding: 1.5rem;
+        }
+        
+        .period-content.active {
+            display: block;
+        }
+        
+        .ppc-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .ppc-table th {
+            text-align: left;
+            padding: 0.75rem;
+            background: var(--bg-elevated);
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        
+        .ppc-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .ppc-table tr:hover {
+            background: var(--bg-elevated);
+        }
+        
+        .credit-badge {
+            background: var(--primary-green);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .ch-detail {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        .internship-section {
+            margin-top: 2rem;
+            background: linear-gradient(135deg, rgba(105, 120, 37, 0.1) 0%, rgba(105, 120, 37, 0.05) 100%);
+            border: 2px solid var(--primary-green);
+        }
+        
+        .total-section {
+            background: var(--bg-elevated);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 2rem;
+            text-align: center;
+        }
+        
+        .total-grid {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+        
+        .total-item {
+            text-align: center;
+        }
+        
+        .total-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-green);
+        }
+        
+        .total-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .ppc-container {
+                padding: 1rem;
+            }
+            
+            .ppc-table {
+                font-size: 0.8rem;
+            }
+            
+            .ppc-table th, .ppc-table td {
+                padding: 0.5rem;
+            }
+            
+            .period-header h2 {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="https://edoc.ufam.edu.br/bitstream/123456789/4819/7/marca_ufam_vetor_positivo.png" alt="UFAM Logo" class="ufam-logo">
+                <div class="turma-logo-container">
+                    <img src="https://i.ibb.co/G4fhsmDV/621823196-17845841154672863-5964764644452470845-n.jpg" alt="Turma 116" class="turma-logo">
+                </div>
+                <div class="logo-text">
+                    <span class="med-text">Med</span><span class="tasks-text">Tasks</span>
+                    <span class="turma-badge">Turma 116</span>
+                </div>
+            </div>
+            <div class="menu-icon" id="menuIcon">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="/"><i class="fas fa-home"></i> Início</a>
+                <a href="/ppc" class="active"><i class="fas fa-book-open"></i> PPC</a>
+                <a href="/sobre"><i class="fas fa-info-circle"></i> Sobre</a>
+                <a href="/horarios"><i class="fas fa-calendar-alt"></i> Horários</a>
+                <a href="/add" class="btn-add"><i class="fas fa-plus"></i> Adicionar Tarefa</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="hero-section" style="padding: 2rem;">
+        <div class="hero-content">
+            <h1><i class="fas fa-book-open"></i> Projeto Pedagógico do Curso</h1>
+            <p>Matriz Curricular - Medicina UFAM</p>
+        </div>
+    </div>
+
+    <div class="ppc-container">
+        <div class="ppc-header">
+            <h1><i class="fas fa-graduation-cap"></i> Matriz Curricular 2024</h1>
+            <p>Baseado nas Diretrizes Curriculares Nacionais (Resolução Nº 3, de 20 de junho de 2014)</p>
+            
+            <div class="ppc-stats">
+                <div class="stat-card">
+                    <div class="stat-number">10</div>
+                    <div class="stat-label">Períodos (1º ao 8º + Internato)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">7.260h</div>
+                    <div class="stat-label">Carga Horária Total</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">170</div>
+                    <div class="stat-label">Créditos Obrigatórios</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">35%</div>
+                    <div class="stat-label">Estágio (Internato)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Disciplinas Obrigatórias -->
+        <div id="obrigatorias"></div>
+
+        <!-- Estágio Curricular (Internato) -->
+        <div id="estagio"></div>
+
+        <div class="total-section">
+            <h3><i class="fas fa-chart-line"></i> Resumo do Curso</h3>
+            <div class="total-grid">
+                <div class="total-item">
+                    <div class="total-value">170</div>
+                    <div class="total-label">Créditos Obrigatórios</div>
+                </div>
+                <div class="total-item">
+                    <div class="total-value">153</div>
+                    <div class="total-label">Créditos Estágio</div>
+                </div>
+                <div class="total-item">
+                    <div class="total-value">7.260h</div>
+                    <div class="total-label">Carga Horária Total</div>
+                </div>
+                <div class="total-item">
+                    <div class="total-value">12</div>
+                    <div class="total-label">Semestres</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p><i class="far fa-copyright"></i> 2024 MedTasks - Turma 116 - Faculdade de Medicina UFAM</p>
+            <p style="font-size: 0.75rem; margin-top: 0.5rem;">Baseado no PPC - Projeto Pedagógico do Curso de Medicina</p>
+        </div>
+    </footer>
+
+    <script>
+        // PPC Data
+        const disciplinasObrigatorias = [
+            // 1º Período
+            { periodo: 1, sigla: "ISC", disciplina: "Introdução à Saúde Coletiva", credito: 3, ch_teorica: 30, ch_pratica: 15, ch_extensao: 30, total: 75, pre_requisito: "-" },
+            { periodo: 1, sigla: "BCM", disciplina: "Biologia Celular e Molecular", credito: 2, ch_teorica: 30, ch_pratica: 15, ch_extensao: 0, total: 45, pre_requisito: "-" },
+            { periodo: 1, sigla: "AH I", disciplina: "Anatomia Humana I", credito: 5, ch_teorica: 60, ch_pratica: 90, ch_extensao: 0, total: 120, pre_requisito: "-" },
+            { periodo: 1, sigla: "EMB", disciplina: "Embriologia", credito: 2, ch_teorica: 30, ch_pratica: 30, ch_extensao: 0, total: 60, pre_requisito: "-" },
+            { periodo: 1, sigla: "MET", disciplina: "Metodologia do Trabalho Científico", credito: 3, ch_teorica: 30, ch_pratica: 30, ch_extensao: 0, total: 60, pre_requisito: "-" },
+            { periodo: 1, sigla: "ÉTICA", disciplina: "Ética Médica", credito: 2, ch_teorica: 30, ch_pratica: 0, ch_extensao: 0, total: 30, pre_requisito: "-" },
+            
+            // 2º Período
+            { periodo: 2, sigla: "HIS", disciplina: "Histologia", credito: 3, ch_teorica: 30, ch_pratica: 30, ch_extensao: 0, total: 60, pre_requisito: "-" },
+            { periodo: 2, sigla: "BCM", disciplina: "Bioquímica Celular e Metabólica", credito: 4, ch_teorica: 60, ch_pratica: 30, ch_extensao: 0, total: 90, pre_requisito: "-" },
+            { periodo: 2, sigla: "AH II", disciplina: "Anatomia Humana II", credito: 5, ch_teorica: 60, ch_pratica: 90, ch_extensao: 0, total: 120, pre_requisito: "AH I" },
+            { periodo: 2, sigla: "GEN", disciplina: "Genética", credito: 3, ch_teorica: 30, ch_pratica: 30, ch_extensao: 0, total: 60, pre_requisito: "-" },
+            { periodo: 2, sigla: "PPGS", disciplina: "Política, Planejamento e Gestão em Saúde", credito: 3, ch_teorica: 30, ch_pratica: 15, ch_extensao: 30, total: 75, pre_requisito: "ISC" },
+            
+            // 3º Período
+            { periodo: 3, sigla: "MICRO", disciplina: "Microbiologia Médica", credito: 3, ch_teorica: 30, ch_pratica: 30, ch_extensao: 0, total: 60, pre_requisito: "BCM" },
+            { periodo: 3, sigla: "PARA", disciplina: "Parasitologia Médica", credito: 3, ch_teorica: 30, ch_pratica: 30, ch_extensao: 0, total: 60, pre_requisito: "BCM" },
+            { periodo: 3, sigla: "MICO", disciplina: "Micologia Médica", credito: 3, ch_teorica: 30, ch_pratica: 30, ch_extensao: 0, total: 60, pre_requisito: "BCM" },
+            { periodo: 3, sigla: "EPI", disciplina: "Epidemiologia e Bioestatística", credito: 5, ch_teorica: 60, ch_pratica: 30, ch_extensao: 0, total: 90, pre_requisito: "PPGS" },
+            { periodo: 3, sigla: "IMU", disciplina: "Imunologia Médica", credito: 2, ch_teorica: 30, ch_pratica: 15, ch_extensao: 0, total: 45, pre_requisito: "BCM" },
+            { periodo: 3, sigla: "FISIO", disciplina: "Fisiologia Humana", credito: 6, ch_teorica: 60, ch_pratica: 60, ch_extensao: 0, total: 120, pre_requisito: "BCM" },
+            
+            // 4º Período
+            { periodo: 4, sigla: "APS", disciplina: "Atenção Primária em Saúde", credito: 3, ch_teorica: 30, ch_pratica: 15, ch_extensao: 30, total: 75, pre_requisito: "PPGS" },
+            { periodo: 4, sigla: "PATOL", disciplina: "Patologia Geral", credito: 4, ch_teorica: 60, ch_pratica: 30, ch_extensao: 0, total: 90, pre_requisito: "HIS" },
+            { periodo: 4, sigla: "FAR I", disciplina: "Farmacologia I", credito: 4, ch_teorica: 60, ch_pratica: 0, ch_extensao: 0, total: 60, pre_requisito: "FISIO" },
+            { periodo: 4, sigla: "PROP", disciplina: "Propedêutica Médica", credito: 6, ch_teorica: 90, ch_pratica: 120, ch_extensao: 0, total: 150, pre_requisito: "AH II" },
+            { periodo: 4, sigla: "TECOP", disciplina: "Técnica Operatória e Cirurgia Experimental", credito: 4, ch_teorica: 30, ch_pratica: 60, ch_extensao: 0, total: 90, pre_requisito: "AH II" },
+            
+            // 5º Período
+            { periodo: 5, sigla: "PATESP", disciplina: "Patologia Especial", credito: 5, ch_teorica: 60, ch_pratica: 30, ch_extensao: 0, total: 90, pre_requisito: "PATOL" },
+            { periodo: 5, sigla: "FAR II", disciplina: "Farmacologia II", credito: 3, ch_teorica: 45, ch_pratica: 0, ch_extensao: 0, total: 45, pre_requisito: "FAR I" },
+            { periodo: 5, sigla: "ANEST", disciplina: "Anestesiologia Clínica", credito: 2, ch_teorica: 30, ch_pratica: 15, ch_extensao: 0, total: 45, pre_requisito: "FAR I" },
+            { periodo: 5, sigla: "CIR_DIG", disciplina: "Cirurgia do Sistema Digestório e Anexos", credito: 4, ch_teorica: 60, ch_pratica: 30, ch_extensao: 0, total: 90, pre_requisito: "TECOP" },
+            { periodo: 5, sigla: "CLIMED I", disciplina: "Clínica Médica Integrada I", credito: 6, ch_teorica: 60, ch_pratica: 60, ch_extensao: 0, total: 120, pre_requisito: "PROP" },
+            { periodo: 5, sigla: "TRAUMA", disciplina: "Atenção ao Trauma", credito: 2, ch_teorica: 30, ch_pratica: 15, ch_extensao: 0, total: 45, pre_requisito: "TECOP" },
+            
+            // 6º Período
+            { periodo: 6, sigla: "CLIMED II", disciplina: "Clínica Médica Integrada II", credito: 7, ch_teorica: 60, ch_pratica: 90, ch_extensao: 0, total: 150, pre_requisito: "CLIMED I" },
+            { periodo: 6, sigla: "DIP", disciplina: "Doenças Infecciosas e Parasitárias", credito: 4, ch_teorica: 60, ch_pratica: 30, ch_extensao: 0, total: 90, pre_requisito: "CLIMED I" },
+            { periodo: 6, sigla: "CIR_INT", disciplina: "Cirurgia Integrada", credito: 4, ch_teorica: 60, ch_pratica: 30, ch_extensao: 0, total: 90, pre_requisito: "CIR_DIG" },
+            { periodo: 6, sigla: "OTORRINO", disciplina: "Otorrino e Cirurgia de Cabeça e Pescoço", credito: 4, ch_teorica: 60, ch_pratica: 30, ch_extensao: 0, total: 90, pre_requisito: "CIR_DIG" },
+            
+            // 7º Período
+            { periodo: 7, sigla: "CLIMED III", disciplina: "Clínica Médica Integrada III", credito: 6, ch_teorica: 60, ch_pratica: 60, ch_extensao: 0, total: 120, pre_requisito: "CLIMED II" },
+            { periodo: 7, sigla: "UROLOGIA", disciplina: "Urologia", credito: 3, ch_teorica: 30, ch_pratica: 30, ch_extensao: 0, total: 60, pre_requisito: "CIR_INT" },
+            { periodo: 7, sigla: "OFTALMO", disciplina: "Oftalmologia", credito: 2, ch_teorica: 30, ch_pratica: 15, ch_extensao: 0, total: 45, pre_requisito: "CLIMED II" },
+            { periodo: 7, sigla: "NEURO", disciplina: "Neurociências", credito: 4, ch_teorica: 60, ch_pratica: 30, ch_extensao: 0, total: 90, pre_requisito: "CLIMED II" },
+            { periodo: 7, sigla: "SM I", disciplina: "Saúde da Mulher I - Ginecologia", credito: 3, ch_teorica: 30, ch_pratica: 15, ch_extensao: 30, total: 75, pre_requisito: "CLIMED II" },
+            { periodo: 7, sigla: "DERMATO", disciplina: "Dermatologia", credito: 3, ch_teorica: 30, ch_pratica: 30, ch_extensao: 0, total: 60, pre_requisito: "CLIMED II" },
+            
+            // 8º Período
+            { periodo: 8, sigla: "SM II", disciplina: "Saúde da Mulher II - Obstetrícia", credito: 4, ch_teorica: 60, ch_pratica: 30, ch_extensao: 0, total: 90, pre_requisito: "SM I" },
+            { periodo: 8, sigla: "PEDIATRIA", disciplina: "Saúde da Criança", credito: 5, ch_teorica: 60, ch_pratica: 90, ch_extensao: 0, total: 120, pre_requisito: "CLIMED II" },
+            { periodo: 8, sigla: "IDOSO", disciplina: "Saúde do Idoso", credito: 2, ch_teorica: 30, ch_pratica: 0, ch_extensao: 0, total: 30, pre_requisito: "CLIMED III" },
+            { periodo: 8, sigla: "PSIQUI", disciplina: "Psiquiatria", credito: 3, ch_teorica: 30, ch_pratica: 30, ch_extensao: 0, total: 60, pre_requisito: "CLIMED III" },
+            { periodo: 8, sigla: "MED_LEGAL", disciplina: "Medicina Legal", credito: 3, ch_teorica: 30, ch_pratica: 30, ch_extensao: 0, total: 60, pre_requisito: "CLIMED III" },
+            { periodo: 8, sigla: "TRAUMATO", disciplina: "Traumatologia e Ortopedia", credito: 4, ch_teorica: 60, ch_pratica: 30, ch_extensao: 0, total: 90, pre_requisito: "CIR_INT" }
+        ];
+        
+        const estagios = [
+            { periodo: "9º-12º", sigla: "EST_CLIMED", disciplina: "Estágio em Clínica Médica", credito: 19, total: 480 },
+            { periodo: "9º-12º", sigla: "EST_CIRURG", disciplina: "Estágio em Clínica Cirúrgica", credito: 19, total: 480 },
+            { periodo: "9º-12º", sigla: "EST_PED", disciplina: "Estágio em Saúde da Criança", credito: 19, total: 480 },
+            { periodo: "9º-12º", sigla: "EST_GINECO", disciplina: "Estágio em Saúde da Mulher", credito: 19, total: 480 },
+            { periodo: "9º-12º", sigla: "EST_URG", disciplina: "Estágio em Urgência e Emergência", credito: 19, total: 480 },
+            { periodo: "9º-12º", sigla: "EST_TROP", disciplina: "Estágio em Doenças Tropicais e Infecciosas", credito: 5, total: 120 },
+            { periodo: "9º-12º", sigla: "EST_ONCO", disciplina: "Estágio em Oncologia", credito: 5, total: 120 },
+            { periodo: "9º-12º", sigla: "EST_NEURO", disciplina: "Estágio em Neurociências", credito: 5, total: 120 },
+            { periodo: "9º-12º", sigla: "EST_MENTAL", disciplina: "Estágio em Saúde Mental", credito: 5, total: 120 },
+            { periodo: "9º-12º", sigla: "EST_RURAL", disciplina: "Estágio em Saúde Coletiva Rural", credito: 19, total: 480 },
+            { periodo: "9º-12º", sigla: "EST_URBANA", disciplina: "Estágio em Saúde Coletiva Urbana", credito: 3, total: 75 },
+            { periodo: "9º-12º", sigla: "EST_COMPL", disciplina: "Estágio Complementar", credito: 16, total: 405 }
+        ];
+        
+        function renderPeriodos() {
+            const container = document.getElementById('obrigatorias');
+            const periodos = [...new Set(disciplinasObrigatorias.map(d => d.periodo))];
+            
+            periodos.forEach(periodo => {
+                const disciplinasPeriodo = disciplinasObrigatorias.filter(d => d.periodo === periodo);
+                const totalCreditos = disciplinasPeriodo.reduce((sum, d) => sum + d.credito, 0);
+                const totalHoras = disciplinasPeriodo.reduce((sum, d) => sum + d.total, 0);
+                
+                const section = document.createElement('div');
+                section.className = 'period-section';
+                section.innerHTML = `
+                    <div class="period-header" onclick="togglePeriod(this)">
+                        <h2><i class="fas fa-calendar-alt"></i> ${periodo}º Período</h2>
+                        <div>
+                            <span class="period-badge">${totalCreditos} créditos</span>
+                            <span class="period-badge" style="background: var(--text-secondary); margin-left: 0.5rem;">${totalHoras}h</span>
+                            <i class="fas fa-chevron-down" style="margin-left: 1rem;"></i>
+                        </div>
+                    </div>
+                    <div class="period-content">
+                        <table class="ppc-table">
+                            <thead>
+                                <tr>
+                                    <th>SIGLA</th>
+                                    <th>DISCIPLINA</th>
+                                    <th>CR</th>
+                                    <th>CH (T-P-E)</th>
+                                    <th>TOTAL</th>
+                                    <th>PRÉ-REQUISITO</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${disciplinasPeriodo.map(d => `
+                                    <tr>
+                                        <td><strong>${d.sigla}</strong></td>
+                                        <td>${d.disciplina}</td>
+                                        <td><span class="credit-badge">${d.credito}</span></td>
+                                        <td class="ch-detail">${d.ch_teorica}-${d.ch_pratica}-${d.ch_extensao}</td>
+                                        <td>${d.total}h</td>
+                                        <td class="ch-detail">${d.pre_requisito}</td>
+                                    </tr>
+                                `).join('')}
+                                <tr style="background: var(--bg-elevated); font-weight: bold;">
+                                    <td colspan="2"><strong>Total do ${periodo}º Período</strong></td>
+                                    <td><strong>${totalCreditos}</strong></td>
+                                    <td>-</td>
+                                    <td><strong>${totalHoras}h</strong></td>
+                                    <td>-</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                container.appendChild(section);
+            });
+        }
+        
+        function renderEstagios() {
+            const container = document.getElementById('estagio');
+            const totalCreditos = estagios.reduce((sum, e) => sum + e.credito, 0);
+            const totalHoras = estagios.reduce((sum, e) => sum + e.total, 0);
+            
+            const section = document.createElement('div');
+            section.className = 'period-section internship-section';
+            section.innerHTML = `
+                <div class="period-header" onclick="togglePeriod(this)">
+                    <h2><i class="fas fa-hospital-user"></i> Estágio Curricular (Internato) - 9º ao 12º Período</h2>
+                    <div>
+                        <span class="period-badge">${totalCreditos} créditos</span>
+                        <span class="period-badge" style="background: var(--text-secondary); margin-left: 0.5rem;">${totalHoras}h</span>
+                        <i class="fas fa-chevron-down" style="margin-left: 1rem;"></i>
+                    </div>
+                </div>
+                <div class="period-content">
+                    <table class="ppc-table">
+                        <thead>
+                            <tr>
+                                <th>SIGLA</th>
+                                <th>ESTÁGIO</th>
+                                <th>CR</th>
+                                <th>CH TOTAL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${estagios.map(e => `
+                                <tr>
+                                    <td><strong>${e.sigla}</strong></td>
+                                    <td>${e.disciplina}</td>
+                                    <td><span class="credit-badge">${e.credito}</span></td>
+                                    <td>${e.total}h</td>
+                                </tr>
+                            `).join('')}
+                            <tr style="background: var(--bg-elevated); font-weight: bold;">
+                                <td colspan="2"><strong>Total do Internato</strong></td>
+                                <td><strong>${totalCreditos}</strong></td>
+                                <td><strong>${totalHoras}h</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div style="margin-top: 1rem; padding: 1rem; background: var(--bg-dark); border-radius: 8px;">
+                        <p><i class="fas fa-info-circle"></i> <strong>Informações importantes:</strong></p>
+                        <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.5rem;">
+                            • Carga horária do internato corresponde a 35% da carga horária total do curso, conforme Resolução Nº 3/2014 do MEC.<br>
+                            • Estágios incluem Atenção Básica (Saúde Coletiva Rural/Urbana), Urgência e Emergência, e áreas obrigatórias como Clínica Médica, Cirúrgica, Pediatria, Ginecologia/Obstetrícia e Saúde Mental.
+                        </p>
+                    </div>
+                </div>
+            `;
+            container.appendChild(section);
+        }
+        
+        function togglePeriod(element) {
+            const content = element.nextElementSibling;
+            const icon = element.querySelector('.fa-chevron-down');
+            content.classList.toggle('active');
+            icon.style.transform = content.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0)';
+        }
+        
+        window.togglePeriod = togglePeriod;
+        
+        renderPeriodos();
+        renderEstagios();
+        
+        // Auto-open first period
+        setTimeout(() => {
+            const firstHeader = document.querySelector('.period-header');
+            if (firstHeader) togglePeriod(firstHeader);
+        }, 100);
+    </script>
+</body>
+</html>
