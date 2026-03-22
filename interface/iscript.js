@@ -21,21 +21,79 @@ document.querySelectorAll('.turma-btn').forEach(btn => {
 });
 
 const disciplinas = [
-    { value: "anat", label: "Anatomia" },
-    { value: "fisio", label: "Fisiologia" },
-    { value: "bioq", label: "Bioquímica" },
-    { value: "histol", label: "Histologia" },
-    { value: "embrio", label: "Embriologia" },
-    { value: "imuno", label: "Imunologia" },
-    { value: "farmaco", label: "Farmacologia" },
-    { value: "patol", label: "Patologia" },
-    { value: "clinica", label: "Clínica Médica" },
-    { value: "cirurgia", label: "Cirurgia" },
-    { value: "pediatria", label: "Pediatria" },
-    { value: "gineco", label: "Ginecologia" },
-    { value: "obstet", label: "Obstetrícia" },
-    { value: "prev", label: "Medicina Preventiva" },
-    { value: "urgencia", label: "Urgência e Emergência" }
+    // 1º Período
+    { value: "isc", label: "Introdução à Saúde Coletiva" },
+    { value: "bcm", label: "Biologia Celular e Molecular" },
+    { value: "ah1", label: "Anatomia Humana I" },
+    { value: "emb", label: "Embriologia" },
+    { value: "metodologia", label: "Metodologia do Trabalho Científico" },
+    { value: "etica", label: "Ética Médica" },
+    
+    // 2º Período
+    { value: "histo", label: "Histologia" },
+    { value: "bioq", label: "Bioquímica Celular e Metabólica" },
+    { value: "ah2", label: "Anatomia Humana II" },
+    { value: "genetica", label: "Genética" },
+    { value: "ppgs", label: "Política, Planejamento e Gestão em Saúde" },
+    
+    // 3º Período
+    { value: "micro", label: "Microbiologia Médica" },
+    { value: "para", label: "Parasitologia Médica" },
+    { value: "mico", label: "Micologia Médica" },
+    { value: "epidemio", label: "Epidemiologia e Bioestatística" },
+    { value: "imuno", label: "Imunologia Médica" },
+    { value: "fisio", label: "Fisiologia Humana" },
+    
+    // 4º Período
+    { value: "aps", label: "Atenção Primária em Saúde" },
+    { value: "patolgeral", label: "Patologia Geral" },
+    { value: "farmaco1", label: "Farmacologia I" },
+    { value: "proped", label: "Propedêutica Médica" },
+    { value: "tecop", label: "Técnica Operatória e Cirurgia Experimental" },
+    
+    // 5º Período
+    { value: "patoesp", label: "Patologia Especial" },
+    { value: "farmaco2", label: "Farmacologia II" },
+    { value: "anestesio", label: "Anestesiologia Clínica" },
+    { value: "cirurgia_dig", label: "Cirurgia do Sistema Digestório e Anexos" },
+    { value: "climed1", label: "Clínica Médica Integrada I" },
+    { value: "trauma", label: "Atenção ao Trauma" },
+    
+    // 6º Período
+    { value: "climed2", label: "Clínica Médica Integrada II" },
+    { value: "doencas_inf", label: "Doenças Infecciosas e Parasitárias" },
+    { value: "cirurgia_int", label: "Cirurgia Integrada" },
+    { value: "otorrino", label: "Otorrino e Cirurgia de Cabeça e Pescoço" },
+    
+    // 7º Período
+    { value: "climed3", label: "Clínica Médica Integrada III" },
+    { value: "urologia", label: "Urologia" },
+    { value: "oftalmo", label: "Oftalmologia" },
+    { value: "neuro", label: "Neurociências" },
+    { value: "saude_mulher1", label: "Saúde da Mulher I - Ginecologia" },
+    { value: "dermato", label: "Dermatologia" },
+    
+    // 8º Período
+    { value: "saude_mulher2", label: "Saúde da Mulher II - Obstetrícia" },
+    { value: "saude_crianca", label: "Saúde da Criança" },
+    { value: "saude_idoso", label: "Saúde do Idoso" },
+    { value: "psiquiatria", label: "Psiquiatria" },
+    { value: "medicina_legal", label: "Medicina Legal" },
+    { value: "traumato", label: "Traumatologia e Ortopedia" },
+    
+    // Estágios (Internato)
+    { value: "estagio_climed", label: "Estágio em Clínica Médica" },
+    { value: "estagio_cirurgica", label: "Estágio em Clínica Cirúrgica" },
+    { value: "estagio_pediatria", label: "Estágio em Saúde da Criança" },
+    { value: "estagio_gineco", label: "Estágio em Saúde da Mulher" },
+    { value: "estagio_urgencia", label: "Estágio em Urgência e Emergência" },
+    { value: "estagio_tropicais", label: "Estágio em Doenças Tropicais e Infecciosas" },
+    { value: "estagio_onco", label: "Estágio em Oncologia" },
+    { value: "estagio_neuro", label: "Estágio em Neurociências" },
+    { value: "estagio_mental", label: "Estágio em Saúde Mental" },
+    { value: "estagio_rural", label: "Estágio em Saúde Coletiva Rural" },
+    { value: "estagio_urbana", label: "Estágio em Saúde Coletiva Urbana" },
+    { value: "estagio_complementar", label: "Estágio Complementar" }
 ];
 
 function getLabelByValue(value) {
