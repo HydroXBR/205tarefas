@@ -253,30 +253,39 @@ app.get('/addlembrete',function(req,res) {
 });
 
 app.get('/moredays', async function(req, res) {
-	console.log("Access MOREDAYS: " + new Date());
-	const { id, days } = req.query;
+    console.log("Access MOREDAYS: " + new Date());
+    const { id, days } = req.query;
 
-	try {
-		const tar = await tarefa.findOne({ _id: id });
-		if (!tar) {
-			return res.status(404).send("Task not found");
-		}
+    try {
+        const tar = await tarefa.findOne({ _id: id });
+        if (!tar) {
+            return res.status(404).send("Task not found");
+        }
 
-		function addmore(d, days){
-			let datedays = new Date(d);
-			let hoursadded = datedays.getHours() + (24 * Number(days));
-			datedays.setHours(hoursadded);
-			return datedays.getTime();
-		}
+        function addmore(d, days){
+            // d é timestamp em UTC
+            const date = new Date(d);
+            // Adicionar dias em UTC
+            const newDate = new Date(date.getTime() + (24 * 60 * 60 * 1000 * parseInt(days)));
+            return newDate.getTime();
+        }
 
-		let entrega = tar.entrega;
-		tar.entrega = addmore(entrega, parseInt(days));
-		await tar.save();
-		res.send(JSON.stringify(tar));
-	} catch (err) {
-		console.log(err);
-		res.status(500).send("Internal Server Error");
-	}
+        // Atualizar todas as turmasInfo
+        if (tar.turmasInfo && tar.turmasInfo.length > 0) {
+            tar.turmasInfo.forEach(info => {
+                info.entrega = addmore(info.entrega, parseInt(days));
+            });
+        } else if (tar.entrega) {
+            // Compatibilidade com formato antigo
+            tar.entrega = addmore(tar.entrega, parseInt(days));
+        }
+        
+        await tar.save();
+        res.send(JSON.stringify(tar));
+    } catch (err) {
+        console.log(err);
+        res.status(500).send("Internal Server Error");
+    }
 });
 
 app.get('/addtar', function(req, res) {
@@ -292,14 +301,22 @@ app.get('/addtar', function(req, res) {
         return res.send({ success: false, reason: "Missing required parameters" });
     }
 
-    const pedidaTimestamp = new Date(pedida).getTime();
+    // Função para converter data corretamente sem fuso horário
+    function parseDateToTimestamp(dateStr) {
+        // dateStr vem no formato YYYY-MM-DD
+        const [year, month, day] = dateStr.split('-').map(Number);
+        // Criar data no UTC (meia-noite UTC) para evitar deslocamento
+        return Date.UTC(year, month - 1, day);
+    }
+
+    const pedidaTimestamp = parseDateToTimestamp(pedida);
     const turmasInfo = [];
 
     // Processar turma principal
     if (turma && entrega) {
         turmasInfo.push({
             turma: turma,
-            entrega: new Date(entrega).getTime(),
+            entrega: parseDateToTimestamp(entrega),
             observacao: turma === 't1-t3' ? (observacaoT1 || '') : (observacaoT4 || ''),
             status: 'pendente'
         });
@@ -309,7 +326,7 @@ app.get('/addtar', function(req, res) {
     if (turma2 && entrega2) {
         turmasInfo.push({
             turma: turma2,
-            entrega: new Date(entrega2).getTime(),
+            entrega: parseDateToTimestamp(entrega2),
             observacao: turma2 === 't1-t3' ? (observacaoT1 || '') : (observacaoT4 || ''),
             status: 'pendente'
         });
@@ -329,7 +346,7 @@ app.get('/addtar', function(req, res) {
         pedida: pedidaTimestamp,
         turmasInfo: turmasInfo,
         observacaoGeral: observacaoGeral || '',
-        registered: new Date().getTime()
+        registered: Date.now() // Usa timestamp atual sem problemas
     });
 
     novaTarefa.save()
