@@ -15,6 +15,7 @@ import Db from "mongodb"
 import im from "./db_connect.js"
 const ec = txt => encodeURIComponent(txt)
 const dec = txt => decodeURIComponent(txt)
+import fs from 'fs'
 const fetch = s => import('node-fetch').then(({default: fetch}) => fetch(s))
 im()
 
@@ -144,7 +145,7 @@ app.get('/add',function(req,res) {
 
 app.get('/src/*', function(req, res) {
     console.log("Access SRC: " + new Date());
-    const filePath = req.params[0]; // Pega o caminho após /src/
+    const filePath = req.params[0];
     
     // Segurança: prevenir path traversal
     const safePath = path.join(__dirname, 'src', filePath);
@@ -155,9 +156,8 @@ app.get('/src/*', function(req, res) {
         return res.status(403).send('Acesso negado');
     }
     
-    // Verificar se o arquivo existe
-    if (require('fs').existsSync(normalizedPath)) {
-        // Determinar o tipo de conteúdo baseado na extensão
+    // Verificar se o arquivo existe usando fs.existsSync (importado)
+    if (fs.existsSync(normalizedPath)) {
         const ext = path.extname(filePath).toLowerCase();
         const mimeTypes = {
             '.pdf': 'application/pdf',
@@ -165,17 +165,12 @@ app.get('/src/*', function(req, res) {
             '.jpeg': 'image/jpeg',
             '.png': 'image/png',
             '.gif': 'image/gif',
-            '.webp': 'image/webp',
-            '.mp4': 'video/mp4',
-            '.mp3': 'audio/mpeg',
-            '.doc': 'application/msword',
-            '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+            '.webp': 'image/webp'
         };
         
         const mimeType = mimeTypes[ext] || 'application/octet-stream';
         res.setHeader('Content-Type', mimeType);
         
-        // Se for PDF, sugerir download ou visualização inline
         if (ext === '.pdf') {
             res.setHeader('Content-Disposition', 'inline; filename="' + path.basename(filePath) + '"');
         }
@@ -186,19 +181,17 @@ app.get('/src/*', function(req, res) {
     }
 });
 
-// Alternativa: rota específica para PDFs
 app.get('/download/:filename', function(req, res) {
     console.log("Access DOWNLOAD: " + new Date());
     const filename = req.params.filename;
     
-    // Segurança: garantir que só acessa PDFs
     if (!filename.endsWith('.pdf')) {
         return res.status(400).send('Formato não suportado');
     }
     
     const filePath = path.join(__dirname, 'src', filename);
     
-    if (require('fs').existsSync(filePath)) {
+    if (fs.existsSync(filePath)) {
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', 'attachment; filename="' + filename + '"');
         res.sendFile(filePath);
