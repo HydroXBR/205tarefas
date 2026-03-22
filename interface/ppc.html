@@ -316,7 +316,7 @@
     </div>
             <div class="ppc-stats">
                 <div class="stat-card">
-                    <div class="stat-number">10</div>
+                    <div class="stat-number">12</div>
                     <div class="stat-label">Períodos (1º ao 8º + Internato)</div>
                 </div>
                 <div class="stat-card">
@@ -407,65 +407,57 @@
     window.togglePeriod = togglePeriod;
        // Disciplinas Obrigatórias - 8 períodos (baseado nas imagens)
     const disciplinasObrigatorias = [
-        // 1º Período
-        { periodo: 1, sigla: "ISC", disciplina: "Introdução à Saúde Coletiva", credito: "3.1.2.0", ch_teorica: 15, ch_pratica: 60, ch_extensao: 0, total: 75, pre_requisito: "-" },
-        { periodo: 1, sigla: "BCM", disciplina: "Biologia Celular e Molecular", credito: "2.1.1.0", ch_teorica: 15, ch_pratica: 30, ch_extensao: 0, total: 45, pre_requisito: "-" },
-        { periodo: 1, sigla: "IBM624", disciplina: "Anatomia Humana I", credito: "5.2.3.0", ch_teorica: 30, ch_pratica: 90, ch_extensao: 0, total: 120, pre_requisito: "-" },
-        { periodo: 1, sigla: "IBM627", disciplina: "Embriologia", credito: "2.2.0.0", ch_teorica: 30, ch_pratica: 0, ch_extensao: 0, total: 30, pre_requisito: "-" },
-        { periodo: 1, sigla: "FSL091", disciplina: "Metodologia do Trabalho Científico", credito: "3.2.1.0", ch_teorica: 30, ch_pratica: 30, ch_extensao: 0, total: 60, pre_requisito: "-" },
-        { periodo: 1, sigla: "FSL087", disciplina: "Ética Médica", credito: "2.2.0.0", ch_teorica: 30, ch_pratica: 0, ch_extensao: 0, total: 30, pre_requisito: "-" },
+        { periodo:1, sigla:"ISC", disciplina:"Introdução à Saúde Coletiva", credito:"3.1.2.0", ch_teorica:15, ch_pratica:60, ch_extensao:0, total:75, pre_requisito:"-" },
+        { periodo:1, sigla:"BCM", disciplina:"Biologia Celular e Molecular", credito:"2.1.1.0", ch_teorica:15, ch_pratica:30, ch_extensao:0, total:45, pre_requisito:"-" },
+        { periodo:1, sigla:"IBM624", disciplina:"Anatomia Humana I", credito:"5.2.3.0", ch_teorica:30, ch_pratica:90, ch_extensao:0, total:120, pre_requisito:"-" },
+        { periodo:1, sigla:"IBM627", disciplina:"Embriologia", credito:"2.2.0.0", ch_teorica:30, ch_pratica:0, ch_extensao:0, total:30, pre_requisito:"-" },
+        { periodo:1, sigla:"FSL091", disciplina:"Metodologia do Trabalho Científico", credito:"3.2.1.0", ch_teorica:30, ch_pratica:30, ch_extensao:0, total:60, pre_requisito:"-" },
+        { periodo:1, sigla:"FSL087", disciplina:"Ética Médica", credito:"2.2.0.0", ch_teorica:30, ch_pratica:0, ch_extensao:0, total:30, pre_requisito:"-" },
         
-        // 2º Período
-        { periodo: 2, sigla: "HIS", disciplina: "Histologia", credito: "3.2.1.0", ch_teorica: 30, ch_pratica: 30, ch_extensao: 0, total: 60, pre_requisito: "BCM" },
-        { periodo: 2, sigla: "BIOQ", disciplina: "Bioquímica Celular e Metabólica", credito: "4.2.2.0", ch_teorica: 30, ch_pratica: 60, ch_extensao: 0, total: 90, pre_requisito: "BCM" },
-        { periodo: 2, sigla: "AHII", disciplina: "Anatomia Humana II", credito: "5.2.3.0", ch_teorica: 30, ch_pratica: 90, ch_extensao: 0, total: 120, pre_requisito: "IBM624" },
-        { periodo: 2, sigla: "GEN", disciplina: "Genética", credito: "3.2.1.0", ch_teorica: 30, ch_pratica: 30, ch_extensao: 0, total: 60, pre_requisito: "BCM" },
-        { periodo: 2, sigla: "PPGS", disciplina: "Política, Planejamento e Gestão em Saúde", credito: "3.1.2.0", ch_teorica: 15, ch_pratica: 60, ch_extensao: 0, total: 75, pre_requisito: "ISC" },
+        { periodo:2, sigla:"HIS", disciplina:"Histologia", credito:"3.2.1.0", ch_teorica:30, ch_pratica:30, ch_extensao:0, total:60, pre_requisito:"BCM" },
+        { periodo:2, sigla:"BIOQ", disciplina:"Bioquímica Celular e Metabólica", credito:"4.2.2.0", ch_teorica:30, ch_pratica:60, ch_extensao:0, total:90, pre_requisito:"BCM" },
+        { periodo:2, sigla:"AHII", disciplina:"Anatomia Humana II", credito:"5.2.3.0", ch_teorica:30, ch_pratica:90, ch_extensao:0, total:120, pre_requisito:"IBM624" },
+        { periodo:2, sigla:"GEN", disciplina:"Genética", credito:"3.2.1.0", ch_teorica:30, ch_pratica:30, ch_extensao:0, total:60, pre_requisito:"BCM" },
+        { periodo:2, sigla:"PPGS", disciplina:"Política, Planejamento e Gestão em Saúde", credito:"3.1.2.0", ch_teorica:15, ch_pratica:60, ch_extensao:0, total:75, pre_requisito:"ISC" },
         
-        // 3º Período
-        { periodo: 3, sigla: "IBP603", disciplina: "Microbiologia Médica", credito: "3.2.1.0", ch_teorica: 30, ch_pratica: 30, ch_extensao: 0, total: 60, pre_requisito: "BCM" },
-        { periodo: 3, sigla: "IBP604", disciplina: "Parasitologia Médica", credito: "3.2.1.0", ch_teorica: 30, ch_pratica: 30, ch_extensao: 0, total: 60, pre_requisito: "BCM" },
-        { periodo: 3, sigla: "IBP605", disciplina: "Micologia Médica", credito: "3.2.1.0", ch_teorica: 30, ch_pratica: 30, ch_extensao: 0, total: 60, pre_requisito: "BCM" },
-        { periodo: 3, sigla: "EPI", disciplina: "Epidemiologia e Bioestatística", credito: "5.4.1.0", ch_teorica: 60, ch_pratica: 30, ch_extensao: 0, total: 90, pre_requisito: "PPGS" },
-        { periodo: 3, sigla: "IMU", disciplina: "Imunologia Médica", credito: "2.1.1.0", ch_teorica: 15, ch_pratica: 30, ch_extensao: 0, total: 45, pre_requisito: "BCM" },
-        { periodo: 3, sigla: "FH", disciplina: "Fisiologia Humana", credito: "6.4.2.0", ch_teorica: 60, ch_pratica: 60, ch_extensao: 0, total: 120, pre_requisito: "BCM" },
+        { periodo:3, sigla:"IBP603", disciplina:"Microbiologia Médica", credito:"3.2.1.0", ch_teorica:30, ch_pratica:30, ch_extensao:0, total:60, pre_requisito:"BCM" },
+        { periodo:3, sigla:"IBP604", disciplina:"Parasitologia Médica", credito:"3.2.1.0", ch_teorica:30, ch_pratica:30, ch_extensao:0, total:60, pre_requisito:"BCM" },
+        { periodo:3, sigla:"IBP605", disciplina:"Micologia Médica", credito:"3.2.1.0", ch_teorica:30, ch_pratica:30, ch_extensao:0, total:60, pre_requisito:"BCM" },
+        { periodo:3, sigla:"EPI", disciplina:"Epidemiologia e Bioestatística", credito:"5.4.1.0", ch_teorica:60, ch_pratica:30, ch_extensao:0, total:90, pre_requisito:"PPGS" },
+        { periodo:3, sigla:"IMU", disciplina:"Imunologia Médica", credito:"2.1.1.0", ch_teorica:15, ch_pratica:30, ch_extensao:0, total:45, pre_requisito:"BCM" },
+        { periodo:3, sigla:"FH", disciplina:"Fisiologia Humana", credito:"6.4.2.0", ch_teorica:60, ch_pratica:60, ch_extensao:0, total:120, pre_requisito:"BCM" },
         
-        // 4º Período
-        { periodo: 4, sigla: "APS", disciplina: "Atenção Primária em Saúde", credito: "3.1.2.0", ch_teorica: 15, ch_pratica: 60, ch_extensao: 0, total: 75, pre_requisito: "PPGS" },
-        { periodo: 4, sigla: "PATOL", disciplina: "Patologia Geral", credito: "4.2.2.0", ch_teorica: 30, ch_pratica: 60, ch_extensao: 0, total: 90, pre_requisito: "HIS" },
-        { periodo: 4, sigla: "FAR I", disciplina: "Farmacologia I", credito: "4.2.4.0", ch_teorica: 30, ch_pratica: 120, ch_extensao: 0, total: 150, pre_requisito: "IMU" },
-        { periodo: 4, sigla: "FSD091", disciplina: "Propedêutica Médica", credito: "6.2.4.0", ch_teorica: 30, ch_pratica: 120, ch_extensao: 0, total: 150, pre_requisito: "AHII" },
-        { periodo: 4, sigla: "FSG089", disciplina: "Técnica Operatória e Cirurgia Experimental", credito: "4.2.2.0", ch_teorica: 30, ch_pratica: 60, ch_extensao: 0, total: 90, pre_requisito: "AHII" },
+        { periodo:4, sigla:"APS", disciplina:"Atenção Primária em Saúde", credito:"3.1.2.0", ch_teorica:15, ch_pratica:60, ch_extensao:0, total:75, pre_requisito:"PPGS" },
+        { periodo:4, sigla:"FSL088", disciplina:"Patologia Geral", credito:"4.2.2.0", ch_teorica:30, ch_pratica:60, ch_extensao:0, total:90, pre_requisito:"HIS" },
+        { periodo:4, sigla:"FAR", disciplina:"Farmacologia I", credito:"4.4.0.0", ch_teorica:60, ch_pratica:0, ch_extensao:0, total:60, pre_requisito:"IMU" },
+        { periodo:4, sigla:"FSD091", disciplina:"Propedêutica Médica", credito:"6.2.4.0", ch_teorica:30, ch_pratica:120, ch_extensao:0, total:150, pre_requisito:"AHII" },
+        { periodo:4, sigla:"FSG089", disciplina:"Técnica Operatória e Cirurgia Experimental", credito:"4.2.2.0", ch_teorica:30, ch_pratica:60, ch_extensao:0, total:90, pre_requisito:"AHII" },
         
-        // 5º Período
-        { periodo: 5, sigla: "PATESP", disciplina: "Patologia Especial", credito: "5.4.1.0", ch_teorica: 60, ch_pratica: 30, ch_extensao: 0, total: 90, pre_requisito: "FSL088" },
-        { periodo: 5, sigla: "FAR II", disciplina: "Farmacologia II", credito: "3.3.0.0", ch_teorica: 45, ch_pratica: 0, ch_extensao: 0, total: 45, pre_requisito: "FAR I" },
-        { periodo: 5, sigla: "FSG097", disciplina: "Anestesiologia Clínica", credito: "2.1.1.0", ch_teorica: 15, ch_pratica: 30, ch_extensao: 0, total: 45, pre_requisito: "FAR I" },
-        { periodo: 5, sigla: "CIR_DIG", disciplina: "Cirurgia do Sistema Digestório e Anexos", credito: "4.2.2.0", ch_teorica: 30, ch_pratica: 60, ch_extensao: 0, total: 90, pre_requisito: "FSG089" },
-        { periodo: 5, sigla: "CLIMED I", disciplina: "Clínica Médica Integrada I", credito: "6.4.2.0", ch_teorica: 60, ch_pratica: 60, ch_extensao: 0, total: 120, pre_requisito: "FSD091" },
-        { periodo: 5, sigla: "TRAUMA", disciplina: "Atenção ao Trauma", credito: "2.1.1.0", ch_teorica: 15, ch_pratica: 30, ch_extensao: 0, total: 45, pre_requisito: "FSG089" },
+        { periodo:5, sigla:"PATESP", disciplina:"Patologia Especial", credito:"5.4.1.0", ch_teorica:60, ch_pratica:30, ch_extensao:0, total:90, pre_requisito:"FSL088" },
+        { periodo:5, sigla:"FARII", disciplina:"Farmacologia II", credito:"3.3.0.0", ch_teorica:45, ch_pratica:0, ch_extensao:0, total:45, pre_requisito:"FAR" },
+        { periodo:5, sigla:"FSG097", disciplina:"Anestesiologia Clínica", credito:"2.1.1.0", ch_teorica:15, ch_pratica:30, ch_extensao:0, total:45, pre_requisito:"FAR" },
+        { periodo:5, sigla:"CIRDIG", disciplina:"Cirurgia do Sistema Digestório e Anexos", credito:"4.2.2.0", ch_teorica:30, ch_pratica:60, ch_extensao:0, total:90, pre_requisito:"FSG089" },
+        { periodo:5, sigla:"CLIMED1", disciplina:"Clínica Médica Integrada I", credito:"6.4.2.0", ch_teorica:60, ch_pratica:60, ch_extensao:0, total:120, pre_requisito:"FSD091" },
+        { periodo:5, sigla:"FSG101", disciplina:"Atenção ao Trauma", credito:"2.1.1.0", ch_teorica:15, ch_pratica:30, ch_extensao:0, total:45, pre_requisito:"FSG089" },
         
-        // 6º Período
-        { periodo: 6, sigla: "FSC309", disciplina: "Clínica Médica Integrada II", credito: "7.4.3.0", ch_teorica: 60, ch_pratica: 90, ch_extensao: 0, total: 150, pre_requisito: "FSD091" },
-        { periodo: 6, sigla: "DIP", disciplina: "Doenças Infecciosas e Parasitárias", credito: "4.2.2.0", ch_teorica: 30, ch_pratica: 60, ch_extensao: 0, total: 90, pre_requisito: "FSD091" },
-        { periodo: 6, sigla: "CIR_INT", disciplina: "Cirurgia Integrada", credito: "4.2.2.0", ch_teorica: 30, ch_pratica: 60, ch_extensao: 0, total: 90, pre_requisito: "FSG089" },
-        { periodo: 6, sigla: "OTORRINO", disciplina: "Otorrino e Cirurgia de Cabeça e Pescoço", credito: "4.2.2.0", ch_teorica: 30, ch_pratica: 60, ch_extensao: 0, total: 90, pre_requisito: "FSG089" },
+        { periodo:6, sigla:"CLIMED2", disciplina:"Clínica Médica Integrada II", credito:"7.4.3.0", ch_teorica:60, ch_pratica:90, ch_extensao:0, total:150, pre_requisito:"FSD091" },
+        { periodo:6, sigla:"FSC309", disciplina:"Doenças Infecciosas e Parasitárias", credito:"4.2.2.0", ch_teorica:30, ch_pratica:60, ch_extensao:0, total:90, pre_requisito:"FSD091" },
+        { periodo:6, sigla:"CIRINT", disciplina:"Cirurgia Integrada", credito:"4.2.2.0", ch_teorica:30, ch_pratica:60, ch_extensao:0, total:90, pre_requisito:"FSG089" },
+        { periodo:6, sigla:"OTORRINO", disciplina:"Otorrino e Cirurgia de Cabeça e Pescoço", credito:"4.2.2.0", ch_teorica:30, ch_pratica:60, ch_extensao:0, total:90, pre_requisito:"FSG089" },
         
-        // 7º Período
-        { periodo: 7, sigla: "FSC094", disciplina: "Clínica Médica Integrada III", credito: "6.4.2.0", ch_teorica: 60, ch_pratica: 60, ch_extensao: 0, total: 120, pre_requisito: "FSD091" },
-        { periodo: 7, sigla: "URO", disciplina: "Urologia", credito: "3.2.1.0", ch_teorica: 30, ch_pratica: 30, ch_extensao: 0, total: 60, pre_requisito: "FSG089, FSD091" },
-        { periodo: 7, sigla: "OFT", disciplina: "Oftalmologia", credito: "2.1.1.0", ch_teorica: 15, ch_pratica: 30, ch_extensao: 0, total: 45, pre_requisito: "FSD091" },
-        { periodo: 7, sigla: "NEURO", disciplina: "Neurociências", credito: "4.2.2.0", ch_teorica: 30, ch_pratica: 60, ch_extensao: 0, total: 90, pre_requisito: "FSG089, FSD091" },
-        { periodo: 7, sigla: "SM I", disciplina: "Saúde da Mulher I (Ginecologia)", credito: "3.1.2.0", ch_teorica: 15, ch_pratica: 60, ch_extensao: 0, total: 75, pre_requisito: "FSD091" },
-        { periodo: 7, sigla: "DERMATO", disciplina: "Dermatologia", credito: "3.2.1.0", ch_teorica: 30, ch_pratica: 30, ch_extensao: 0, total: 60, pre_requisito: "FSD091" },
+        { periodo:7, sigla:"CLIMED3", disciplina:"Clínica Médica Integrada III", credito:"6.4.2.0", ch_teorica:60, ch_pratica:60, ch_extensao:0, total:120, pre_requisito:"FSD091" },
+        { periodo:7, sigla:"FSG094", disciplina:"Urologia", credito:"3.2.1.0", ch_teorica:30, ch_pratica:30, ch_extensao:0, total:60, pre_requisito:"FSG089, FSD091" },
+        { periodo:7, sigla:"OFT", disciplina:"Oftalmologia", credito:"2.1.1.0", ch_teorica:15, ch_pratica:30, ch_extensao:0, total:45, pre_requisito:"FSD091" },
+        { periodo:7, sigla:"NEURO", disciplina:"Neurociências", credito:"4.2.2.0", ch_teorica:30, ch_pratica:60, ch_extensao:0, total:90, pre_requisito:"FSG089, FSD091" },
+        { periodo:7, sigla:"FSI055", disciplina:"Saúde da Mulher I", credito:"3.1.2.0", ch_teorica:15, ch_pratica:60, ch_extensao:0, total:75, pre_requisito:"FSD091" },
+        { periodo:7, sigla:"FSC308", disciplina:"Dermatologia", credito:"3.2.1.0", ch_teorica:30, ch_pratica:30, ch_extensao:0, total:60, pre_requisito:"FSD091" },
         
-        // 8º Período
-        { periodo: 8, sigla: "FSI056", disciplina: "Saúde da Mulher II (Obstetrícia)", credito: "4.2.2.0", ch_teorica: 30, ch_pratica: 60, ch_extensao: 0, total: 90, pre_requisito: "FSD091" },
-        { periodo: 8, sigla: "FSI057", disciplina: "Saúde da Criança", credito: "5.2.3.0", ch_teorica: 30, ch_pratica: 90, ch_extensao: 0, total: 120, pre_requisito: "FSD091" },
-        { periodo: 8, sigla: "FSI101", disciplina: "Saúde do Idoso", credito: "2.2.0.0", ch_teorica: 30, ch_pratica: 0, ch_extensao: 0, total: 30, pre_requisito: "FSD091" },
-        { periodo: 8, sigla: "FSD094", disciplina: "Psiquiatria", credito: "3.2.1.0", ch_teorica: 30, ch_pratica: 30, ch_extensao: 0, total: 60, pre_requisito: "FSD091" },
-        { periodo: 8, sigla: "FSL086", disciplina: "Medicina Legal", credito: "3.2.1.0", ch_teorica: 30, ch_pratica: 30, ch_extensao: 0, total: 60, pre_requisito: "FSD091" },
-        { periodo: 8, sigla: "FSG090", disciplina: "Traumatologia e Ortopedia", credito: "4.2.2.0", ch_teorica: 30, ch_pratica: 60, ch_extensao: 0, total: 90, pre_requisito: "FSG089, FSD091, AHII" }
+        { periodo:8, sigla:"FSI056", disciplina:"Saúde da Mulher II", credito:"4.2.2.0", ch_teorica:30, ch_pratica:60, ch_extensao:0, total:90, pre_requisito:"FSD091" },
+        { periodo:8, sigla:"FSI057", disciplina:"Saúde da Criança", credito:"5.2.3.0", ch_teorica:30, ch_pratica:90, ch_extensao:0, total:120, pre_requisito:"FSD091" },
+        { periodo:8, sigla:"FSI101", disciplina:"Saúde do Idoso", credito:"2.2.0.0", ch_teorica:30, ch_pratica:0, ch_extensao:0, total:30, pre_requisito:"FSD091" },
+        { periodo:8, sigla:"FSD094", disciplina:"Psiquiatria", credito:"3.2.1.0", ch_teorica:30, ch_pratica:30, ch_extensao:0, total:60, pre_requisito:"FSD091" },
+        { periodo:8, sigla:"FSL086", disciplina:"Medicina Legal", credito:"3.2.1.0", ch_teorica:30, ch_pratica:30, ch_extensao:0, total:60, pre_requisito:"FSD091" },
+        { periodo:8, sigla:"FSG090", disciplina:"Traumatologia e Ortopedia", credito:"4.2.2.0", ch_teorica:30, ch_pratica:60, ch_extensao:0, total:90, pre_requisito:"FSG089, FSD091, AHII" }
     ];
     
     // Estágio Curricular - Internato (9º ao 12º período)
