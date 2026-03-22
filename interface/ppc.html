@@ -371,7 +371,26 @@
     </footer>
 
     <script>
-        // PPC Data
+        const menuIcon = document.getElementById('menuIcon');
+    const navLinks = document.getElementById('navLinks');
+    
+    if (menuIcon && navLinks) {
+        menuIcon.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+        });
+    }
+
+    // Função para alternar períodos
+    function togglePeriod(element) {
+        const content = element.nextElementSibling;
+        const icon = element.querySelector('.fa-chevron-down');
+        if (content && icon) {
+            content.classList.toggle('active');
+            icon.style.transform = content.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0)';
+        }
+    }
+
+    window.togglePeriod = togglePeriod;
         const disciplinasObrigatorias = [
             // 1º Período
             { periodo: 1, sigla: "ISC", disciplina: "Introdução à Saúde Coletiva", credito: 3, ch_teorica: 30, ch_pratica: 15, ch_extensao: 30, total: 75, pre_requisito: "-" },
@@ -560,20 +579,10 @@
             `;
             container.appendChild(section);
         }
-        
-        function togglePeriod(element) {
-            const content = element.nextElementSibling;
-            const icon = element.querySelector('.fa-chevron-down');
-            content.classList.toggle('active');
-            icon.style.transform = content.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0)';
-        }
-        
-        window.togglePeriod = togglePeriod;
-        
+
         renderPeriodos();
         renderEstagios();
         
-        // Auto-open first period
         setTimeout(() => {
             const firstHeader = document.querySelector('.period-header');
             if (firstHeader) togglePeriod(firstHeader);
