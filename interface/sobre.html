@@ -2,31 +2,302 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sobre - 305 Tarefas</title>
-    <link rel="stylesheet" href="sobre.css">
-    <link rel="icon" type="image/png" href="https://i.ibb.co/kgm5kJNj/305.png>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Sobre - MedTasks</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/99xSTL2P/med116.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .about-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .about-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        
+        .about-header {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-dark) 100%);
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .about-header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+        
+        .about-body {
+            padding: 2rem;
+        }
+        
+        .creator-section {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .creator-photo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-green);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        .creator-info {
+            flex: 1;
+        }
+        
+        .creator-info h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .creator-info h3 i {
+            color: var(--primary-green);
+        }
+        
+        .creator-info p {
+            color: var(--text-secondary);
+        }
+        
+        .message-box {
+            background: var(--bg-elevated);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--primary-green);
+        }
+        
+        .message-box p {
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        
+        .message-box p:last-child {
+            margin-bottom: 0;
+        }
+        
+        .representante-card {
+            background: linear-gradient(135deg, rgba(105, 120, 37, 0.1) 0%, rgba(105, 120, 37, 0.05) 100%);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(105, 120, 37, 0.3);
+            text-align: center;
+        }
+        
+        .representante-card i {
+            font-size: 2rem;
+            color: var(--primary-green);
+            margin-bottom: 0.5rem;
+        }
+        
+        .representante-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .representante-card p {
+            color: var(--text-secondary);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .feature-item {
+            background: var(--bg-elevated);
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-green);
+        }
+        
+        .feature-item i {
+            font-size: 1.5rem;
+            color: var(--primary-green);
+            margin-bottom: 0.5rem;
+        }
+        
+        .feature-item h4 {
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .feature-item p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        .footer-note {
+            text-align: center;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+        
+        @media (max-width: 768px) {
+            .about-container {
+                padding: 1rem;
+            }
+            
+            .about-body {
+                padding: 1.5rem;
+            }
+            
+            .creator-section {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .creator-info h3 {
+                justify-content: center;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="navbar">
-    <h1>305 Tarefas</h1>
-    <div class="menu-icon" id="menuIcon">&#9776;</div>
-        <div class="nav-links" id="navLinks">
-            <a href="/">Página Inicial</a>
-            <a href="/sobre">Sobre</a>
-            <a href="/horarios">Horários</a>
-            <a href="/add" class="link-adicionar">Adicionar Tarefa</a>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="https://i.ibb.co/5XVmGm7h/marca-ufam-vetor-positivo.png" alt="UFAM Logo" class="ufam-logo">
+                <div class="turma-logo-container">
+                    <img src="https://i.ibb.co/99xSTL2P/med116.png" alt="Turma 116" class="turma-logo">
+                </div>
+                <div class="logo-text">
+                    <span class="med-text">Med</span><span class="tasks-text">Tasks</span>
+                    <span class="turma-badge">Turma 116</span>
+                </div>
+            </div>
+            <div class="menu-icon" id="menuIcon">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="/"><i class="fas fa-home"></i> Início</a>
+                <a href="/ppc"><i class="fas fa-book-open"></i> PPC</a>
+                <a href="/sobre" class="active"><i class="fas fa-info-circle"></i> Sobre</a>
+                <a href="/horarios"><i class="fas fa-calendar-alt"></i> Horários</a>
+                <a href="/add" class="btn-add"><i class="fas fa-plus"></i> Adicionar Tarefa</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="about-container">
+        <div class="about-card">
+            <div class="about-header">
+                <h1><i class="fas fa-heartbeat"></i> Sobre o MedTasks</h1>
+                <p>Organização e colaboração para a Turma 116 de Medicina</p>
+            </div>
+            <div class="about-body">
+                <div class="creator-section">
+                    <img src="https://i.ibb.co/nq7wxhKm/MAR-1850-Copia.jpg" alt="Isaías" class="creator-photo">
+                    <div class="creator-info">
+                        <h3><i class="fas fa-code"></i> Isaías Nascimento</h3>
+                        <p>Desenvolvedor e criador do sistema</p>
+                    </div>
+                </div>
+
+                <div class="message-box">
+                    <p>✨ <strong>Opa, seja bem-vindo(a)!</strong> ✨</p>
+                    <p>Aqui é apenas uma plataforma pra auxiliar no controle de tarefas, trabalhos e avisos extras da nossa turma.</p>
+                    <p>Vale ressaltar que <strong>não é uma plataforma oficial</strong> da UFAM - foi programada por mim, <strong>Isaías</strong>, em JavaScript, CSS e HTML apenas para controle e espero ajudar em algo dividindo esse sistema que utilizei ao longo do Ensino Médio e compartilhei também com o 205 de 2024.</p>
+                    <p>💚 <strong>Fique à vontade para adicionar tarefas e contribuir!</strong> A ideia é que todos possam colaborar e se ajudar mutuamente. Juntos somos mais fortes! 🚀</p>
+                    <p><i class="fas fa-graduation-cap"></i> <strong>Obrigado por fazer parte disso!</strong></p>
+                </div>
+
+                <div class="representante-card">
+                    <i class="fas fa-crown"></i>
+                    <h3>Representante da Turma</h3>
+                    <p><strong>Mateus Cesarino</strong></p>
+                    <p style="font-size: 0.85rem;">Qualquer dúvida, sugestão ou necessidade, pode falar com ele! Ele tá aí pra ajudar e representar a gente com muito carinho. 🫶</p>
+                </div>
+
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <i class="fas fa-tasks"></i>
+                        <h4>Controle de Tarefas</h4>
+                        <p>Organize suas atividades e prazos</p>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-users"></i>
+                        <h4>Múltiplas Turmas</h4>
+                        <p>Suporte para T1-T3 e T4-T6</p>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-comments"></i>
+                        <h4>Comentários</h4>
+                        <p>Interaja e tire dúvidas</p>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <h4>Horários</h4>
+                        <p>Grade completa do semestre</p>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-book-open"></i>
+                        <h4>PPC Completo</h4>
+                        <p>Matriz curricular do curso</p>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-bell"></i>
+                        <h4>Lembretes</h4>
+                        <p>Avisos importantes</p>
+                    </div>
+                </div>
+
+                <div class="footer-note">
+                    <p><i class="fas fa-heart" style="color: var(--primary-green);"></i> Feito com dedicação para a Turma 116 de Medicina UFAM <i class="fas fa-heart" style="color: var(--primary-green);"></i></p>
+                    <p style="font-size: 0.7rem; margin-top: 0.5rem;">MedTasks - Versão 1.0 | 2026</p>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="container">
-        <h1>Sobre</h1>
-        <img src="https://i.ibb.co/kgm5kJNj/305.png" alt="305 Logo">
-        <p>
-            Opa, seja bem-vindo! Aqui é apenas uma plataforma pra auxiliar no controle de tarefas, trabalhos e avisos extras. <br>
-            Vale ressaltar que não é uma plataforma oficial - foi programada por mim, Isaías, em JavaScript, CSS e HTML apenas para controle e espero ajudar em algo dividindo esse sistema que utilizei ao longo do Ensino Médio e compartilhei também com o 205 de 2024. Fique à vontade para adicionar tarefas e contribuir. Obrigado!
-        </p>
-    </div>
-    <script src="sobre.js"></script>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p><i class="far fa-copyright"></i> 2026 MedTasks - Turma 116 - Faculdade de Medicina UFAM</p>
+        </div>
+    </footer>
+
+    <script>
+        // Menu hamburguer
+        const menuIcon = document.getElementById('menuIcon');
+        const navLinks = document.getElementById('navLinks');
+        
+        if (menuIcon && navLinks) {
+            menuIcon.addEventListener('click', function() {
+                navLinks.classList.toggle('active');
+            });
+        }
+    </script>
 </body>
 </html>
