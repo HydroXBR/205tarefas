@@ -64,7 +64,6 @@ body {
     height: 45px;
     border-radius: 50%;
     overflow: hidden;
-    border: 2px solid var(--primary-green);
 }
 
 .turma-logo {
