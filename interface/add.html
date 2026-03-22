@@ -389,7 +389,69 @@
     </footer>
 
     <script>
-        // Lista de disciplinas baseada no PPC
+        const alunos = [
+            { "complete": "Allan Arruda", "id": "allanarruda" },
+            { "complete": "Allan Chaves", "id": "allanchaves" },
+            { "complete": "Álvaro Gaia", "id": "alvarogaia" },
+            { "complete": "Amon Villaça", "id": "amonv" },
+            { "complete": "Ana Rodrigues", "id": "anarodrigues" },
+            { "complete": "Ana Valentina", "id": "anavalentina" },
+            { "complete": "Anna Luiza Baraúna", "id": "annaluizab" },
+            { "complete": "Anna Luiza Jaques", "id": "annaluizaj" },
+            { "complete": "Antunes Ruas", "id": "antunesruas" },
+            { "complete": "Arlene Costa", "id": "arlenecosta" },
+            { "complete": "Ayla Rita", "id": "aylarita" },
+            { "complete": "Aylla Lopes", "id": "ayllalopes" },
+            { "complete": "Beatriz Nogueira", "id": "beatrizn" },
+            { "complete": "Bitencourt", "id": "bitencourt" },
+            { "complete": "Brayan Tomaz", "id": "brayantomaz" },
+            { "complete": "Cauã Lobão", "id": "caualobao" },
+            { "complete": "Daniel Cruz", "id": "danielcruz" },
+            { "complete": "Diogo", "id": "diogo" },
+            { "complete": "Eduardo Araújo", "id": "eduardoaraujo" },
+            { "complete": "Érica Silva", "id": "ericasilva" },
+            { "complete": "Guilherme Ferreira", "id": "guilhermef" },
+            { "complete": "Hugo", "id": "hugo" },
+            { "complete": "Isaías Nascimento", "id": "isaias" },
+            { "complete": "Ítalo Costa", "id": "italocosta" },
+            { "complete": "João Chuvas", "id": "joaochuvas" },
+            { "complete": "Laisa Vásquez", "id": "laisavasquez" },
+            { "complete": "Luana Dias", "id": "luanadias" },
+            { "complete": "Marcos Frikel", "id": "marcosfrikel" },
+            { "complete": "Maria Clara", "id": "mariaclara" },
+            { "complete": "Maria Cristina", "id": "mariacristina" },
+            { "complete": "Maria Eduarda", "id": "mariaeduarda" },
+            { "complete": "Maria Luiza", "id": "marialuiza" },
+            { "complete": "Mateus Cesarino", "id": "mateuscesarino" },
+            { "complete": "Mateus Freitas", "id": "mateusfreitas" },
+            { "complete": "Mateus Sousa", "id": "mateussousa" },
+            { "complete": "Maya Coelho", "id": "mayacoelho" },
+            { "complete": "Pedro Negreiros", "id": "pedronegreiros" },
+            { "complete": "Pedro Souza", "id": "pedrosouza" },
+            { "complete": "Pedro Tiago", "id": "pedrotiago" },
+            { "complete": "Rafael Possimoser", "id": "rafaelpossimoser" },
+            { "complete": "Raphael Cohen", "id": "raphaelcohen" },
+            { "complete": "Rayca Emanuelle", "id": "rayca" },
+            { "complete": "Samuel Vicente", "id": "samuelvicente" },
+            { "complete": "Sara Cristina", "id": "saracristina" },
+            { "complete": "Sérgio Mazzini", "id": "sergiomazzini" },
+            { "complete": "Sofia Pachalian", "id": "sofiapachalian" },
+            { "complete": "Sophia Melo", "id": "sophiamelo" },
+            { "complete": "Thiago Luniere", "id": "thiagoluniere" },
+            { "complete": "Vitor Leocádio", "id": "vitorleocadio" },
+            { "complete": "Vitório", "id": "vitorio" }
+        ];
+        function loadAlunos() {
+            const select = document.getElementById('author');
+            if (select) {
+                alunos.forEach(aluno => {
+                    const option = document.createElement('option');
+                    option.value = aluno.id;
+                    option.textContent = aluno.complete;
+                    select.appendChild(option);
+                });
+            }
+        }
         const disciplinasList = [
             { value: "isc", label: "Introdução à Saúde Coletiva" },
             { value: "bcm", label: "Biologia Celular e Molecular" },
@@ -469,7 +531,7 @@
                         ${observacaoGeral ? `<p style="font-size: 0.85rem; background: rgba(59,130,246,0.1); padding: 0.5rem; border-radius: 6px; margin: 0.5rem 0;"><i class="fas fa-info-circle"></i> ${observacaoGeral}</p>` : ''}
                         <hr style="border-color: var(--border-color); margin: 0.5rem 0;">
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.85rem;">
-                            <span>👤 Autor: ${author || '—'}</span>
+                            <span>👤 Autor: ${author ? alunos.find(a => a.id === author)?.complete || author : '—'}</span>
                             <span>🏷️ Tipo: ${tipo ? tipo.charAt(0).toUpperCase() + tipo.slice(1) : '—'}</span>
                             <span>📚 Disciplina: ${disciplina || '—'}</span>
                             <span>⚡ Nível: ${nivel || '—'}</span>
@@ -509,7 +571,7 @@
         async function submitTask(event) {
             event.preventDefault();
             
-            const author = document.getElementById('author').value.trim();
+            const author = document.getElementById('author').value;
             const tipo = document.getElementById('tipo').value;
             const titulo = document.getElementById('titulo').value.trim();
             const desc = document.getElementById('desc').value.trim();
@@ -584,6 +646,7 @@
         }
         
         document.addEventListener('DOMContentLoaded', () => {
+            loadAlunos();
             loadDisciplinas();
             
             toggleTurma('turmaT1Checkbox', 'turmaT1Content', 'turmaT1Card');
