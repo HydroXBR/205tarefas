@@ -1,6 +1,6 @@
 const urlParams = new URLSearchParams(window.location.search);
 const isAdmin = urlParams.get('admin');
-let currentTurma = 'all';
+const url = currentTurma === 'all' ? '/tasks' : `/tasks?turma=${currentTurma}`;
 
 function pmaiuscula(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
