@@ -2,82 +2,682 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Horários - 305 Tarefas</title>
-    <link rel="stylesheet" href="horarios.css">
-    <link rel="icon" type="image/png" href="https://i.ibb.co/kgm5kJNj/305.png">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Horários - Medicina UFAM</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/99xSTL2P/med116.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .schedule-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .turma-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .turma-tab {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .turma-tab i {
+            font-size: 1.2rem;
+        }
+        
+        .turma-tab:hover {
+            border-color: var(--primary-green);
+            transform: translateY(-2px);
+        }
+        
+        .turma-tab.active {
+            background: var(--primary-green);
+            border-color: var(--primary-green);
+            color: white;
+        }
+        
+        .schedule-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        
+        .schedule-header {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-dark) 100%);
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .schedule-header h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .schedule-header p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+        
+        .schedule-table-wrapper {
+            overflow-x: auto;
+            padding: 1rem;
+        }
+        
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+        
+        .schedule-table th {
+            background: var(--bg-elevated);
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+            color: var(--primary-green);
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .schedule-table td {
+            padding: 0.75rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: top;
+        }
+        
+        .time-col {
+            background: var(--bg-elevated);
+            font-weight: 600;
+            color: var(--primary-green);
+            width: 100px;
+        }
+        
+        .class-item {
+            background: rgba(105, 120, 37, 0.1);
+            border-radius: 8px;
+            padding: 0.5rem;
+            margin: 0.25rem 0;
+        }
+        
+        .class-code {
+            font-weight: 700;
+            color: var(--primary-green);
+            font-size: 0.8rem;
+        }
+        
+        .class-name {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        .empty-slot {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            opacity: 0.5;
+        }
+        
+        .legend {
+            background: var(--bg-elevated);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .legend h3 {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .legend-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+        
+        .info-note {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid #3b82f6;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .schedule-container {
+                padding: 1rem;
+            }
+            
+            .turma-tab {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .schedule-table th, .schedule-table td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+            
+            .time-col {
+                width: 70px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="navbar">
-    <h1>305 Tarefas</h1>
-    <div class="menu-icon" id="menuIcon">&#9776;</div>
-        <div class="nav-links" id="navLinks">
-            <a href="/">Página Inicial</a>
-            <a href="/sobre">Sobre</a>
-            <a href="/horarios">Horários</a>
-            <a href="/add" class="link-adicionar">Adicionar Tarefa</a>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="https://i.ibb.co/5XVmGm7h/marca-ufam-vetor-positivo.png" alt="UFAM Logo" class="ufam-logo">
+                <div class="turma-logo-container">
+                    <img src="https://i.ibb.co/99xSTL2P/med116.png" alt="Turma 116" class="turma-logo">
+                </div>
+                <div class="logo-text">
+                    <span class="med-text">Med</span><span class="tasks-text">Tasks</span>
+                    <span class="turma-badge">Turma 116</span>
+                </div>
+            </div>
+            <div class="menu-icon" id="menuIcon">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="/"><i class="fas fa-home"></i> Início</a>
+                <a href="/ppc"><i class="fas fa-book-open"></i> PPC</a>
+                <a href="/sobre"><i class="fas fa-info-circle"></i> Sobre</a>
+                <a href="/horarios" class="active"><i class="fas fa-calendar-alt"></i> Horários</a>
+                <a href="/add" class="btn-add"><i class="fas fa-plus"></i> Adicionar Tarefa</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="hero-section" style="padding: 2rem;">
+        <div class="hero-content">
+            <h1><i class="fas fa-calendar-week"></i> Horários das Aulas</h1>
+            <p>1º Semestre de 2026 - Medicina UFAM</p>
         </div>
     </div>
-    <div class="container">
-        <h2>Horários da Semana</h2>
-        <div class="div-resp">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Horário</th>
-                        <th>Segunda</th>
-                        <th>Terça</th>
-                        <th>Quarta</th>
-                        <th>Quinta</th>
-                        <th>Sexta</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1º (07h00-07h48)</td>
-                        <td>Matemática</td>
-                        <td>Português</td>
-                        <td>Matemática</td>
-                        <td>Geografia</td>
-                        <td>Inglês</td>
-                    </tr>
-                    <tr>
-                        <td>2º (07h48-08h36)</td>
-                        <td>Ed. Física</td>
-                        <td>Português</td>
-                        <td>Matemática</td>
-                        <td>Química</td>
-                        <td>História</td>
-                    </tr>
-                    <tr>
-                        <td>3º (08h36-09h24)</td>
-                        <td>Ed. Física</td>
-                        <td>Biologia</td>
-                        <td>Física</td>
-                        <td>História</td>
-                        <td>Português</td>
-                    </tr>
-                    <tr>
-                        <td>4º (09h39-10h27)</td>
-                        <td>Biologia</td>
-                        <td>Geografia</td>
-                        <td>Inglês</td>
-                        <td>Filosofia</td>
-                        <td>Sociologia</td>
-                    </tr>
-                    <tr>
-                        <td>5º (10h27-11h15)</td>
-                        <td>Biologia</td>
-                        <td>Química</td>
-                        <td>Artes</td>
-                        <td>Física</td>
-                        <td>Filosofia</td>
-                    </tr>
-                </tbody>
-            </table>
+
+    <div class="schedule-container">
+        <div class="turma-tabs">
+            <div class="turma-tab active" data-turma="t1t3">
+                <i class="fas fa-users"></i> Turmas T1 - T3
+            </div>
+            <div class="turma-tab" data-turma="t4t6">
+                <i class="fas fa-user-md"></i> Turmas T4 - T6
+            </div>
+        </div>
+
+        <!-- Horários T1-T3 -->
+        <div id="schedule-t1t3" class="schedule-card">
+            <div class="schedule-header">
+                <h2><i class="fas fa-users"></i> Turmas T1, T2 e T3</h2>
+                <p>1º Período - Medicina UFAM</p>
+            </div>
+            <div class="schedule-table-wrapper">
+                <table class="schedule-table">
+                    <thead>
+                        <tr>
+                            <th>Horário</th>
+                            <th>Segunda</th>
+                            <th>Terça</th>
+                            <th>Quarta</th>
+                            <th>Quinta</th>
+                            <th>Sexta</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="time-col">08:00 - 10:00</td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">IBM624</div>
+                                    <div class="class-name">Anatomia Humana I</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">IBM624</div>
+                                    <div class="class-name">Anatomia Humana I</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">IBM624</div>
+                                    <div class="class-name">Anatomia Humana I</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">IBM624</div>
+                                    <div class="class-name">Anatomia Humana I</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">IBM064</div>
+                                    <div class="class-name">Biologia Celular e Molecular</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">10:00 - 12:00</td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">IBM064</div>
+                                    <div class="class-name">Biologia Celular e Molecular</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">IBM627</div>
+                                    <div class="class-name">Embriologia</div>
+                                </div>
+                            </td>
+                            <td class="empty-slot">-</td>
+                            <td class="empty-slot">-</td>
+                            <td class="empty-slot">-</td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">13:00 - 14:00</td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">DPM001</div>
+                                    <div class="class-name">Metodologia do Trabalho Científico</div>
+                                </div>
+                            </td>
+                            <td class="empty-slot">-</td>
+                            <td class="empty-slot">-</td>
+                            <td class="empty-slot">-</td>
+                            <td class="empty-slot">-</td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">14:00 - 16:00</td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">DPM001/DSC001</div>
+                                    <div class="class-name">MTC / Introdução à Saúde Coletiva</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">DPM001</div>
+                                    <div class="class-name">Metodologia do Trabalho Científico</div>
+                                </div>
+                            </td>
+                            <td class="empty-slot">-</td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">DSC001</div>
+                                    <div class="class-name">Introdução à Saúde Coletiva</div>
+                                </div>
+                            </td>
+                            <td class="empty-slot">-</td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">16:00 - 18:00</td>
+                            <td class="empty-slot">-</td>
+                            <td class="empty-slot">-</td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">DPM002</div>
+                                    <div class="class-name">Ética Médica</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">DSC001</div>
+                                    <div class="class-name">Introdução à Saúde Coletiva</div>
+                                </div>
+                            </td>
+                            <td class="empty-slot">-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Horários T4-T6 -->
+        <div id="schedule-t4t6" class="schedule-card" style="display: none;">
+            <div class="schedule-header">
+                <h2><i class="fas fa-user-md"></i> Turmas T4, T5 e T6</h2>
+                <p>1º Período - Medicina UFAM</p>
+            </div>
+            <div class="schedule-table-wrapper">
+                <table class="schedule-table">
+                    <thead>
+                        <tr>
+                            <th>Horário</th>
+                            <th>Segunda</th>
+                            <th>Terça</th>
+                            <th>Quarta</th>
+                            <th>Quinta</th>
+                            <th>Sexta</th>
+                            <th>Sábado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="time-col">08:00 - 09:00</td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">IBM624 - T06</div>
+                                    <div class="class-name">Anatomia Humana I</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">IBM627 - T06</div>
+                                    <div class="class-name">Embriologia</div>
+                                </div>
+                            </td>
+                            <td class="empty-slot">-</td>
+                            <td class="empty-slot">-</td>
+                            <td class="empty-slot">-</td>
+                            <td class="empty-slot">-</td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">09:00 - 10:00</td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">IBM624 - T06</div>
+                                    <div class="class-name">Anatomia Humana I</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">IBM627 - T06</div>
+                                    <div class="class-name">Embriologia</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">IBM624 - T06</div>
+                                    <div class="class-name">Anatomia Humana I</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">IBM624 - T06</div>
+                                    <div class="class-name">Anatomia Humana I</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">IBM064 - T06</div>
+                                    <div class="class-name">Biologia Celular e Molecular</div>
+                                </div>
+                            </td>
+                            <td class="empty-slot">-</td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">10:00 - 11:00</td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">IBM064 - T06</div>
+                                    <div class="class-name">Biologia Celular e Molecular</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">IBM624 - T06</div>
+                                    <div class="class-name">Anatomia Humana I</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">IBM624 - T06</div>
+                                    <div class="class-name">Anatomia Humana I</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">IBM624 - T06</div>
+                                    <div class="class-name">Anatomia Humana I</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">IBMD64 - T06</div>
+                                    <div class="class-name">Biologia Celular e Molecular</div>
+                                </div>
+                            </td>
+                            <td class="empty-slot">-</td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">11:00 - 12:00</td>
+                            <td class="empty-slot">-</td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">IBM624 - T06</div>
+                                    <div class="class-name">Anatomia Humana I</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">IBM624 - T06</div>
+                                    <div class="class-name">Anatomia Humana I</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">IBM624 - T06</div>
+                                    <div class="class-name">Anatomia Humana I</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">IBM064 - T06</div>
+                                    <div class="class-name">Biologia Celular e Molecular</div>
+                                </div>
+                            </td>
+                            <td class="empty-slot">-</td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">13:00 - 14:00</td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">DPM001 - T06</div>
+                                    <div class="class-name">Metodologia do Trabalho Científico</div>
+                                </div>
+                            </td>
+                            <td class="empty-slot">-</td>
+                            <td class="empty-slot">-</td>
+                            <td class="empty-slot">-</td>
+                            <td class="empty-slot">-</td>
+                            <td class="empty-slot">-</td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">14:00 - 15:00</td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">DPM001 - T06</div>
+                                    <div class="class-name">Metodologia do Trabalho Científico</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">DPM001 - T06</div>
+                                    <div class="class-name">Metodologia do Trabalho Científico</div>
+                                </div>
+                            </td>
+                            <td class="empty-slot">-</td>
+                            <td class="empty-slot">-</td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">DSC001 - T06</div>
+                                    <div class="class-name">Introdução à Saúde Coletiva</div>
+                                </div>
+                            </td>
+                            <td class="empty-slot">-</td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">15:00 - 16:00</td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">DSC001 - T06</div>
+                                    <div class="class-name">Introdução à Saúde Coletiva</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">DPM001 - T06</div>
+                                    <div class="class-name">Metodologia do Trabalho Científico</div>
+                                </div>
+                            </td>
+                            <td class="empty-slot">-</td>
+                            <td class="empty-slot">-</td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">DSC001 - T06</div>
+                                    <div class="class-name">Introdução à Saúde Coletiva</div>
+                                </div>
+                            </td>
+                            <td class="empty-slot">-</td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">16:00 - 17:00</td>
+                            <td class="empty-slot">-</td>
+                            <td class="empty-slot">-</td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">DPM002 - T01</div>
+                                    <div class="class-name">Ética Médica</div>
+                                </div>
+                            </td>
+                            <td class="empty-slot">-</td>
+                            <td class="empty-slot">-</td>
+                            <td class="empty-slot">-</td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">17:00 - 18:00</td>
+                            <td class="empty-slot">-</td>
+                            <td class="empty-slot">-</td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">DPM002 - T01</div>
+                                    <div class="class-name">Ética Médica</div>
+                                </div>
+                            </td>
+                            <td class="empty-slot">-</td>
+                            <td class="empty-slot">-</td>
+                            <td>
+                                <div class="class-item">
+                                    <div class="class-code">DSC001 - T06</div>
+                                    <div class="class-name">Introdução à Saúde Coletiva</div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="legend">
+            <h3><i class="fas fa-info-circle"></i> Legenda das Disciplinas</h3>
+            <div class="legend-grid">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: rgba(105, 120, 37, 0.2); border: 1px solid var(--primary-green);"></div>
+                    <span><strong>IBM064</strong> - Biologia Celular e Molecular</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: rgba(105, 120, 37, 0.2); border: 1px solid var(--primary-green);"></div>
+                    <span><strong>IBM624</strong> - Anatomia Humana I</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: rgba(105, 120, 37, 0.2); border: 1px solid var(--primary-green);"></div>
+                    <span><strong>IBM627</strong> - Embriologia</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: rgba(105, 120, 37, 0.2); border: 1px solid var(--primary-green);"></div>
+                    <span><strong>DPM001</strong> - Metodologia do Trabalho Científico</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: rgba(105, 120, 37, 0.2); border: 1px solid var(--primary-green);"></div>
+                    <span><strong>DPM002</strong> - Ética Médica</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: rgba(105, 120, 37, 0.2); border: 1px solid var(--primary-green);"></div>
+                    <span><strong>DSC001</strong> - Introdução à Saúde Coletiva</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-note">
+            <i class="fas fa-clock"></i>
+            <strong>Informações importantes:</strong>
+            <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
+                <li>Horários sujeitos a alterações conforme calendário acadêmico</li>
+                <li>As aulas práticas de Anatomia ocorrem no laboratório</li>
+                <li>Verificar com os professores eventuais mudanças de sala</li>
+            </ul>
         </div>
     </div>
-    <script src="sobre.js"></script>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p><i class="far fa-copyright"></i> 2024 MedTasks - Turma 116 - Faculdade de Medicina UFAM</p>
+            <p style="font-size: 0.75rem; margin-top: 0.5rem;">Horários do 1º Semestre de 2026</p>
+        </div>
+    </footer>
+
+    <script>
+        // Alternância entre turmas
+        const tabs = document.querySelectorAll('.turma-tab');
+        const scheduleT1T3 = document.getElementById('schedule-t1t3');
+        const scheduleT4T6 = document.getElementById('schedule-t4t6');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs
+                tabs.forEach(t => t.classList.remove('active'));
+                // Add active class to clicked tab
+                tab.classList.add('active');
+                
+                // Show/hide schedules based on selected turma
+                if (tab.dataset.turma === 't1t3') {
+                    scheduleT1T3.style.display = 'block';
+                    scheduleT4T6.style.display = 'none';
+                } else {
+                    scheduleT1T3.style.display = 'none';
+                    scheduleT4T6.style.display = 'block';
+                }
+            });
+        });
+    </script>
 </body>
 </html>
