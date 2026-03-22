@@ -280,33 +280,66 @@ app.get('/moredays', async function(req, res) {
 });
 
 app.get('/addtar', function(req, res) {
-	const { author, tipo, titulo, desc, disciplina, pedida, entrega, nivel, turma } = req.query;
+    const { 
+        author, tipo, titulo, desc, disciplina, 
+        pedida, nivel, turma, entrega, 
+        turma2, entrega2, observacaoGeral,
+        observacaoT1, observacaoT4 
+    } = req.query;
 
-	if (!author || !tipo || !titulo || !desc || !disciplina || !pedida || !entrega || !nivel || !turma) {
-		return res.send({ success: false, reason: "Missing parameters" });
-	}
+    // Validação dos campos obrigatórios
+    if (!author || !tipo || !titulo || !desc || !disciplina || !pedida || !nivel) {
+        return res.send({ success: false, reason: "Missing required parameters" });
+    }
 
-	const novaTarefa = new tarefa({
-		author: author,
-		tipo: tipo,
-		title: titulo,
-		desc: desc,
-		disc: disciplina,
-		pedida: pedida,
-		entrega: entrega,
-		nivel: nivel,
-		turma: turma,
-		registered: new Date().getTime()
-	});
+    const pedidaTimestamp = new Date(pedida).getTime();
+    const turmasInfo = [];
 
-	novaTarefa.save()
-		.then(() => {
-			res.send({ success: true, reason: "Success" });
-		})
-			.catch(error => {
-				console.error("Erro ao salvar tarefa:", error);
-				res.send({ success: false, reason: "Error" });
-			});
+    // Processar turma principal
+    if (turma && entrega) {
+        turmasInfo.push({
+            turma: turma,
+            entrega: new Date(entrega).getTime(),
+            observacao: turma === 't1-t3' ? (observacaoT1 || '') : (observacaoT4 || ''),
+            status: 'pendente'
+        });
+    }
+
+    // Processar segunda turma se selecionada
+    if (turma2 && entrega2) {
+        turmasInfo.push({
+            turma: turma2,
+            entrega: new Date(entrega2).getTime(),
+            observacao: turma2 === 't1-t3' ? (observacaoT1 || '') : (observacaoT4 || ''),
+            status: 'pendente'
+        });
+    }
+
+    if (turmasInfo.length === 0) {
+        return res.send({ success: false, reason: "At least one turma must be selected" });
+    }
+
+    const novaTarefa = new tarefa({
+        author: author,
+        tipo: tipo,
+        title: titulo,
+        desc: desc,
+        disc: disciplina,
+        nivel: nivel,
+        pedida: pedidaTimestamp,
+        turmasInfo: turmasInfo,
+        observacaoGeral: observacaoGeral || '',
+        registered: new Date().getTime()
+    });
+
+    novaTarefa.save()
+        .then(() => {
+            res.send({ success: true, reason: "Success", id: novaTarefa._id });
+        })
+        .catch(error => {
+            console.error("Erro ao salvar tarefa:", error);
+            res.send({ success: false, reason: "Error saving task: " + error.message });
+        });
 });
 
 app.get('/addlemb', function(req, res) {
