@@ -114,7 +114,8 @@ function getTipoClass(tipo) {
         'trabalho': 'tipo-trabalho',
         'seminário': 'tipo-seminario',
         'atividade': 'tipo-atividade',
-        'prática': 'tipo-pratica'
+        'prática': 'tipo-pratica',
+        'leitura': 'tipo-leitura'
     };
     return classes[tipo.toLowerCase()] || 'tipo-atividade';
 }
