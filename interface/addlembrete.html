@@ -266,7 +266,15 @@
             const previewContent = document.getElementById('previewContent');
             
             if (title || desc || date) {
-                const formattedDate = date ? new Date(date).toLocaleDateString('pt-BR') : '—';
+                // Formatar data sem fuso usando UTC
+                let formattedDate = '—';
+                if (date) {
+                    const [year, month, day] = date.split('-');
+                    // Criar data UTC para evitar deslocamento
+                    const dateUTC = new Date(Date.UTC(parseInt(year), parseInt(month) - 1, parseInt(day)));
+                    formattedDate = dateUTC.toLocaleDateString('pt-BR', { timeZone: 'UTC' });
+                }
+                
                 previewContent.innerHTML = `
                     <div style="background: var(--bg-dark); padding: 0.75rem; border-radius: 8px;">
                         <p><strong>📌 ${title || 'Título não definido'}</strong></p>
