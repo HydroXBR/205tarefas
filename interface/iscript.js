@@ -118,18 +118,66 @@ function getTipoClass(tipo) {
     return classes[tipo.toLowerCase()] || 'tipo-atividade';
 }
 
-async function loadTasks() {
-    try {
-        const url = currentTurma === 'all' ? '/tasks' : `/tasks?turma=${currentTurma}`;
-        const response = await fetch(url);
-        const tasks = await response.json();
-        tasks.sort((a, b) => b.entrega - a.entrega);
+function formatTurmasInfo(turmasInfo) {
+    if (!turmasInfo || turmasInfo.length === 0) return '<span class="turma-badge-small">Geral</span>';
+    
+    return turmasInfo.map(info => {
+        const turmaLabel = info.turma === 't1-t3' ? 'T1-T3' : 'T4-T6';
+        const turmaClass = info.turma === 't1-t3' ? 'turma-t1' : 'turma-t4';
+        const entregaDate = new Date(info.entrega);
+        const hoje = new Date();
+        const isUrgent = entregaDate <= hoje && hoje.getHours() < 12;
         
-        const now = new Date();
-        const todayOnlyDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        
-        const tasksPendentes = tasks.filter(task => {
-            const entregaDate = new Date(task.entrega);
+        return `
+            <div class="turma-info-tooltip" title="${info.observacao || 'Sem observações específicas'}">
+                <span class="turma-badge-small ${turmaClass}">
+                    ${turmaLabel}
+                </span>
+                <span class="turma-entrega ${isUrgent ? 'urgent-date' : ''}">
+                    ${entregaDate.toLocaleDateString('pt-BR')}
+                </span>
+                ${info.observacao ? '<i class="fas fa-info-circle turma-info-icon"></i>' : ''}
+            </div>
+        `;
+    }).join('');
+}
+
+// Função para verificar se a tarefa está pendente para uma turma específica
+function isTaskPendingForTurma(entregaTimestamp, turma) {
+    const now = new Date();
+    const todayOnlyDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const entregaDate = new Date(entregaTimestamp);
+    const entregaOnlyDate = new Date(entregaDate.getFullYear(), entregaDate.getMonth(), entregaDate.getDate());
+    
+    if (now.getHours() >= 12) {
+        return entregaOnlyDate > todayOnlyDate;
+    }
+    return entregaOnlyDate >= todayOnlyDate;
+}
+
+// Função para filtrar tarefas baseado nas turmasInfo
+function filterTasksByTurma(tasks, currentTurma) {
+    if (currentTurma === 'all') return tasks;
+    
+    return tasks.filter(task => {
+        // Se tiver turmasInfo (novo formato)
+        if (task.turmasInfo && task.turmasInfo.length > 0) {
+            return task.turmasInfo.some(info => info.turma === currentTurma);
+        }
+        // Compatibilidade com formato antigo
+        return task.turma === currentTurma;
+    });
+}
+
+// Função para verificar se a tarefa está pendente (considerando múltiplas turmas)
+function isTaskPending(task) {
+    const now = new Date();
+    const todayOnlyDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    
+    // Se tiver turmasInfo (novo formato)
+    if (task.turmasInfo && task.turmasInfo.length > 0) {
+        return task.turmasInfo.some(info => {
+            const entregaDate = new Date(info.entrega);
             const entregaOnlyDate = new Date(entregaDate.getFullYear(), entregaDate.getMonth(), entregaDate.getDate());
             
             if (now.getHours() >= 12) {
@@ -137,6 +185,41 @@ async function loadTasks() {
             }
             return entregaOnlyDate >= todayOnlyDate;
         });
+    }
+    
+    // Compatibilidade com formato antigo
+    if (task.entrega) {
+        const entregaDate = new Date(task.entrega);
+        const entregaOnlyDate = new Date(entregaDate.getFullYear(), entregaDate.getMonth(), entregaDate.getDate());
+        
+        if (now.getHours() >= 12) {
+            return entregaOnlyDate > todayOnlyDate;
+        }
+        return entregaOnlyDate >= todayOnlyDate;
+    }
+    
+    return false;
+}
+
+// Função para obter a menor data de entrega (para ordenação)
+function getEarliestDelivery(task) {
+    if (task.turmasInfo && task.turmasInfo.length > 0) {
+        return Math.min(...task.turmasInfo.map(info => info.entrega));
+    }
+    return task.entrega || Infinity;
+}
+
+async function loadTasks() {
+    try {
+        const url = currentTurma === 'all' ? '/tasks' : `/tasks?turma=${currentTurma}`;
+        const response = await fetch(url);
+        const tasks = await response.json();
+        
+        // Ordenar por data de entrega (a mais próxima primeiro)
+        tasks.sort((a, b) => getEarliestDelivery(a) - getEarliestDelivery(b));
+        
+        // Filtrar tarefas pendentes
+        const tasksPendentes = tasks.filter(task => isTaskPending(task));
         
         const tableBody = document.getElementById('tabela-tarefas');
         tableBody.innerHTML = '';
@@ -154,11 +237,13 @@ async function loadTasks() {
                 const entregaCell = row.insertCell(5);
                 const nivelCell = row.insertCell(6);
                 
+                // Tipo
                 const tipoSpan = document.createElement("span");
                 tipoSpan.innerHTML = pmaiuscula(task.tipo);
                 tipoSpan.classList.add('tipo-badge', getTipoClass(task.tipo));
                 tipoCell.appendChild(tipoSpan);
                 
+                // Título com link
                 const id = task._id;
                 const link = document.createElement("a");
                 link.href = isAdmin ? `/tarefa?id=${id}&admin=true` : `/tarefa?id=${id}`;
@@ -166,28 +251,38 @@ async function loadTasks() {
                 link.classList.add('task-link');
                 tituloCell.appendChild(link);
                 
+                // Disciplina
                 disciplinaCell.textContent = getLabelByValue(task.disc);
-                turmaCell.innerHTML = task.turmasInfo && task.turmasInfo.length > 0 ? task.turmasInfo.map(info => { const turmaLabel = info.turma === 't1-t3' ? 'T1-T3' : 'T4-T6'; const turmaClass = info.turma === 't1-t3' ? 'turma-t1' : 'turma-t4';  return `<span class="turma-badge-small ${turmaClass}" title="${info.observacao || ''}">${turmaLabel}<br><small>${new Date(info.entrega).toLocaleDateString('pt-BR')}</small></span>`;
-    }).join(' ') : (task.turma ? `<span class="turma-badge-small ${task.turma === 't1-t3' ? 'turma-t1' : 'turma-t4'}">${task.turma === 't1-t3' ? 'T1-T3' : 'T4-T6'}<br><small>${new Date(task.entrega).toLocaleDateString('pt-BR')}</small></span>` : '<span class="turma-badge-small">Geral</span>');
+                
+                // Turmas (agora com suporte a múltiplas)
+                turmaCell.innerHTML = formatTurmasInfo(task.turmasInfo);
+                
+                // Data solicitada
                 pedidaCell.textContent = new Date(task.pedida).toLocaleDateString('pt-BR');
                 
-                const entregaDate = new Date(task.entrega);
-                const isUrgent = entregaDate <= todayOnlyDate && now.getHours() < 12;
-                entregaCell.innerHTML = `<span class="${isUrgent ? 'urgent-date' : ''}">${entregaDate.toLocaleDateString('pt-BR')}</span>`;
+                // Data de entrega (mostrar a mais próxima ou todas?)
+                if (task.turmasInfo && task.turmasInfo.length > 0) {
+                    const entregas = task.turmasInfo.map(info => {
+                        const entregaDate = new Date(info.entrega);
+                        const isUrgent = entregaDate <= new Date() && new Date().getHours() < 12;
+                        return `<span class="${isUrgent ? 'urgent-date' : ''}">${info.turma === 't1-t3' ? 'T1-T3' : 'T4-T6'}: ${entregaDate.toLocaleDateString('pt-BR')}</span>`;
+                    }).join('<br>');
+                    entregaCell.innerHTML = entregas;
+                } else if (task.entrega) {
+                    const entregaDate = new Date(task.entrega);
+                    const isUrgent = entregaDate <= new Date() && new Date().getHours() < 12;
+                    entregaCell.innerHTML = `<span class="${isUrgent ? 'urgent-date' : ''}">${entregaDate.toLocaleDateString('pt-BR')}</span>`;
+                } else {
+                    entregaCell.textContent = '—';
+                }
                 
+                // Nível
                 nivelCell.innerHTML = `<span class="nivel-badge nivel-${task.nivel.toLowerCase()}">${task.nivel}</span>`;
             });
         }
         
-        const tasksAnteriores = tasks.filter(task => {
-            const entregaDate = new Date(task.entrega);
-            const entregaOnlyDate = new Date(entregaDate.getFullYear(), entregaDate.getMonth(), entregaDate.getDate());
-            
-            if (now.getHours() >= 12) {
-                return entregaOnlyDate <= todayOnlyDate;
-            }
-            return entregaOnlyDate < todayOnlyDate;
-        });
+        // Tarefas anteriores (já realizadas)
+        const tasksAnteriores = tasks.filter(task => !isTaskPending(task));
         
         const tableBody2 = document.getElementById('tabela-anteriores');
         tableBody2.innerHTML = '';
@@ -218,9 +313,21 @@ async function loadTasks() {
                 tituloCell2.appendChild(link2);
                 
                 disciplinaCell2.textContent = getLabelByValue(task.disc);
-                turmaCell2.innerHTML = `<span class="turma-badge-small ${task.turma === 't1-t3' ? 'turma-t1' : 'turma-t4'}">${getTurmaLabel(task.turma)}</span>`;
+                turmaCell2.innerHTML = formatTurmasInfo(task.turmasInfo);
                 pedidaCell2.textContent = new Date(task.pedida).toLocaleDateString('pt-BR');
-                entregaCell2.textContent = new Date(task.entrega).toLocaleDateString('pt-BR');
+                
+                if (task.turmasInfo && task.turmasInfo.length > 0) {
+                    const entregas = task.turmasInfo.map(info => {
+                        const entregaDate = new Date(info.entrega);
+                        return `${info.turma === 't1-t3' ? 'T1-T3' : 'T4-T6'}: ${entregaDate.toLocaleDateString('pt-BR')}`;
+                    }).join('<br>');
+                    entregaCell2.innerHTML = entregas;
+                } else if (task.entrega) {
+                    entregaCell2.textContent = new Date(task.entrega).toLocaleDateString('pt-BR');
+                } else {
+                    entregaCell2.textContent = '—';
+                }
+                
                 nivelCell2.innerHTML = `<span class="nivel-badge nivel-${task.nivel.toLowerCase()}">${task.nivel}</span>`;
             });
         }
