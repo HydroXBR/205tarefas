@@ -2,80 +2,830 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalhes da Tarefa</title>
-    <link rel="stylesheet" href="tarefa.css">
-    <link rel="icon" type="image/png" href="https://i.ibb.co/kgm5kJNj/305.png">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Detalhes da Tarefa - MedTasks</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/99xSTL2P/med116.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .task-detail-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .task-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        
+        .task-header {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-dark) 100%);
+            padding: 2rem;
+            position: relative;
+        }
+        
+        .task-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            word-break: break-word;
+        }
+        
+        .task-type-badge {
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+        
+        .task-body {
+            padding: 2rem;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .info-card {
+            background: var(--bg-elevated);
+            border-radius: 12px;
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+        }
+        
+        .info-card h3 {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .info-card h3 i {
+            color: var(--primary-green);
+        }
+        
+        .info-card p {
+            font-size: 1rem;
+            font-weight: 500;
+            word-break: break-word;
+        }
+        
+        .turmas-section {
+            background: var(--bg-elevated);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+        }
+        
+        .turmas-section h3 {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .turma-detail-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: var(--bg-card);
+            border-radius: 10px;
+            margin-bottom: 0.75rem;
+            border-left: 4px solid var(--primary-green);
+        }
+        
+        .turma-detail-card:last-child {
+            margin-bottom: 0;
+        }
+        
+        .turma-detail-info {
+            flex: 1;
+        }
+        
+        .turma-name {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .turma-obs {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        .turma-date {
+            text-align: right;
+        }
+        
+        .turma-date .date {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--primary-green);
+        }
+        
+        .turma-date .status {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        .observacao-geral {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid #3b82f6;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+        
+        .descricao-box {
+            background: var(--bg-elevated);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+        }
+        
+        .descricao-box h3 {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .descricao-box p {
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        
+        .descricao-box a {
+            color: var(--primary-green);
+            text-decoration: none;
+        }
+        
+        .descricao-box a:hover {
+            text-decoration: underline;
+        }
+        
+        .admin-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn-admin {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-color);
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-admin:hover {
+            border-color: var(--primary-green);
+            color: var(--primary-green);
+        }
+        
+        .btn-danger {
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+        
+        .btn-danger:hover {
+            background: #ef4444;
+            color: white;
+        }
+        
+        .add-days-group {
+            display: inline-flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
+        .add-days-group input {
+            width: 100px;
+            padding: 0.5rem;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+        }
+        
+        .comentarios-section {
+            background: var(--bg-card);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+        
+        .comentarios-header {
+            background: var(--bg-elevated);
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .comentarios-header h3 {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .comentarios-list {
+            padding: 1.5rem;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .comentario-item {
+            background: var(--bg-elevated);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-color);
+        }
+        
+        .comentario-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .comentario-author {
+            font-weight: 700;
+            color: var(--primary-green);
+        }
+        
+        .comentario-date {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        .comentario-text {
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+        
+        .novo-comentario {
+            padding: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+        
+        .textarea-comentario {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-primary);
+            resize: vertical;
+            font-family: inherit;
+            margin-bottom: 1rem;
+        }
+        
+        .btn-enviar {
+            background: var(--primary-green);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-enviar:hover {
+            background: var(--primary-green-light);
+            transform: translateY(-2px);
+        }
+        
+        .btn-voltar {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--primary-green);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 100;
+        }
+        
+        .btn-voltar:hover {
+            transform: scale(1.1);
+            background: var(--primary-green-light);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+        
+        @media (max-width: 768px) {
+            .task-detail-container {
+                padding: 1rem;
+            }
+            
+            .task-header {
+                padding: 1.5rem;
+            }
+            
+            .task-header h1 {
+                font-size: 1.3rem;
+            }
+            
+            .task-body {
+                padding: 1.5rem;
+            }
+            
+            .turma-detail-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            
+            .turma-date {
+                text-align: left;
+            }
+            
+            .btn-voltar {
+                bottom: 1rem;
+                right: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="navbar">
-    <h1>305 Tarefas</h1>
-    <div class="menu-icon" id="menuIcon">&#9776;</div>
-        <div class="nav-links" id="navLinks">
-            <a href="/">Página Inicial</a>
-            <a href="/sobre">Sobre</a>
-            <a href="/horarios">Horários</a>
-            <a href="/add" class="link-adicionar">Adicionar Tarefa</a>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="https://i.ibb.co/5XVmGm7h/marca-ufam-vetor-positivo.png" alt="UFAM Logo" class="ufam-logo">
+                <div class="turma-logo-container">
+                    <img src="https://i.ibb.co/99xSTL2P/med116.png" alt="Turma 116" class="turma-logo">
+                </div>
+                <div class="logo-text">
+                    <span class="med-text">Med</span><span class="tasks-text">Tasks</span>
+                    <span class="turma-badge">Turma 116</span>
+                </div>
+            </div>
+            <div class="menu-icon" id="menuIcon">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="/"><i class="fas fa-home"></i> Início</a>
+                <a href="/ppc"><i class="fas fa-book-open"></i> PPC</a>
+                <a href="/sobre"><i class="fas fa-info-circle"></i> Sobre</a>
+                <a href="/horarios"><i class="fas fa-calendar-alt"></i> Horários</a>
+                <a href="/add" class="btn-add"><i class="fas fa-plus"></i> Adicionar Tarefa</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="task-detail-container" id="taskContainer">
+        <div class="loading">
+            <div class="loader"></div>
+            <p>Carregando detalhes da tarefa...</p>
         </div>
     </div>
 
-    <div class="container">
-        <div class="box boxx">
-            <h2 id="titulo">Carregando...</h2>
-        </div>
+    <button class="btn-voltar" id="btnVoltar">
+        <i class="fas fa-arrow-up"></i>
+    </button>
 
-        <div class="box" id="deletediv" style="display: none;">
-            <button id="delete">Deletar tarefa</button>
+    <footer class="footer">
+        <div class="footer-content">
+            <p><i class="far fa-copyright"></i> 2024 MedTasks - Turma 116 - Faculdade de Medicina UFAM</p>
         </div>
+    </footer>
 
-        <div class="box">
-            <h2>Descrição</h2>
-            <p class="quebrar" id="descricao">Carregando...</p>
-        </div>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const tarefaId = urlParams.get('id');
+        const isAdmin = urlParams.get('admin') === 'true';
 
-        <div class="box">
-            <h2>Nível</h2>
-            <p id="nivel">Carregando...</p>
-        </div>
+        // Lista de alunos da turma
+        const alunos = [
+            { "complete": "Adllynes Avelino", "id": "addlynes" },
+            { "complete": "Amanda Luizy", "id": "luizy" },
+            { "complete": "Ana Júlia", "id": "ajulia" },
+            { "complete": "Ana Laura", "id": "alaura" },
+            { "complete": "Anna Paula", "id": "annap" },
+            { "complete": "Beatriz Moreira", "id": "bmoreira" },
+            { "complete": "Carla Isabela", "id": "carla" },
+            { "complete": "Caio Furtado", "id": "caio" },
+            { "complete": "Carlos Eduardo", "id": "ceduardo" },
+            { "complete": "Gabriel Castro", "id": "gabriel" },
+            { "complete": "Isaías Nascimento", "id": "isaias" },
+            { "complete": "Izabele Miranda", "id": "izabele" },
+            { "complete": "Jaqueline Catunda", "id": "jaque" },
+            { "complete": "João Christhofer", "id": "jchris" },
+            { "complete": "João Diego", "id": "jdiego" },
+            { "complete": "José Henrique", "id": "jhenri" },
+            { "complete": "Josué Guerra", "id": "josue" },
+            { "complete": "Laura Albuquerque", "id": "laura" },
+            { "complete": "Lauro Tomaz", "id": "lauro" },
+            { "complete": "Letícia Dayanne", "id": "leticia" },
+            { "complete": "Livinny Batalha", "id": "livinny" },
+            { "complete": "Lohannah Katharina", "id": "lohannah" },
+            { "complete": "Lucas Daniel", "id": "ldaniel" },
+            { "complete": "Lucas Prestes", "id": "lprestes" },
+            { "complete": "Luiz Gustavo", "id": "luizg" },
+            { "complete": "Lyzbrenda Frota", "id": "lyzbrenda" },
+            { "complete": "Maria Eduarda Cruz", "id": "mcruz" },
+            { "complete": "Maria Eduarda dos Anjos", "id": "manjos" },
+            { "complete": "Maria Isabelle", "id": "misabelle" },
+            { "complete": "Nicolas Barboza", "id": "nicolas" },
+            { "complete": "Nicole Maciel", "id": "nmaciel" },
+            { "complete": "Nicole Lopes", "id": "nlopes" },
+            { "complete": "Nicolly Franco", "id": "nicolly" },
+            { "complete": "Roberta Cambriai", "id": "roberta" },
+            { "complete": "Ronald Ezequiel", "id": "ronald" },
+            { "complete": "Safira Tomiko", "id": "safira" },
+            { "complete": "Thicyane Fernanda", "id": "thicyane" },
+            { "complete": "Ulysses Vidal", "id": "ulysses" },
+            { "complete": "Vitória Lavínia", "id": "vitoria" },
+            { "complete": "Wilmones", "id": "wilmones" }
+        ];
 
-        <div class="box">
-            <h2>Disciplina</h2>
-            <p id="disciplina">Carregando...</p>
-        </div>
+        // Lista de disciplinas
+        const disciplinas = [
+            { value: "isc", label: "Introdução à Saúde Coletiva" },
+            { value: "bcm", label: "Biologia Celular e Molecular" },
+            { value: "ah1", label: "Anatomia Humana I" },
+            { value: "emb", label: "Embriologia" },
+            { value: "metodologia", label: "Metodologia do Trabalho Científico" },
+            { value: "etica", label: "Ética Médica" },
+            { value: "histo", label: "Histologia" },
+            { value: "bioq", label: "Bioquímica Celular e Metabólica" },
+            { value: "ah2", label: "Anatomia Humana II" },
+            { value: "genetica", label: "Genética" },
+            { value: "ppgs", label: "Política, Planejamento e Gestão em Saúde" },
+            { value: "micro", label: "Microbiologia Médica" },
+            { value: "para", label: "Parasitologia Médica" },
+            { value: "mico", label: "Micologia Médica" },
+            { value: "epidemio", label: "Epidemiologia e Bioestatística" },
+            { value: "imuno", label: "Imunologia Médica" },
+            { value: "fisio", label: "Fisiologia Humana" }
+        ];
 
-        <div class="box">
-            <h2>Pedida em</h2>
-            <p id="pedida-em">Carregando...</p>
-        </div>
+        function getAlunoName(id) {
+            const aluno = alunos.find(a => a.id === id);
+            return aluno ? aluno.complete : id;
+        }
 
-        <div class="box" id=entregabox>
-            <h2>Entrega</h2>
-            <p id="entrega">Carregando...</p>
-        </div>
+        function getDisciplinaLabel(value) {
+            const disc = disciplinas.find(d => d.value === value);
+            return disc ? disc.label : value;
+        }
 
-        <div class="box">
-            <h2>Registrado por</h2>
-            <p id="autor">Carregando...</p>
-        </div>
+        function formatarData(timestamp) {
+            const data = new Date(timestamp);
+            return data.toLocaleDateString('pt-BR');
+        }
 
-        <div class="box comentarios">
-            <h2>Comentários</h2>
-            <div id="comentarios">
-            </div>
-            <hr style="margin-top: 20px; margin-bottom: 20px;">
-            <div class="seletor-nome">
-                <label for="selecionar-nome">Seu nome:</label>
-                <select id="selecionar-nome"></select>
-            </div>
-            <div class="espaco-comentar">
-                <textarea id="novo-comentario" rows="4" placeholder="Digite seu comentário. SELECIONE O SEU NOME, POR FAVOR. Confio na boa fé de vcs kkkkk"></textarea>
-                <button id="enviar-comentario">Enviar</button>
-            </div>
-        </div>
-    </div>
-    <button id="btnVoltar">Voltar</button>
+        function formatarDataCompleta(timestamp) {
+            const data = new Date(timestamp);
+            const dia = data.getDate().toString().padStart(2, '0');
+            const mes = (data.getMonth() + 1).toString().padStart(2, '0');
+            const ano = data.getFullYear();
+            const horas = data.getHours().toString().padStart(2, '0');
+            const minutos = data.getMinutes().toString().padStart(2, '0');
+            return `${dia}/${mes}/${ano} às ${horas}:${minutos}`;
+        }
 
-    <script src="tarefa.js"></script>
+        function getTipoClass(tipo) {
+            const classes = {
+                'prova': 'tipo-prova',
+                'trabalho': 'tipo-trabalho',
+                'seminário': 'tipo-seminario',
+                'atividade': 'tipo-atividade',
+                'prática': 'tipo-pratica'
+            };
+            return classes[tipo?.toLowerCase()] || 'tipo-atividade';
+        }
+
+        async function addDays(id, days) {
+            try {
+                const response = await fetch(`/moredays?id=${id}&days=${days}`);
+                const result = await response.json();
+                if (result.success === false) {
+                    alert('Erro ao adicionar os dias! Tente novamente.');
+                } else {
+                    alert('Data alterada com sucesso!');
+                    carregarTarefa(id);
+                }
+            } catch (err) {
+                console.error('Erro:', err);
+                alert('Erro ao conectar com o servidor.');
+            }
+        }
+
+        async function deleteTask(id) {
+            if (confirm('Tem certeza que deseja deletar esta tarefa? Esta ação não pode ser desfeita.')) {
+                try {
+                    const response = await fetch(`/apagar?id=${id}&token=22222`);
+                    const result = await response.json();
+                    if (result.success === false) {
+                        alert('Erro ao deletar tarefa!');
+                    } else {
+                        alert('Tarefa deletada com sucesso!');
+                        window.location.href = isAdmin ? '/?admin=true' : '/';
+                    }
+                } catch (err) {
+                    console.error('Erro:', err);
+                    alert('Erro ao conectar com o servidor.');
+                }
+            }
+        }
+
+        async function addComment(id, author, comment) {
+            try {
+                const date = new Date().toISOString();
+                const response = await fetch(`/comment?author=${author}&comment=${encodeURIComponent(comment)}&date=${date}&idtar=${id}`);
+                const result = await response.json();
+                if (result.success) {
+                    carregarTarefa(id);
+                    document.getElementById('novo-comentario').value = '';
+                } else {
+                    alert('Erro ao adicionar comentário.');
+                }
+            } catch (err) {
+                console.error('Erro:', err);
+                alert('Erro ao conectar com o servidor.');
+            }
+        }
+
+        async function carregarTarefa(id) {
+            try {
+                const response = await fetch(`/search?id=${id}`);
+                const tarefa = await response.json();
+                
+                if (!tarefa || tarefa === null) {
+                    document.getElementById('taskContainer').innerHTML = `
+                        <div class="task-card">
+                            <div class="task-header">
+                                <h1>Tarefa não encontrada</h1>
+                            </div>
+                            <div class="task-body">
+                                <p>A tarefa solicitada não existe ou foi removida.</p>
+                                <a href="/" class="btn-submit" style="display: inline-block; text-decoration: none; margin-top: 1rem;">Voltar ao início</a>
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                const tipoLabel = tarefa.tipo ? tarefa.tipo.charAt(0).toUpperCase() + tarefa.tipo.slice(1) : 'Não definido';
+                
+                let turmasHtml = '';
+                if (tarefa.turmasInfo && tarefa.turmasInfo.length > 0) {
+                    tarefa.turmasInfo.forEach(info => {
+                        const turmaLabel = info.turma === 't1-t3' ? 'Turmas T1 - T3' : 'Turmas T4 - T6';
+                        const turmaClass = info.turma === 't1-t3' ? 'turma-t1' : 'turma-t4';
+                        turmasHtml += `
+                            <div class="turma-detail-card">
+                                <div class="turma-detail-info">
+                                    <div class="turma-name" style="color: ${info.turma === 't1-t3' ? 'var(--primary-green)' : '#3b82f6'}">
+                                        <i class="fas ${info.turma === 't1-t3' ? 'fa-users' : 'fa-user-md'}"></i> ${turmaLabel}
+                                    </div>
+                                    ${info.observacao ? `<div class="turma-obs"><i class="fas fa-info-circle"></i> ${info.observacao}</div>` : ''}
+                                </div>
+                                <div class="turma-date">
+                                    <div class="date">${formatarData(info.entrega)}</div>
+                                    <div class="status">Data de entrega</div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                } else if (tarefa.turma && tarefa.entrega) {
+                    // Compatibilidade com formato antigo
+                    const turmaLabel = tarefa.turma === 't1-t3' ? 'Turmas T1 - T3' : 'Turmas T4 - T6';
+                    turmasHtml = `
+                        <div class="turma-detail-card">
+                            <div class="turma-detail-info">
+                                <div class="turma-name">${turmaLabel}</div>
+                            </div>
+                            <div class="turma-date">
+                                <div class="date">${formatarData(tarefa.entrega)}</div>
+                                <div class="status">Data de entrega</div>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                const adminHtml = isAdmin ? `
+                    <div class="admin-actions">
+                        <div class="add-days-group">
+                            <input type="number" id="diasAdicionar" placeholder="Dias a adicionar" style="width: 120px;">
+                            <button class="btn-admin" id="btnAddDays">
+                                <i class="fas fa-plus-circle"></i> Adicionar Dias
+                            </button>
+                        </div>
+                        <button class="btn-admin btn-danger" id="btnDelete">
+                            <i class="fas fa-trash-alt"></i> Deletar Tarefa
+                        </button>
+                    </div>
+                ` : '';
+                
+                const observacaoGeralHtml = tarefa.observacaoGeral ? `
+                    <div class="observacao-geral">
+                        <i class="fas fa-info-circle"></i> <strong>Observação Geral:</strong> ${tarefa.observacaoGeral}
+                    </div>
+                ` : '';
+                
+                const comentariosHtml = tarefa.comments && tarefa.comments.length > 0 ? 
+                    tarefa.comments.map(comment => `
+                        <div class="comentario-item">
+                            <div class="comentario-header">
+                                <span class="comentario-author">${getAlunoName(comment.author)}</span>
+                                <span class="comentario-date">${formatarDataCompleta(comment.date)}</span>
+                            </div>
+                            <div class="comentario-text">${comment.comment}</div>
+                        </div>
+                    `).join('') : 
+                    '<p style="text-align: center; color: var(--text-secondary);">Nenhum comentário ainda. Seja o primeiro a comentar!</p>';
+                
+                const html = `
+                    <div class="task-card">
+                        <div class="task-header">
+                            <h1><i class="fas fa-tasks"></i> ${tarefa.title}</h1>
+                            <span class="task-type-badge ${getTipoClass(tarefa.tipo)}">${tipoLabel}</span>
+                        </div>
+                        <div class="task-body">
+                            ${adminHtml}
+                            
+                            <div class="info-grid">
+                                <div class="info-card">
+                                    <h3><i class="fas fa-user-md"></i> Autor</h3>
+                                    <p>${getAlunoName(tarefa.author)}</p>
+                                </div>
+                                <div class="info-card">
+                                    <h3><i class="fas fa-book"></i> Disciplina</h3>
+                                    <p>${getDisciplinaLabel(tarefa.disc)}</p>
+                                </div>
+                                <div class="info-card">
+                                    <h3><i class="fas fa-chart-line"></i> Nível</h3>
+                                    <p>${tarefa.nivel}</p>
+                                </div>
+                                <div class="info-card">
+                                    <h3><i class="fas fa-calendar-day"></i> Data Solicitada</h3>
+                                    <p>${formatarData(tarefa.pedida)}</p>
+                                </div>
+                                <div class="info-card">
+                                    <h3><i class="fas fa-clock"></i> Registrado em</h3>
+                                    <p>${formatarDataCompleta(tarefa.registered)}</p>
+                                </div>
+                            </div>
+                            
+                            ${turmasHtml ? `
+                                <div class="turmas-section">
+                                    <h3><i class="fas fa-users"></i> Turmas e Datas de Entrega</h3>
+                                    ${turmasHtml}
+                                </div>
+                            ` : ''}
+                            
+                            ${observacaoGeralHtml}
+                            
+                            <div class="descricao-box">
+                                <h3><i class="fas fa-align-left"></i> Descrição</h3>
+                                <p>${tarefa.desc.replace(/\n/g, '<br>').replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>')}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="comentarios-section">
+                        <div class="comentarios-header">
+                            <h3><i class="fas fa-comments"></i> Comentários (${tarefa.comments?.length || 0})</h3>
+                        </div>
+                        <div class="comentarios-list" id="comentariosList">
+                            ${comentariosHtml}
+                        </div>
+                        <div class="novo-comentario">
+                            <select id="selecionar-nome" class="form-select">
+                                <option value="">Selecione seu nome</option>
+                                ${alunos.map(aluno => `<option value="${aluno.id}">${aluno.complete}</option>`).join('')}
+                            </select>
+                            <textarea id="novo-comentario" class="textarea-comentario" rows="3" placeholder="Digite seu comentário aqui..."></textarea>
+                            <button id="enviar-comentario" class="btn-enviar">
+                                <i class="fas fa-paper-plane"></i> Enviar Comentário
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                document.getElementById('taskContainer').innerHTML = html;
+                
+                if (isAdmin) {
+                    document.getElementById('btnAddDays')?.addEventListener('click', () => {
+                        const dias = document.getElementById('diasAdicionar').value;
+                        if (dias && !isNaN(dias)) {
+                            addDays(id, dias);
+                        } else {
+                            alert('Digite um número válido de dias.');
+                        }
+                    });
+                    document.getElementById('btnDelete')?.addEventListener('click', () => deleteTask(id));
+                }
+                
+                document.getElementById('enviar-comentario')?.addEventListener('click', () => {
+                    const author = document.getElementById('selecionar-nome').value;
+                    const comment = document.getElementById('novo-comentario').value.trim();
+                    if (!author) {
+                        alert('Por favor, selecione seu nome.');
+                        return;
+                    }
+                    if (!comment) {
+                        alert('Por favor, digite um comentário.');
+                        return;
+                    }
+                    addComment(id, author, comment);
+                });
+                
+            } catch (err) {
+                console.error('Erro ao carregar tarefa:', err);
+                document.getElementById('taskContainer').innerHTML = `
+                    <div class="task-card">
+                        <div class="task-header">
+                            <h1>Erro ao carregar tarefa</h1>
+                        </div>
+                        <div class="task-body">
+                            <p>Ocorreu um erro ao carregar os detalhes da tarefa. Tente novamente mais tarde.</p>
+                            <a href="/" class="btn-submit" style="display: inline-block; text-decoration: none; margin-top: 1rem;">Voltar ao início</a>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            if (tarefaId) {
+                carregarTarefa(tarefaId);
+            } else {
+                document.getElementById('taskContainer').innerHTML = `
+                    <div class="task-card">
+                        <div class="task-header">
+                            <h1>Tarefa não especificada</h1>
+                        </div>
+                        <div class="task-body">
+                            <p>Nenhum ID de tarefa foi fornecido.</p>
+                            <a href="/" class="btn-submit" style="display: inline-block; text-decoration: none; margin-top: 1rem;">Voltar ao início</a>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            document.getElementById('btnVoltar').addEventListener('click', () => {
+                window.location.href = isAdmin ? '/?admin=true' : '/';
+            });
+            
+            document.getElementById('menuIcon').addEventListener('click', () => {
+                document.getElementById('navLinks').classList.toggle('active');
+            });
+        });
+    </script>
 </body>
 </html>
