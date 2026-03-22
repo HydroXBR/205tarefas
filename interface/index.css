@@ -366,6 +366,11 @@ body {
     color: #10b981;
 }
 
+.tipo-leitura {
+    background: rgba(20, 184, 166, 0.2);
+    color: #14b8a6;
+}
+
 .tipo-pratica {
     background: rgba(245, 158, 11, 0.2);
     color: #f59e0b;
