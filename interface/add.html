@@ -2,66 +2,610 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adicionar Tarefa - 305 Tarefas</title>
-    <link rel="stylesheet" href="add.css">
-    <link rel="icon" type="image/png" href="https://i.ibb.co/kgm5kJNj/305.png">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Adicionar Tarefa - MedTasks</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/99xSTL2P/med116.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .form-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .form-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+        
+        .form-header {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-dark) 100%);
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .form-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+        
+        .form-header p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+        
+        .form-body {
+            padding: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .form-group label i {
+            color: var(--primary-green);
+            margin-right: 0.5rem;
+        }
+        
+        .required-star {
+            color: #ef4444;
+            margin-left: 0.25rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(105, 120, 37, 0.2);
+        }
+        
+        textarea.form-control {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .turma-card {
+            background: var(--bg-elevated);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+        
+        .turma-card.active {
+            border-color: var(--primary-green);
+            background: rgba(105, 120, 37, 0.05);
+        }
+        
+        .turma-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+        }
+        
+        .turma-header input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--primary-green);
+        }
+        
+        .turma-header h3 {
+            font-size: 1.1rem;
+            margin: 0;
+        }
+        
+        .turma-content {
+            padding-left: 2rem;
+            display: none;
+        }
+        
+        .turma-content.show {
+            display: block;
+        }
+        
+        .btn-submit {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary-green);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+        
+        .btn-submit:hover {
+            background: var(--primary-green-light);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(105, 120, 37, 0.3);
+        }
+        
+        .message {
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .message.success {
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid #10b981;
+            color: #10b981;
+        }
+        
+        .message.error {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 4px solid #ef4444;
+            color: #ef4444;
+        }
+        
+        .preview-card {
+            background: var(--bg-elevated);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            border: 1px solid var(--border-color);
+        }
+        
+        .preview-card h4 {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .turma-badge-preview {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+        }
+        
+        .turma-t1-preview {
+            background: rgba(105, 120, 37, 0.2);
+            color: var(--primary-green);
+        }
+        
+        .turma-t4-preview {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+        }
+        
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 1rem;
+            }
+            
+            .form-body {
+                padding: 1.5rem;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="navbar">
-    <h1>305 Tarefas</h1>
-    <div class="menu-icon" id="menuIcon">&#9776;</div>
-        <div class="nav-links" id="navLinks">
-            <a href="/">Página Inicial</a>
-            <a href="/sobre">Sobre</a>
-            <a href="/horarios">Horários</a>
-            <a href="/add" class="link-adicionar">Adicionar Tarefa</a>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="https://i.ibb.co/5XVmGm7h/marca-ufam-vetor-positivo.png" alt="UFAM Logo" class="ufam-logo">
+                <div class="turma-logo-container">
+                    <img src="https://i.ibb.co/99xSTL2P/med116.png" alt="Turma 116" class="turma-logo">
+                </div>
+                <div class="logo-text">
+                    <span class="med-text">Med</span><span class="tasks-text">Tasks</span>
+                    <span class="turma-badge">Turma 116</span>
+                </div>
+            </div>
+            <div class="menu-icon" id="menuIcon">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="/"><i class="fas fa-home"></i> Início</a>
+                <a href="/ppc"><i class="fas fa-book-open"></i> PPC</a>
+                <a href="/sobre"><i class="fas fa-info-circle"></i> Sobre</a>
+                <a href="/horarios"><i class="fas fa-calendar-alt"></i> Horários</a>
+                <a href="/add" class="btn-add active"><i class="fas fa-plus"></i> Adicionar Tarefa</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="form-container">
+        <div class="form-card">
+            <div class="form-header">
+                <h1><i class="fas fa-plus-circle"></i> Nova Tarefa</h1>
+                <p>Preencha os dados da atividade acadêmica</p>
+            </div>
+            <div class="form-body">
+                <div id="messageArea"></div>
+                
+                <form id="taskForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-user-md"></i> Autor <span class="required-star">*</span></label>
+                            <input type="text" class="form-control" id="author" name="author" placeholder="Seu nome" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label><i class="fas fa-tag"></i> Tipo <span class="required-star">*</span></label>
+                            <select class="form-control" id="tipo" name="tipo" required>
+                                <option value="">Selecione o tipo</option>
+                                <option value="prova">Prova</option>
+                                <option value="trabalho">Trabalho</option>
+                                <option value="seminário">Seminário</option>
+                                <option value="atividade">Atividade</option>
+                                <option value="prática">Prática</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-heading"></i> Título <span class="required-star">*</span></label>
+                        <input type="text" class="form-control" id="titulo" name="titulo" placeholder="Ex: Prova de Anatomia I" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-align-left"></i> Descrição <span class="required-star">*</span></label>
+                        <textarea class="form-control" id="desc" name="desc" placeholder="Detalhes sobre a atividade, conteúdo, etc." required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-comment"></i> Observação Geral</label>
+                        <textarea class="form-control" id="observacaoGeral" name="observacaoGeral" placeholder="Informações gerais para todas as turmas (ex: material necessário, local, etc.)" rows="2"></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-book"></i> Disciplina <span class="required-star">*</span></label>
+                            <select class="form-control" id="disciplina" name="disciplina" required>
+                                <option value="">Selecione a disciplina</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label><i class="fas fa-chart-line"></i> Nível <span class="required-star">*</span></label>
+                            <select class="form-control" id="nivel" name="nivel" required>
+                                <option value="">Selecione o nível</option>
+                                <option value="Fácil">Fácil</option>
+                                <option value="Médio">Médio</option>
+                                <option value="Difícil">Difícil</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar-day"></i> Data Solicitada <span class="required-star">*</span></label>
+                        <input type="date" class="form-control" id="pedida" name="pedida" required>
+                    </div>
+                    
+                    <div style="margin: 1.5rem 0;">
+                        <h3><i class="fas fa-users"></i> Turmas</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.85rem;">Selecione as turmas que terão esta atividade</p>
+                    </div>
+                    
+                    <!-- Turma T1-T3 -->
+                    <div class="turma-card" id="turmaT1Card">
+                        <div class="turma-header">
+                            <input type="checkbox" id="turmaT1Checkbox">
+                            <h3><i class="fas fa-users"></i> Turmas T1 - T3</h3>
+                        </div>
+                        <div class="turma-content" id="turmaT1Content">
+                            <div class="form-group">
+                                <label><i class="fas fa-calendar-check"></i> Data de Entrega <span class="required-star">*</span></label>
+                                <input type="date" class="form-control" id="entregaT1" name="entregaT1">
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-info-circle"></i> Observação específica</label>
+                                <input type="text" class="form-control" id="observacaoT1" placeholder="Ex: Entregar na sala 101, com capa, etc.">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Turma T4-T6 -->
+                    <div class="turma-card" id="turmaT4Card">
+                        <div class="turma-header">
+                            <input type="checkbox" id="turmaT4Checkbox">
+                            <h3><i class="fas fa-user-md"></i> Turmas T4 - T6</h3>
+                        </div>
+                        <div class="turma-content" id="turmaT4Content">
+                            <div class="form-group">
+                                <label><i class="fas fa-calendar-check"></i> Data de Entrega <span class="required-star">*</span></label>
+                                <input type="date" class="form-control" id="entregaT4" name="entregaT4">
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-info-circle"></i> Observação específica</label>
+                                <input type="text" class="form-control" id="observacaoT4" placeholder="Ex: Entregar na sala 102, dupla, etc.">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="preview-card" id="previewCard">
+                        <h4><i class="fas fa-eye"></i> Pré-visualização</h4>
+                        <div class="preview-content" id="previewContent">
+                            <p style="color: var(--text-secondary);">Preencha os campos acima para visualizar a tarefa</p>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-save"></i> Salvar Tarefa
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
-    <div class="container">
-        <h1>Adicionar Tarefa</h1>
-        <form id="addTaskForm" action="#">
-            <p>Por favor, use de boa-fé e preencha informações verdadeiras, principalmente seu nome. Esta é uma plataforma colaborativa, e, para não burocratizar, não foi feito um sistema de login. Colabore com o projeto :) Obrigado por colaborar adicionando sua tarefa! - isaias</p>
-            <label for="author">Seu nome:</label>
-            <select id="author" name="author" class="form-input"></select>
-            
-            <label for="tipo">Tipo:</label>
-            <select id="tipo" name="tipo" class="form-input">
-                <option value="prova">Prova</option>
-                <option value="atividade">Atividade</option>
-                <option value="trabalho">Trabalho</option>
-                <option value="parcial">Parcial</option>
-                <option value="apresentação">Apresentação</option>
-            </select>
-            
-            <label for="titulo">Título:</label>
-            <input type="text" id="titulo" name="titulo" placeholder="Insira o título da tarefa" minlength="5" maxlength="25" required>
-            
-            <label for="desc">Descrição:</label>
-            <p>Para quebra de linha, utilize "///". Só dar "enter" não irá quebrar a linha.</p>
-            <textarea id="desc" name="desc" placeholder="Descreva a tarefa, com detalhes, se possível." minlength="5" required></textarea>
-            
-            <label for="disciplina">Disciplina:</label>
-            <select id="disciplina" name="disciplina" class="form-input"></select>
 
-            <label for="nivel">Nível:</label>
-            <select id="nivel" name="nivel" class="form-input">
-                <option value="Fácil">Fácil (1 hora)</option>
-                <option value="Médio">Médio (2-5 horas)</option>
-                <option value="Difícil">Difícil (1 dia)</option>
-                <option value="Intankável">Intankável (1 semana)</option>
-            </select>
+    <footer class="footer">
+        <div class="footer-content">
+            <p><i class="far fa-copyright"></i> 2024 MedTasks - Turma 116 - Faculdade de Medicina UFAM</p>
+        </div>
+    </footer>
 
-            <label for="pedida-em">Pedida em:</label>
-            <input type="date" id="pedida-em" name="pedida-em">
+    <script>
+        // Lista de disciplinas baseada no PPC
+        const disciplinasList = [
+            { value: "isc", label: "Introdução à Saúde Coletiva" },
+            { value: "bcm", label: "Biologia Celular e Molecular" },
+            { value: "ah1", label: "Anatomia Humana I" },
+            { value: "emb", label: "Embriologia" },
+            { value: "metodologia", label: "Metodologia do Trabalho Científico" },
+            { value: "etica", label: "Ética Médica" },
+            { value: "histo", label: "Histologia" },
+            { value: "bioq", label: "Bioquímica Celular e Metabólica" },
+            { value: "ah2", label: "Anatomia Humana II" },
+            { value: "genetica", label: "Genética" },
+            { value: "ppgs", label: "Política, Planejamento e Gestão em Saúde" },
+            { value: "micro", label: "Microbiologia Médica" },
+            { value: "para", label: "Parasitologia Médica" },
+            { value: "mico", label: "Micologia Médica" },
+            { value: "epidemio", label: "Epidemiologia e Bioestatística" },
+            { value: "imuno", label: "Imunologia Médica" },
+            { value: "fisio", label: "Fisiologia Humana" }
+        ];
+
+        function loadDisciplinas() {
+            const select = document.getElementById('disciplina');
+            disciplinasList.forEach(disciplina => {
+                const option = document.createElement('option');
+                option.value = disciplina.value;
+                option.textContent = disciplina.label;
+                select.appendChild(option);
+            });
+        }
+
+        function showMessage(type, text) {
+            const messageArea = document.getElementById('messageArea');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+            messageDiv.innerHTML = `<i class="fas ${icon}"></i> ${text}`;
+            messageArea.innerHTML = '';
+            messageArea.appendChild(messageDiv);
+            setTimeout(() => {
+                messageDiv.style.opacity = '0';
+                setTimeout(() => messageDiv.remove(), 300);
+            }, 5000);
+        }
+
+        function updatePreview() {
+            const author = document.getElementById('author').value;
+            const tipo = document.getElementById('tipo').value;
+            const titulo = document.getElementById('titulo').value;
+            const desc = document.getElementById('desc').value;
+            const observacaoGeral = document.getElementById('observacaoGeral').value;
+            const disciplinaSelect = document.getElementById('disciplina');
+            const disciplina = disciplinaSelect.options[disciplinaSelect.selectedIndex]?.text || '';
+            const nivel = document.getElementById('nivel').value;
+            const pedida = document.getElementById('pedida').value;
+            const turmaT1Checked = document.getElementById('turmaT1Checkbox').checked;
+            const turmaT4Checked = document.getElementById('turmaT4Checkbox').checked;
+            const entregaT1 = document.getElementById('entregaT1').value;
+            const entregaT4 = document.getElementById('entregaT4').value;
+            const observacaoT1 = document.getElementById('observacaoT1').value;
+            const observacaoT4 = document.getElementById('observacaoT4').value;
             
-            <label for="entrega">Entrega:</label>
-            <input type="date" id="entrega" name="entrega">
+            const previewContent = document.getElementById('previewContent');
+            
+            if (author || tipo || titulo || desc || disciplina || nivel || pedida || turmaT1Checked || turmaT4Checked) {
+                let turmasHtml = '';
+                if (turmaT1Checked) {
+                    turmasHtml += `<div><span class="turma-badge-preview turma-t1-preview">T1 - T3</span> Entrega: ${entregaT1 || '—'} ${observacaoT1 ? `<br><span style="font-size:0.75rem;">📌 ${observacaoT1}</span>` : ''}</div>`;
+                }
+                if (turmaT4Checked) {
+                    turmasHtml += `<div><span class="turma-badge-preview turma-t4-preview">T4 - T6</span> Entrega: ${entregaT4 || '—'} ${observacaoT4 ? `<br><span style="font-size:0.75rem;">📌 ${observacaoT4}</span>` : ''}</div>`;
+                }
+                
+                previewContent.innerHTML = `
+                    <div style="background: var(--bg-dark); padding: 0.75rem; border-radius: 8px;">
+                        <p><strong>📝 ${titulo || 'Título não definido'}</strong></p>
+                        <p style="font-size: 0.85rem; color: var(--text-secondary);">${desc || 'Descrição não definida'}</p>
+                        ${observacaoGeral ? `<p style="font-size: 0.85rem; background: rgba(59,130,246,0.1); padding: 0.5rem; border-radius: 6px; margin: 0.5rem 0;"><i class="fas fa-info-circle"></i> ${observacaoGeral}</p>` : ''}
+                        <hr style="border-color: var(--border-color); margin: 0.5rem 0;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.85rem;">
+                            <span>👤 Autor: ${author || '—'}</span>
+                            <span>🏷️ Tipo: ${tipo ? tipo.charAt(0).toUpperCase() + tipo.slice(1) : '—'}</span>
+                            <span>📚 Disciplina: ${disciplina || '—'}</span>
+                            <span>⚡ Nível: ${nivel || '—'}</span>
+                            <span>📅 Solicitada: ${pedida || '—'}</span>
+                        </div>
+                        <div style="margin-top: 0.75rem; padding-top: 0.5rem; border-top: 1px solid var(--border-color);">
+                            <strong>📌 Turmas:</strong>
+                            ${turmasHtml || '<span style="color: var(--text-secondary);">Nenhuma turma selecionada</span>'}
+                        </div>
+                    </div>
+                `;
+            } else {
+                previewContent.innerHTML = '<p style="color: var(--text-secondary);">Preencha os campos acima para visualizar a tarefa</p>';
+            }
+        }
 
-            <input type="submit" value="Adicionar">
-        </form>
-    </div>
-    <script src="add.js"></script>
+        function toggleTurma(checkboxId, contentId, cardId, entregaRequired = true) {
+            const checkbox = document.getElementById(checkboxId);
+            const content = document.getElementById(contentId);
+            const card = document.getElementById(cardId);
+            const entregaInput = document.getElementById(entregaRequired ? (checkboxId === 'turmaT1Checkbox' ? 'entregaT1' : 'entregaT4') : null);
+            
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    content.classList.add('show');
+                    card.classList.add('active');
+                    if (entregaInput) entregaInput.required = true;
+                } else {
+                    content.classList.remove('show');
+                    card.classList.remove('active');
+                    if (entregaInput) entregaInput.required = false;
+                }
+                updatePreview();
+            });
+        }
+
+        async function submitTask(event) {
+            event.preventDefault();
+            
+            const author = document.getElementById('author').value.trim();
+            const tipo = document.getElementById('tipo').value;
+            const titulo = document.getElementById('titulo').value.trim();
+            const desc = document.getElementById('desc').value.trim();
+            const disciplina = document.getElementById('disciplina').value;
+            const nivel = document.getElementById('nivel').value;
+            const pedida = document.getElementById('pedida').value;
+            const observacaoGeral = document.getElementById('observacaoGeral').value.trim();
+            
+            const turmaT1Checked = document.getElementById('turmaT1Checkbox').checked;
+            const turmaT4Checked = document.getElementById('turmaT4Checkbox').checked;
+            const entregaT1 = document.getElementById('entregaT1').value;
+            const entregaT4 = document.getElementById('entregaT4').value;
+            const observacaoT1 = document.getElementById('observacaoT1').value.trim();
+            const observacaoT4 = document.getElementById('observacaoT4').value.trim();
+            
+            if (!author || !tipo || !titulo || !desc || !disciplina || !nivel || !pedida) {
+                showMessage('error', 'Por favor, preencha todos os campos obrigatórios.');
+                return;
+            }
+            
+            if (!turmaT1Checked && !turmaT4Checked) {
+                showMessage('error', 'Selecione pelo menos uma turma.');
+                return;
+            }
+            
+            if (turmaT1Checked && !entregaT1) {
+                showMessage('error', 'Informe a data de entrega para a turma T1-T3.');
+                return;
+            }
+            
+            if (turmaT4Checked && !entregaT4) {
+                showMessage('error', 'Informe a data de entrega para a turma T4-T6.');
+                return;
+            }
+            
+            const submitBtn = document.querySelector('.btn-submit');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
+            submitBtn.disabled = true;
+            
+            try {
+                let url = `/addtar?author=${encodeURIComponent(author)}&tipo=${encodeURIComponent(tipo)}&titulo=${encodeURIComponent(titulo)}&desc=${encodeURIComponent(desc)}&disciplina=${encodeURIComponent(disciplina)}&nivel=${encodeURIComponent(nivel)}&pedida=${encodeURIComponent(pedida)}&observacaoGeral=${encodeURIComponent(observacaoGeral)}`;
+                
+                if (turmaT1Checked) {
+                    url += `&turma=t1-t3&entrega=${encodeURIComponent(entregaT1)}&observacaoT1=${encodeURIComponent(observacaoT1)}`;
+                }
+                if (turmaT4Checked) {
+                    url += `&turma2=t4-t6&entrega2=${encodeURIComponent(entregaT4)}&observacaoT4=${encodeURIComponent(observacaoT4)}`;
+                }
+                
+                const response = await fetch(url);
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage('success', '✅ Tarefa adicionada com sucesso!');
+                    document.getElementById('taskForm').reset();
+                    updatePreview();
+                    
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 2000);
+                } else {
+                    showMessage('error', `❌ Erro ao adicionar tarefa: ${result.reason || 'Erro desconhecido'}`);
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                showMessage('error', '❌ Erro ao conectar com o servidor. Tente novamente.');
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDisciplinas();
+            
+            toggleTurma('turmaT1Checkbox', 'turmaT1Content', 'turmaT1Card');
+            toggleTurma('turmaT4Checkbox', 'turmaT4Content', 'turmaT4Card');
+            
+            const form = document.getElementById('taskForm');
+            form.addEventListener('submit', submitTask);
+            
+            const inputs = ['author', 'tipo', 'titulo', 'desc', 'disciplina', 'nivel', 'pedida', 'observacaoGeral', 'entregaT1', 'entregaT4', 'observacaoT1', 'observacaoT4'];
+            inputs.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('input', updatePreview);
+                    element.addEventListener('change', updatePreview);
+                }
+            });
+            
+            updatePreview();
+        });
+        
+        document.getElementById('menuIcon').addEventListener('click', function () {
+            document.getElementById('navLinks').classList.toggle('active');
+        });
+    </script>
 </body>
 </html>
