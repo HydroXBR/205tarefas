@@ -172,9 +172,11 @@ function filterTasksByTurma(tasks, currentTurma) {
 }
 
 // Função para verificar se a tarefa está pendente (considerando múltiplas turmas)
+// Função para verificar se a tarefa está pendente (considerando múltiplas turmas)
 function isTaskPending(task) {
     const now = new Date();
     const todayOnlyDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const currentHour = now.getHours();
     
     // Se tiver turmasInfo (novo formato)
     if (task.turmasInfo && task.turmasInfo.length > 0) {
@@ -182,10 +184,14 @@ function isTaskPending(task) {
             const entregaDate = new Date(info.entrega);
             const entregaOnlyDate = new Date(entregaDate.getFullYear(), entregaDate.getMonth(), entregaDate.getDate());
             
-            if (now.getHours() >= 12) {
-                return entregaOnlyDate > todayOnlyDate;
+            // Se for entrega hoje
+            if (entregaOnlyDate.getTime() === todayOnlyDate.getTime()) {
+                // Se ainda não passou das 12h, mostra tarefa de hoje
+                // Se já passou das 12h, não mostra mais tarefas de hoje
+                return currentHour < 18;
             }
-            return entregaOnlyDate >= todayOnlyDate;
+            // Tarefas futuras
+            return entregaOnlyDate > todayOnlyDate;
         });
     }
     
@@ -194,10 +200,10 @@ function isTaskPending(task) {
         const entregaDate = new Date(task.entrega);
         const entregaOnlyDate = new Date(entregaDate.getFullYear(), entregaDate.getMonth(), entregaDate.getDate());
         
-        if (now.getHours() >= 12) {
-            return entregaOnlyDate > todayOnlyDate;
+        if (entregaOnlyDate.getTime() === todayOnlyDate.getTime()) {
+            return currentHour < 12;
         }
-        return entregaOnlyDate >= todayOnlyDate;
+        return entregaOnlyDate > todayOnlyDate;
     }
     
     return false;
