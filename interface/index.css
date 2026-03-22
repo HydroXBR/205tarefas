@@ -541,3 +541,83 @@ body {
         font-size: 1.2rem;
     }
 }
+
+/* Estilos para exibição de múltiplas turmas */
+.turma-info-tooltip {
+    margin-bottom: 0.5rem;
+    position: relative;
+    cursor: help;
+}
+
+.turma-info-tooltip:last-child {
+    margin-bottom: 0;
+}
+
+.turma-badge-small {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin-right: 0.5rem;
+}
+
+.turma-entrega {
+    display: inline-block;
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+}
+
+.turma-info-icon {
+    margin-left: 0.25rem;
+    font-size: 0.7rem;
+    color: var(--primary-green);
+    cursor: help;
+}
+
+.turma-t1 {
+    background: rgba(105, 120, 37, 0.2);
+    color: var(--primary-green);
+}
+
+.turma-t4 {
+    background: rgba(59, 130, 246, 0.2);
+    color: #3b82f6;
+}
+
+/* Estilo para o container da coluna turma */
+.tasks-table td:nth-child(4) {
+    min-width: 120px;
+}
+
+/* Tooltip personalizado */
+.turma-info-tooltip:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    background: var(--bg-elevated);
+    color: var(--text-primary);
+    padding: 0.5rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    z-index: 1000;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    pointer-events: none;
+}
+
+/* Responsividade para a coluna turma */
+@media (max-width: 768px) {
+    .tasks-table td:nth-child(4) {
+        min-width: 100px;
+    }
+    
+    .turma-info-tooltip:hover::after {
+        white-space: normal;
+        max-width: 200px;
+        bottom: auto;
+        top: 100%;
+    }
+}
