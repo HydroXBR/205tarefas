@@ -367,27 +367,27 @@ app.get('/addtar', function(req, res) {
 });
 
 app.get('/addlemb', function(req, res) {
-	const { title, desc, date } = req.query;
+    const { title, desc, date } = req.query;
 
-	if (!title || !desc || !date) {
-		return res.send({ success: false, reason: "Missing parameters" });
-	}
+    if (!title || !desc || !date) {
+        return res.send({ success: false, reason: "Missing parameters" });
+    }
 
-	const novoLembrete = new lembrete({
-		title: title,
-		desc: desc,
-		date: date,
-		registered: new Date().getTime()
-	});
+    const novoLembrete = new lembrete({
+        title: title,
+        desc: desc,
+        date: date,
+        registered: new Date().getTime()
+    });
 
-		novoLembrete.save()
-		.then(() => {
-			res.send({ success: true, reason: "Success" });
-		})
-			.catch(error => {
-				console.error("Erro ao salvar lembrete:", error);
-				res.send({ success: false, reason: "Error" });
-			});
+    novoLembrete.save()
+        .then(() => {
+            res.send({ success: true, reason: "Success" });
+        })
+        .catch(error => {
+            console.error("Erro ao salvar lembrete:", error);
+            res.send({ success: false, reason: "Error" });
+        });
 });
 
 app.get('/comment', async function(req, res) {
