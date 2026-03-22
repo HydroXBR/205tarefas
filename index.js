@@ -256,35 +256,42 @@ app.get('/moredays', async function(req, res) {
     console.log("Access MOREDAYS: " + new Date());
     const { id, days } = req.query;
 
+    if (!id || !days) {
+        return res.status(400).send({ success: false, reason: "Missing id or days" });
+    }
+
     try {
         const tar = await tarefa.findOne({ _id: id });
         if (!tar) {
-            return res.status(404).send("Task not found");
+            return res.status(404).send({ success: false, reason: "Task not found" });
         }
 
-        function addmore(d, days){
-            // d é timestamp em UTC
-            const date = new Date(d);
-            // Adicionar dias em UTC
-            const newDate = new Date(date.getTime() + (24 * 60 * 60 * 1000 * parseInt(days)));
-            return newDate.getTime();
+        // Função para adicionar dias a um timestamp
+        function addDaysToTimestamp(timestamp, daysToAdd) {
+            return timestamp + (daysToAdd * 24 * 60 * 60 * 1000);
         }
 
-        // Atualizar todas as turmasInfo
+        // Verificar se tem turmasInfo (novo formato)
         if (tar.turmasInfo && tar.turmasInfo.length > 0) {
+            // Adicionar dias em TODAS as turmas
             tar.turmasInfo.forEach(info => {
-                info.entrega = addmore(info.entrega, parseInt(days));
+                info.entrega = addDaysToTimestamp(info.entrega, parseInt(days));
             });
-        } else if (tar.entrega) {
-            // Compatibilidade com formato antigo
-            tar.entrega = addmore(tar.entrega, parseInt(days));
+            await tar.save();
+            res.send({ success: true, turmasInfo: tar.turmasInfo });
+        } 
+        // Compatibilidade com formato antigo
+        else if (tar.entrega) {
+            tar.entrega = addDaysToTimestamp(tar.entrega, parseInt(days));
+            await tar.save();
+            res.send({ success: true, entrega: tar.entrega });
+        } 
+        else {
+            res.status(400).send({ success: false, reason: "No delivery date found" });
         }
-        
-        await tar.save();
-        res.send(JSON.stringify(tar));
     } catch (err) {
-        console.log(err);
-        res.status(500).send("Internal Server Error");
+        console.error("Erro no moredays:", err);
+        res.status(500).send({ success: false, reason: "Internal Server Error" });
     }
 });
 
