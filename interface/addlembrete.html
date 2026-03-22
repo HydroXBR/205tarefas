@@ -1,37 +1,352 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Adicionar Lembrete - 305 Tarefas</title>
-	<link rel="stylesheet" href="add.css">
-	<link rel="icon" type="image/png" href="https://i.ibb.co/kgm5kJNj/305.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Adicionar Lembrete - MedTasks</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/99xSTL2P/med116.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .form-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+        
+        .form-header {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-dark) 100%);
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .form-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+        
+        .form-header p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+        
+        .form-body {
+            padding: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .form-group label i {
+            color: var(--primary-green);
+            margin-right: 0.5rem;
+        }
+        
+        .required-star {
+            color: #ef4444;
+            margin-left: 0.25rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(105, 120, 37, 0.2);
+        }
+        
+        textarea.form-control {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .btn-submit {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary-green);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+        
+        .btn-submit:hover {
+            background: var(--primary-green-light);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(105, 120, 37, 0.3);
+        }
+        
+        .message {
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .message.success {
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid #10b981;
+            color: #10b981;
+        }
+        
+        .message.error {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 4px solid #ef4444;
+            color: #ef4444;
+        }
+        
+        .preview-card {
+            background: var(--bg-elevated);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            border: 1px solid var(--border-color);
+        }
+        
+        .preview-card h4 {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .info-note {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid #3b82f6;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+        }
+        
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 1rem;
+            }
+            
+            .form-body {
+                padding: 1.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
-	<div class="navbar">
-    <h1>305 Tarefas</h1>
-    <div class="menu-icon" id="menuIcon">&#9776;</div>
-        <div class="nav-links" id="navLinks">
-            <a href="/">Página Inicial</a>
-            <a href="/sobre">Sobre</a>
-            <a href="/horarios">Horários</a>
-            <a href="/add" class="link-adicionar">Adicionar Tarefa</a>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="https://i.ibb.co/5XVmGm7h/marca-ufam-vetor-positivo.png" alt="UFAM Logo" class="ufam-logo">
+                <div class="turma-logo-container">
+                    <img src="https://i.ibb.co/99xSTL2P/med116.png" alt="Turma 116" class="turma-logo">
+                </div>
+                <div class="logo-text">
+                    <span class="med-text">Med</span><span class="tasks-text">Tasks</span>
+                    <span class="turma-badge">Turma 116</span>
+                </div>
+            </div>
+            <div class="menu-icon" id="menuIcon">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="/"><i class="fas fa-home"></i> Início</a>
+                <a href="/ppc"><i class="fas fa-book-open"></i> PPC</a>
+                <a href="/sobre"><i class="fas fa-info-circle"></i> Sobre</a>
+                <a href="/horarios"><i class="fas fa-calendar-alt"></i> Horários</a>
+                <a href="/add" class="btn-add"><i class="fas fa-plus"></i> Tarefa</a>
+                <a href="/addlembrete" class="btn-add" style="background: #3b82f6;"><i class="fas fa-bell"></i> Lembrete</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="form-container">
+        <div class="form-card">
+            <div class="form-header">
+                <h1><i class="fas fa-bell"></i> Novo Lembrete</h1>
+                <p>Adicione um lembrete que aparecerá na data programada</p>
+            </div>
+            <div class="form-body">
+                <div id="messageArea"></div>
+                
+                <form id="lembreteForm">
+                    <div class="form-group">
+                        <label><i class="fas fa-heading"></i> Título <span class="required-star">*</span></label>
+                        <input type="text" class="form-control" id="title" name="title" placeholder="Ex: Reunião de turma, Prova, Entrega de trabalho..." required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-align-left"></i> Descrição <span class="required-star">*</span></label>
+                        <textarea class="form-control" id="desc" name="desc" placeholder="Detalhes do lembrete..." rows="3" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar-day"></i> Data do Lembrete <span class="required-star">*</span></label>
+                        <input type="date" class="form-control" id="date" name="date" required>
+                        <small style="color: var(--text-secondary); font-size: 0.7rem;">O lembrete aparecerá na página inicial neste dia</small>
+                    </div>
+                    
+                    <div class="preview-card" id="previewCard">
+                        <h4><i class="fas fa-eye"></i> Pré-visualização</h4>
+                        <div class="preview-content" id="previewContent">
+                            <p style="color: var(--text-secondary);">Preencha os campos acima para visualizar o lembrete</p>
+                        </div>
+                    </div>
+                    
+                    <div class="info-note">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Como funciona:</strong>
+                        <ul style="margin-top: 0.5rem; margin-left: 1rem;">
+                            <li>Lembretes aparecem automaticamente na página inicial no dia programado</li>
+                            <li>Se você acessar antes das 7h, também aparecem lembretes do dia anterior</li>
+                            <li>Lembretes automáticos como "Revista de Cabelo" e "Educação Física" já estão configurados</li>
+                        </ul>
+                    </div>
+                    
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-save"></i> Salvar Lembrete
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
-	<div class="container">
-		<h1>Adicionar Lembrete</h1>
-		<form id="addTaskForm" action="#">
-			<label for="titulo">Título:</label>
-			<input type="text" id="title" name="title" placeholder="Insira o título do lembrete" minlength="5" maxlength="25" required>
-			<label for="desc">Descrição:</label>
-			<input type="text" id="desc" name="desc" placeholder="Descreva o lembrete, com detalhes, se possível." minlength="5" maxlength="200" required>
-			<label for="date">Data:</label>
-			<input type="date" id="date" name="date">
 
+    <footer class="footer">
+        <div class="footer-content">
+            <p><i class="far fa-copyright"></i> 2026 MedTasks - Turma 116 - Faculdade de Medicina UFAM</p>
+        </div>
+    </footer>
 
-			<input type="submit" value="Adicionar">
-		</form>
-	</div>
-	<script src="addlembrete.js"></script>
+    <script>
+        // Menu hamburguer
+        document.getElementById('menuIcon').addEventListener('click', function() {
+            document.getElementById('navLinks').classList.toggle('active');
+        });
+        
+        // Pré-visualização
+        function updatePreview() {
+            const title = document.getElementById('title').value;
+            const desc = document.getElementById('desc').value;
+            const date = document.getElementById('date').value;
+            
+            const previewContent = document.getElementById('previewContent');
+            
+            if (title || desc || date) {
+                const formattedDate = date ? new Date(date).toLocaleDateString('pt-BR') : '—';
+                previewContent.innerHTML = `
+                    <div style="background: var(--bg-dark); padding: 0.75rem; border-radius: 8px;">
+                        <p><strong>📌 ${title || 'Título não definido'}</strong></p>
+                        <p style="font-size: 0.85rem; color: var(--text-secondary); white-space: pre-wrap;">${desc || 'Descrição não definida'}</p>
+                        <hr style="border-color: var(--border-color); margin: 0.5rem 0;">
+                        <div style="font-size: 0.8rem; color: var(--primary-green);">
+                            <i class="fas fa-calendar"></i> Aparecerá em: ${formattedDate}
+                        </div>
+                    </div>
+                `;
+            } else {
+                previewContent.innerHTML = '<p style="color: var(--text-secondary);">Preencha os campos acima para visualizar o lembrete</p>';
+            }
+        }
+        
+        document.getElementById('title').addEventListener('input', updatePreview);
+        document.getElementById('desc').addEventListener('input', updatePreview);
+        document.getElementById('date').addEventListener('change', updatePreview);
+        
+        // Enviar formulário
+        async function addLembrete(title, desc, date) {
+            try {
+                const response = await fetch(`/addlemb?title=${encodeURIComponent(title)}&desc=${encodeURIComponent(desc)}&date=${date}`);
+                const result = await response.json();
+                return result;
+            } catch (error) {
+                console.error('Erro:', error);
+                return { success: false, reason: 'Erro de conexão' };
+            }
+        }
+        
+        document.getElementById('lembreteForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            const title = document.getElementById('title').value.trim();
+            const desc = document.getElementById('desc').value.trim();
+            const date = document.getElementById('date').value;
+            
+            if (!title || !desc || !date) {
+                showMessage('error', 'Por favor, preencha todos os campos obrigatórios.');
+                return;
+            }
+            
+            const submitBtn = document.querySelector('.btn-submit');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
+            submitBtn.disabled = true;
+            
+            const result = await addLembrete(title, desc, date);
+            
+            if (result.success) {
+                showMessage('success', '✅ Lembrete adicionado com sucesso!');
+                document.getElementById('lembreteForm').reset();
+                updatePreview();
+                
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 1500);
+            } else {
+                showMessage('error', `❌ Erro ao adicionar lembrete: ${result.reason || 'Tente novamente.'}`);
+            }
+            
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+        });
+        
+        function showMessage(type, text) {
+            const messageArea = document.getElementById('messageArea');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+            messageDiv.innerHTML = `<i class="fas ${icon}"></i> ${text}`;
+            messageArea.innerHTML = '';
+            messageArea.appendChild(messageDiv);
+            
+            setTimeout(() => {
+                messageDiv.style.opacity = '0';
+                setTimeout(() => messageDiv.remove(), 300);
+            }, 4000);
+        }
+    </script>
 </body>
 </html>
