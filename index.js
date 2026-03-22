@@ -142,13 +142,75 @@ app.get('/add',function(req,res) {
 	res.sendFile(__dirname + '/interface/add.html')
 });
 
-app.get('/src',function(req,res) {
-	let urlparsed = "https://metodosimulados.yeshayahudesigndeveloper.repl.co" + req._parsedOriginalUrl.href
-	let required = new URL(urlparsed).searchParams.get('id') || res.sendStatus(404)
-	let format = new URL(urlparsed).searchParams.get('format') || "png"
+app.get('/src/*', function(req, res) {
+    console.log("Access SRC: " + new Date());
+    const filePath = req.params[0]; // Pega o caminho após /src/
+    
+    // Segurança: prevenir path traversal
+    const safePath = path.join(__dirname, 'src', filePath);
+    const normalizedPath = path.normalize(safePath);
+    
+    // Verificar se o arquivo está dentro da pasta src
+    if (!normalizedPath.startsWith(path.join(__dirname, 'src'))) {
+        return res.status(403).send('Acesso negado');
+    }
+    
+    // Verificar se o arquivo existe
+    if (require('fs').existsSync(normalizedPath)) {
+        // Determinar o tipo de conteúdo baseado na extensão
+        const ext = path.extname(filePath).toLowerCase();
+        const mimeTypes = {
+            '.pdf': 'application/pdf',
+            '.jpg': 'image/jpeg',
+            '.jpeg': 'image/jpeg',
+            '.png': 'image/png',
+            '.gif': 'image/gif',
+            '.webp': 'image/webp',
+            '.mp4': 'video/mp4',
+            '.mp3': 'audio/mpeg',
+            '.doc': 'application/msword',
+            '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        };
+        
+        const mimeType = mimeTypes[ext] || 'application/octet-stream';
+        res.setHeader('Content-Type', mimeType);
+        
+        // Se for PDF, sugerir download ou visualização inline
+        if (ext === '.pdf') {
+            res.setHeader('Content-Disposition', 'inline; filename="' + path.basename(filePath) + '"');
+        }
+        
+        res.sendFile(normalizedPath);
+    } else {
+        res.status(404).send('Arquivo não encontrado');
+    }
+});
 
-	res.sendFile(__dirname + `/src/${required}.${format}`)
-})
+// Alternativa: rota específica para PDFs
+app.get('/download/:filename', function(req, res) {
+    console.log("Access DOWNLOAD: " + new Date());
+    const filename = req.params.filename;
+    
+    // Segurança: garantir que só acessa PDFs
+    if (!filename.endsWith('.pdf')) {
+        return res.status(400).send('Formato não suportado');
+    }
+    
+    const filePath = path.join(__dirname, 'src', filename);
+    
+    if (require('fs').existsSync(filePath)) {
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'attachment; filename="' + filename + '"');
+        res.sendFile(filePath);
+    } else {
+        res.status(404).send('Arquivo não encontrado');
+    }
+});
+
+app.get('/ppc', function(req, res) {
+    console.log("Access PPC: " + new Date());
+    res.sendFile(__dirname + '/interface/ppc.html');
+});
 
 app.get('/tasks', async (req, res) => {
 	try {
