@@ -2,62 +2,130 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tarefas 305</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>MedTasks - UFAM Medicina</title>
     <link rel="stylesheet" href="index.css">
-    <link rel="icon" type="image/png" href="https://i.ibb.co/kgm5kJNj/305.png">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/G4fhsmDV/621823196-17845841154672863-5964764644452470845-n.jpg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <div class="navbar">
-    <h1>305 Tarefas</h1>
-    <div class="menu-icon" id="menuIcon">&#9776;</div>
-        <div class="nav-links" id="navLinks">
-            <a href="/">Página Inicial</a>
-            <a href="/sobre">Sobre</a>
-            <a href="/horarios">Horários</a>
-            <a href="/add" class="link-adicionar">Adicionar Tarefa</a>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="https://edoc.ufam.edu.br/bitstream/123456789/4819/7/marca_ufam_vetor_positivo.png" alt="UFAM Logo" class="ufam-logo">
+                <div class="turma-logo-container">
+                    <img src="https://i.ibb.co/G4fhsmDV/621823196-17845841154672863-5964764644452470845-n.jpg" alt="Turma 116" class="turma-logo">
+                </div>
+                <div class="logo-text">
+                    <span class="med-text">Med</span><span class="tasks-text">Tasks</span>
+                    <span class="turma-badge">Turma 116</span>
+                </div>
+            </div>
+            <div class="menu-icon" id="menuIcon">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="/" class="active"><i class="fas fa-home"></i> Início</a>
+                <a href="/sobre"><i class="fas fa-info-circle"></i> Sobre</a>
+                <a href="/horarios"><i class="fas fa-calendar-alt"></i> Horários</a>
+                <a href="/add" class="btn-add"><i class="fas fa-plus"></i> Adicionar Tarefa</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="hero-section">
+        <div class="hero-content">
+            <h1>Controle Acadêmico</h1>
+            <p>Gerencie suas atividades e prazos de forma eficiente</p>
+            <div class="hero-badge">
+                <i class="fas fa-stethoscope"></i> Medicina UFAM
+            </div>
         </div>
     </div>
-    <div class="container" id="container-lembretes"></div>
-    <div class="container">
-        <h1>305 Tarefas</h1>
-        <p>Atividades para hoje ou futuro. Arrasta pro lado! (se estiver em celular)</p>
-        <div class="table-resp">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Tipo</th>
-                        <th>Título</th>
-                        <th>Disciplina</th>
-                        <th>Pedida em</th>
-                        <th>Entrega</th>
-                        <th>Nível</th>
-                    </tr>
-                </thead>
-                <tbody id="tabela-tarefas"></tbody>
-            </table>
-        </div>
+
+    <div class="turma-selector">
+        <button class="turma-btn active" data-turma="all">
+            <i class="fas fa-users"></i> Todas as Turmas
+        </button>
+        <button class="turma-btn" data-turma="t1-t3">
+            <i class="fas fa-user-graduate"></i> Turmas T1 - T3
+        </button>
+        <button class="turma-btn" data-turma="t4-t6">
+            <i class="fas fa-user-md"></i> Turmas T4 - T6
+        </button>
     </div>
-    <div class="container">
-        <h1>Anteriores</h1>
-        <p>Tarefas anteriores, para registro (tarefas com mais de 30 dias são apagadas).</p>
-        <div class="table-resp">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Tipo</th>
-                        <th>Título</th>
-                        <th>Disciplina</th>
-                        <th>Pedida em</th>
-                        <th>Entrega</th>
-                        <th>Nível</th>
-                    </tr>
-                </thead>
-                <tbody id="tabela-anteriores"></tbody>
-            </table>
+
+    <div id="container-lembretes" class="lembretes-container"></div>
+
+    <main class="main-container">
+        <div class="tasks-section">
+            <div class="section-header">
+                <h2><i class="fas fa-tasks"></i> Atividades Pendentes</h2>
+                <p>Tarefas para entregar hoje ou nos próximos dias</p>
+            </div>
+            <div class="table-responsive">
+                <table class="tasks-table">
+                    <thead>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Título</th>
+                            <th>Disciplina</th>
+                            <th>Turma</th>
+                            <th>Pedida em</th>
+                            <th>Entrega</th>
+                            <th>Nível</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-tarefas">
+                        <tr>
+                            <td colspan="7" class="loading-cell">
+                                <div class="loader"></div>
+                                <span>Carregando tarefas...</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
+
+        <div class="tasks-section">
+            <div class="section-header">
+                <h2><i class="fas fa-history"></i> Atividades Anteriores</h2>
+                <p>Tarefas já realizadas (apagadas após 30 dias)</p>
+            </div>
+            <div class="table-responsive">
+                <table class="tasks-table">
+                    <thead>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Título</th>
+                            <th>Disciplina</th>
+                            <th>Turma</th>
+                            <th>Pedida em</th>
+                            <th>Entrega</th>
+                            <th>Nível</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-anteriores">
+                        <tr>
+                            <td colspan="7" class="loading-cell">
+                                <div class="loader"></div>
+                                <span>Carregando tarefas...</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p><i class="far fa-copyright"></i> 2024 MedTasks - Turma 116 - Faculdade de Medicina UFAM</p>
+        </div>
+    </footer>
+
     <script src="iscript.js"></script>
 </body>
 </html>
