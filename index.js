@@ -18,8 +18,6 @@ const dec = txt => decodeURIComponent(txt)
 const fetch = s => import('node-fetch').then(({default: fetch}) => fetch(s))
 im()
 
-
-
 function round(num, scale) {
 	if(!("" + num).includes("e")) {
 		return +(Math.round(num + "e+" + scale)  + "e-" + scale);
@@ -34,7 +32,7 @@ function round(num, scale) {
 }
 
 const headers = /** @type {import("http").OutgoingHttpHeaders} */ ({
-		"Access-Control-Allow-Origin": "https://brainly.com.br",
+	"Access-Control-Allow-Origin": "https://brainly.com.br",
 	"Access-Control-Allow-Methods":"GET",
 	"Access-Control-Allow-Headers":"X-Api-Token"
 })
@@ -54,7 +52,6 @@ app.use(
 
 app.listen(3000, () => {})
 
-
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '/interface'));
 
@@ -63,32 +60,7 @@ app.get('/', async function(req, res) {
 
 	try {
 		const today = new Date();
-		const todayStr = today.toISOString().split("T")[0]; // Formato YYYY-MM-DD
-
-		let visitData = await visit.findOne();
-
-		if (!visitData) {
-			visitData = new visit({ totalVisits: 1, days: [todayStr] });
-		} else {
-			visitData.totalVisits += 1;
-			if (!visitData.days.includes(todayStr)) {
-				visitData.days.push(todayStr);
-			}
-		}
-
-		await visitData.save();
-	} catch (err) {
-		console.error("Erro ao registrar visita:", err);
-	}
-
-	res.sendFile(__dirname + '/interface/index.html');
-});
-app.get('/#', async function(req, res) {
-	console.log("Access PRINCIPAL: " + new Date());
-
-	try {
-		const today = new Date();
-		const todayStr = today.toISOString().split("T")[0]; // Formato YYYY-MM-DD
+		const todayStr = today.toISOString().split("T")[0];
 
 		let visitData = await visit.findOne();
 
@@ -175,13 +147,19 @@ app.get('/src',function(req,res) {
 	let required = new URL(urlparsed).searchParams.get('id') || res.sendStatus(404)
 	let format = new URL(urlparsed).searchParams.get('format') || "png"
 
-
 	res.sendFile(__dirname + `/src/${required}.${format}`)
 })
 
 app.get('/tasks', async (req, res) => {
 	try {
-		const tasks = await tarefa.find().sort({ data: -1 }); 
+		const { turma } = req.query;
+		let query = {};
+		
+		if (turma && turma !== 'all') {
+			query.turma = turma;
+		}
+		
+		const tasks = await tarefa.find(query).sort({ data: -1 }); 
 		res.json(tasks);
 	}catch (err){
 		console.error('Erro ao buscar tarefas:', err);
@@ -205,7 +183,6 @@ app.get('/search', async function(req, res) {
 		const id = req.query.id;
 		const result = tasks.find(task => task._id == id) || null;
 		if (result == null) return res.sendStatus(404);
-		// Convertendo o documento MongoDB em JSON
 		const jsonResult = JSON.stringify(result);
 		res.send(jsonResult);
 });
@@ -248,10 +225,9 @@ app.get('/moredays', async function(req, res) {
 });
 
 app.get('/addtar', function(req, res) {
-	const { author, tipo, titulo, desc, disciplina, pedida, entrega, nivel } = req.query;
-	console.log(req.query);
+	const { author, tipo, titulo, desc, disciplina, pedida, entrega, nivel, turma } = req.query;
 
-	if (!author || !tipo || !titulo || !desc || !disciplina || !pedida || !entrega || !nivel) {
+	if (!author || !tipo || !titulo || !desc || !disciplina || !pedida || !entrega || !nivel || !turma) {
 		return res.send({ success: false, reason: "Missing parameters" });
 	}
 
@@ -264,6 +240,7 @@ app.get('/addtar', function(req, res) {
 		pedida: pedida,
 		entrega: entrega,
 		nivel: nivel,
+		turma: turma,
 		registered: new Date().getTime()
 	});
 
@@ -308,15 +285,12 @@ app.get('/comment', async function(req, res) {
 				return res.send({ success: false, reason: "Missing parameters" });
 		}
 
-		// Converter a data de string para uma timestamp Unix
 		const parsedDate = new Date(date).getTime();
 
 		tarefa.findOne({ _id: idtar }, (err, tar) => {
 				if (tar) {
-						// Adicionar o comentário ao array 'comments' da tarefa
 						tar.comments.push({ comment: comment, author: author, date: parsedDate });
 
-						// Salvar a tarefa atualizada
 						tar.save((err) => {
 								if (err) {
 										console.error('Erro ao salvar tarefa:', err);
