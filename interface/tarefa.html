@@ -397,6 +397,39 @@
                 right: 1rem;
             }
         }
+        /* Garantir que comentários apareçam no mobile */
+        .comentarios-section {
+            background: var(--bg-card);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            margin-top: 1.5rem;
+        }
+        
+        .comentarios-list {
+            padding: 1rem;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        @media (max-width: 768px) {
+            .comentarios-list {
+                padding: 0.75rem;
+                max-height: 300px;
+            }
+            
+            .comentario-item {
+                padding: 0.75rem;
+            }
+            
+            .novo-comentario {
+                padding: 1rem;
+            }
+            
+            .form-select, .textarea-comentario {
+                font-size: 16px; /* Evita zoom no iOS */
+            }
+        }
     </style>
 </head>
 <body>
@@ -699,54 +732,74 @@
                     `).join('') : 
                     '<p style="text-align: center; color: var(--text-secondary);">Nenhum comentário ainda. Seja o primeiro a comentar!</p>';
                 
-                const html = `
-    <div class="task-card">
-        <div class="task-header">
-            <h1><i class="fas fa-tasks"></i> ${tarefa.title}</h1>
-            <span class="task-type-badge ${getTipoClass(tarefa.tipo)}">${tipoLabel}</span>
-        </div>
-        <div class="task-body">
-            ${adminHtml}
-            
-            ${observacaoGeralHtml}
-            
-            <div class="descricao-box">
-                <h3><i class="fas fa-align-left"></i> Descrição</h3>
-                <p>${tarefa.desc.replace(/\n/g, '<br>').replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>')}</p>
-            </div>
-            
-            <div class="info-grid">
-                <div class="info-card">
-                    <h3><i class="fas fa-user-md"></i> Autor</h3>
-                    <p>${getAlunoName(tarefa.author)}</p>
+              const html = `
+                <div class="task-card">
+                    <div class="task-header">
+                        <h1><i class="fas fa-tasks"></i> ${tarefa.title}</h1>
+                        <span class="task-type-badge ${getTipoClass(tarefa.tipo)}">${tipoLabel}</span>
+                    </div>
+                    <div class="task-body">
+                        ${adminHtml}
+                        
+                        ${observacaoGeralHtml}
+                        
+                        <div class="descricao-box">
+                            <h3><i class="fas fa-align-left"></i> Descrição</h3>
+                            <p>${tarefa.desc.replace(/\n/g, '<br>').replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>')}</p>
+                        </div>
+                        
+                        <div class="info-grid">
+                            <div class="info-card">
+                                <h3><i class="fas fa-user-md"></i> Autor</h3>
+                                <p>${getAlunoName(tarefa.author)}</p>
+                            </div>
+                            <div class="info-card">
+                                <h3><i class="fas fa-book"></i> Disciplina</h3>
+                                <p>${getDisciplinaLabel(tarefa.disc)}</p>
+                            </div>
+                            <div class="info-card">
+                                <h3><i class="fas fa-chart-line"></i> Nível</h3>
+                                <p>${tarefa.nivel}</p>
+                            </div>
+                            <div class="info-card">
+                                <h3><i class="fas fa-calendar-day"></i> Data Solicitada</h3>
+                                <p>${formatarData(tarefa.pedida)}</p>
+                            </div>
+                            <div class="info-card">
+                                <h3><i class="fas fa-clock"></i> Registrado em</h3>
+                                <p>${formatarDataCompleta(tarefa.registered)}</p>
+                            </div>
+                        </div>
+                        
+                        ${turmasHtml ? `
+                            <div class="turmas-section">
+                                <h3><i class="fas fa-users"></i> Turmas e Datas de Entrega</h3>
+                                ${turmasHtml}
+                            </div>
+                        ` : ''}
+                        
+                        <!-- COMENTÁRIOS DENTRO DO TASK-BODY -->
+                        <div class="comentarios-section">
+                            <div class="comentarios-header">
+                                <h3><i class="fas fa-comments"></i> Comentários (${tarefa.comments?.length || 0})</h3>
+                            </div>
+                            <div class="comentarios-list" id="comentariosList">
+                                ${comentariosHtml}
+                            </div>
+                            <div class="novo-comentario">
+                                <select id="selecionar-nome" class="form-select">
+                                    <option value="">Selecione seu nome</option>
+                                    ${alunos.map(aluno => `<option value="${aluno.id}">${aluno.complete}</option>`).join('')}
+                                </select>
+                                <textarea id="novo-comentario" class="textarea-comentario" rows="3" placeholder="Digite seu comentário aqui..."></textarea>
+                                <button id="enviar-comentario" class="btn-enviar">
+                                    <i class="fas fa-paper-plane"></i> Enviar Comentário
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="info-card">
-                    <h3><i class="fas fa-book"></i> Disciplina</h3>
-                    <p>${getDisciplinaLabel(tarefa.disc)}</p>
-                </div>
-                <div class="info-card">
-                    <h3><i class="fas fa-chart-line"></i> Nível</h3>
-                    <p>${tarefa.nivel}</p>
-                </div>
-                <div class="info-card">
-                    <h3><i class="fas fa-calendar-day"></i> Data Solicitada</h3>
-                    <p>${formatarData(tarefa.pedida)}</p>
-                </div>
-                <div class="info-card">
-                    <h3><i class="fas fa-clock"></i> Registrado em</h3>
-                    <p>${formatarDataCompleta(tarefa.registered)}</p>
-                </div>
-            </div>
-            
-            ${turmasHtml ? `
-                <div class="turmas-section">
-                    <h3><i class="fas fa-users"></i> Turmas e Datas de Entrega</h3>
-                    ${turmasHtml}
-                </div>
-            ` : ''}
-        </div>
-    </div>
-`;
+            `;
                 
                 document.getElementById('taskContainer').innerHTML = html;
                 
