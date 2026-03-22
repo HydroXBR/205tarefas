@@ -167,7 +167,8 @@ async function loadTasks() {
                 tituloCell.appendChild(link);
                 
                 disciplinaCell.textContent = getLabelByValue(task.disc);
-                turmaCell.innerHTML = `<span class="turma-badge-small ${task.turma === 't1-t3' ? 'turma-t1' : 'turma-t4'}">${getTurmaLabel(task.turma)}</span>`;
+                turmaCell.innerHTML = task.turmasInfo && task.turmasInfo.length > 0 ? task.turmasInfo.map(info => { const turmaLabel = info.turma === 't1-t3' ? 'T1-T3' : 'T4-T6'; const turmaClass = info.turma === 't1-t3' ? 'turma-t1' : 'turma-t4';  return `<span class="turma-badge-small ${turmaClass}" title="${info.observacao || ''}">${turmaLabel}<br><small>${new Date(info.entrega).toLocaleDateString('pt-BR')}</small></span>`;
+    }).join(' ') : (task.turma ? `<span class="turma-badge-small ${task.turma === 't1-t3' ? 'turma-t1' : 'turma-t4'}">${task.turma === 't1-t3' ? 'T1-T3' : 'T4-T6'}<br><small>${new Date(task.entrega).toLocaleDateString('pt-BR')}</small></span>` : '<span class="turma-badge-small">Geral</span>');
                 pedidaCell.textContent = new Date(task.pedida).toLocaleDateString('pt-BR');
                 
                 const entregaDate = new Date(task.entrega);
