@@ -120,6 +120,14 @@ function getTipoClass(tipo) {
     return classes[tipo.toLowerCase()] || 'tipo-atividade';
 }
 
+function formatarDataUTC(timestamp) {
+    const data = new Date(timestamp);
+    const dia = data.getUTCDate().toString().padStart(2, '0');
+    const mes = (data.getUTCMonth() + 1).toString().padStart(2, '0');
+    const ano = data.getUTCFullYear();
+    return `${dia}/${mes}/${ano}`;
+}
+
 function formatTurmasInfo(turmasInfo) {
     if (!turmasInfo || turmasInfo.length === 0) return '<span class="turma-badge-small">Geral</span>';
     
@@ -172,39 +180,27 @@ function filterTasksByTurma(tasks, currentTurma) {
 }
 
 // Função para verificar se a tarefa está pendente (considerando múltiplas turmas)
-// Função para verificar se a tarefa está pendente (considerando múltiplas turmas)
-// Função para verificar se a tarefa está pendente (considerando múltiplas turmas)
 function isTaskPending(task) {
-    // Usar UTC para evitar problemas de fuso
     const agora = new Date();
-    const hojeUTC = new Date(Date.UTC(agora.getUTCFullYear(), agora.getUTCMonth(), agora.getUTCDate()));
+    const hojeUTC = Date.UTC(agora.getUTCFullYear(), agora.getUTCMonth(), agora.getUTCDate());
     const horaUTC = agora.getUTCHours();
     
-    // Se tiver turmasInfo (novo formato)
     if (task.turmasInfo && task.turmasInfo.length > 0) {
         return task.turmasInfo.some(info => {
-            const entregaDate = new Date(info.entrega);
-            const entregaUTC = new Date(Date.UTC(entregaDate.getUTCFullYear(), entregaDate.getUTCMonth(), entregaDate.getUTCDate()));
+            const entregaUTC = info.entrega; // Já é timestamp UTC
             
-            // Se for entrega hoje
-            if (entregaUTC.getTime() === hojeUTC.getTime()) {
-                // Mostrar até meio-dia no horário de Brasília (UTC-3 = 15h UTC)
+            if (entregaUTC === hojeUTC) {
                 return horaUTC < 15; // 15h UTC = 12h Brasília
             }
-            // Tarefas futuras
             return entregaUTC > hojeUTC;
         });
     }
     
-    // Compatibilidade com formato antigo
     if (task.entrega) {
-        const entregaDate = new Date(task.entrega);
-        const entregaUTC = new Date(Date.UTC(entregaDate.getUTCFullYear(), entregaDate.getUTCMonth(), entregaDate.getUTCDate()));
-        
-        if (entregaUTC.getTime() === hojeUTC.getTime()) {
+        if (task.entrega === hojeUTC) {
             return horaUTC < 15;
         }
-        return entregaUTC > hojeUTC;
+        return task.entrega > hojeUTC;
     }
     
     return false;
@@ -295,20 +291,21 @@ function renderTabelaPendentes(tasks) {
         // Turmas
         turmaCell.innerHTML = formatTurmasInfo(task.turmasInfo);
         
-        // Data solicitada
-        pedidaCell.textContent = new Date(task.pedida).toLocaleDateString('pt-BR');
+        const pedidaTimestamp = task.pedida;
+        const pedidaDate = new Date(pedidaTimestamp);
+        pedidaCell.textContent = `${pedidaDate.getUTCDate().toString().padStart(2, '0')}/${(pedidaDate.getUTCMonth() + 1).toString().padStart(2, '0')}/${pedidaDate.getUTCFullYear()}`;
         
         // Data de entrega
         if (task.turmasInfo && task.turmasInfo.length > 0) {
-            const agoraUTC = new Date();
-            const hojeUTC = new Date(Date.UTC(agoraUTC.getUTCFullYear(), agoraUTC.getUTCMonth(), agoraUTC.getUTCDate()));
-            const horaUTC = agoraUTC.getUTCHours();
+            const agora = new Date();
+            const hojeUTC = Date.UTC(agora.getUTCFullYear(), agora.getUTCMonth(), agora.getUTCDate());
+            const horaUTC = agora.getUTCHours();
             
             const entregas = task.turmasInfo.map(info => {
                 const entregaDate = new Date(info.entrega);
-                const entregaUTC = new Date(Date.UTC(entregaDate.getUTCFullYear(), entregaDate.getUTCMonth(), entregaDate.getUTCDate()));
-                const isUrgent = entregaUTC.getTime() === hojeUTC.getTime() && horaUTC < 15;
-                return `<span class="${isUrgent ? 'urgent-date' : ''}">${info.turma === 't1-t3' ? 'T1-T3' : 'T4-T6'}: ${entregaDate.toLocaleDateString('pt-BR')}</span>`;
+                const isUrgent = info.entrega === hojeUTC && horaUTC < 15;
+                const dataFormatada = `${entregaDate.getUTCDate().toString().padStart(2, '0')}/${(entregaDate.getUTCMonth() + 1).toString().padStart(2, '0')}/${entregaDate.getUTCFullYear()}`;
+                return `<span class="${isUrgent ? 'urgent-date' : ''}">${info.turma === 't1-t3' ? 'T1-T3' : 'T4-T6'}: ${dataFormatada}</span>`;
             }).join('<br>');
             entregaCell.innerHTML = entregas;
         }
@@ -375,16 +372,7 @@ async function loadLembretes() {
         const lembretes = await response.json();
         
         const containerLembretes = document.getElementById('container-lembretes');
-        containerLembretes.innerHTML = '';
-        
-        // Função para formatar data no padrão YYYY-MM-DD usando UTC
-        function formatarDataUTC(data) {
-            const ano = data.getUTCFullYear();
-            const mes = String(data.getUTCMonth() + 1).padStart(2, '0');
-            const dia = String(data.getUTCDate()).padStart(2, '0');
-            return `${ano}-${mes}-${dia}`;
-        }
-        
+        containerLembretes.innerHTML = '';   
         // Data atual em UTC
         const agora = new Date();
         const hojeUTC = formatarDataUTC(agora);
