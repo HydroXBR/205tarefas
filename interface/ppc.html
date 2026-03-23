@@ -482,7 +482,14 @@
             
             periodos.forEach(periodo => {
                 const disciplinasPeriodo = disciplinasObrigatorias.filter(d => d.periodo === periodo);
-                const totalCreditos = disciplinasPeriodo.reduce((sum, d) => sum + d.credito, 0);
+                const totalCreditos = disciplinasPeriodo.reduce((acc, d) => {
+                    const partes = d.credito.split('.').map(Number);
+                    acc[0] += partes[0];
+                    acc[1] += partes[1];
+                    acc[2] += partes[2];
+                    acc[3] += partes[3];
+                    return acc;
+                }, [0,0,0,0]).join('.');
                 const totalHoras = disciplinasPeriodo.reduce((sum, d) => sum + d.total, 0);
                 
                 const section = document.createElement('div');
@@ -536,7 +543,14 @@
         
         function renderEstagios() {
             const container = document.getElementById('estagio');
-            const totalCreditos = estagios.reduce((sum, e) => sum + e.credito, 0);
+            const totalCreditos = estagios.reduce((acc, e) => {
+                const partes = e.credito.split('.').map(Number);
+                acc[0] += partes[0];
+                acc[1] += partes[1];
+                acc[2] += partes[2];
+                acc[3] += partes[3];
+                return acc;
+            }, [0,0,0,0]).join('.');
             const totalHoras = estagios.reduce((sum, e) => sum + e.total, 0);
             
             const section = document.createElement('div');
