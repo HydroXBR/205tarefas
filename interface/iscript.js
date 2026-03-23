@@ -173,37 +173,38 @@ function filterTasksByTurma(tasks, currentTurma) {
 
 // Função para verificar se a tarefa está pendente (considerando múltiplas turmas)
 // Função para verificar se a tarefa está pendente (considerando múltiplas turmas)
+// Função para verificar se a tarefa está pendente (considerando múltiplas turmas)
 function isTaskPending(task) {
-    const now = new Date();
-    const todayOnlyDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const currentHour = now.getHours();
+    // Usar UTC para evitar problemas de fuso
+    const agora = new Date();
+    const hojeUTC = new Date(Date.UTC(agora.getUTCFullYear(), agora.getUTCMonth(), agora.getUTCDate()));
+    const horaUTC = agora.getUTCHours();
     
     // Se tiver turmasInfo (novo formato)
     if (task.turmasInfo && task.turmasInfo.length > 0) {
         return task.turmasInfo.some(info => {
             const entregaDate = new Date(info.entrega);
-            const entregaOnlyDate = new Date(entregaDate.getFullYear(), entregaDate.getMonth(), entregaDate.getDate());
+            const entregaUTC = new Date(Date.UTC(entregaDate.getUTCFullYear(), entregaDate.getUTCMonth(), entregaDate.getUTCDate()));
             
             // Se for entrega hoje
-            if (entregaOnlyDate.getTime() === todayOnlyDate.getTime()) {
-                // Se ainda não passou das 12h, mostra tarefa de hoje
-                // Se já passou das 12h, não mostra mais tarefas de hoje
-                return currentHour < 18;
+            if (entregaUTC.getTime() === hojeUTC.getTime()) {
+                // Mostrar até meio-dia no horário de Brasília (UTC-3 = 15h UTC)
+                return horaUTC < 15; // 15h UTC = 12h Brasília
             }
             // Tarefas futuras
-            return entregaOnlyDate > todayOnlyDate;
+            return entregaUTC > hojeUTC;
         });
     }
     
     // Compatibilidade com formato antigo
     if (task.entrega) {
         const entregaDate = new Date(task.entrega);
-        const entregaOnlyDate = new Date(entregaDate.getFullYear(), entregaDate.getMonth(), entregaDate.getDate());
+        const entregaUTC = new Date(Date.UTC(entregaDate.getUTCFullYear(), entregaDate.getUTCMonth(), entregaDate.getUTCDate()));
         
-        if (entregaOnlyDate.getTime() === todayOnlyDate.getTime()) {
-            return currentHour < 12;
+        if (entregaUTC.getTime() === hojeUTC.getTime()) {
+            return horaUTC < 15;
         }
-        return entregaOnlyDate > todayOnlyDate;
+        return entregaUTC > hojeUTC;
     }
     
     return false;
@@ -299,18 +300,17 @@ function renderTabelaPendentes(tasks) {
         
         // Data de entrega
         if (task.turmasInfo && task.turmasInfo.length > 0) {
+            const agoraUTC = new Date();
+            const hojeUTC = new Date(Date.UTC(agoraUTC.getUTCFullYear(), agoraUTC.getUTCMonth(), agoraUTC.getUTCDate()));
+            const horaUTC = agoraUTC.getUTCHours();
+            
             const entregas = task.turmasInfo.map(info => {
                 const entregaDate = new Date(info.entrega);
-                const isUrgent = entregaDate <= new Date() && new Date().getHours() < 12;
+                const entregaUTC = new Date(Date.UTC(entregaDate.getUTCFullYear(), entregaDate.getUTCMonth(), entregaDate.getUTCDate()));
+                const isUrgent = entregaUTC.getTime() === hojeUTC.getTime() && horaUTC < 15;
                 return `<span class="${isUrgent ? 'urgent-date' : ''}">${info.turma === 't1-t3' ? 'T1-T3' : 'T4-T6'}: ${entregaDate.toLocaleDateString('pt-BR')}</span>`;
             }).join('<br>');
             entregaCell.innerHTML = entregas;
-        } else if (task.entrega) {
-            const entregaDate = new Date(task.entrega);
-            const isUrgent = entregaDate <= new Date() && new Date().getHours() < 12;
-            entregaCell.innerHTML = `<span class="${isUrgent ? 'urgent-date' : ''}">${entregaDate.toLocaleDateString('pt-BR')}</span>`;
-        } else {
-            entregaCell.textContent = '—';
         }
         
         // Nível
