@@ -131,12 +131,18 @@ function formatarDataUTC(timestamp) {
 function formatTurmasInfo(turmasInfo) {
     if (!turmasInfo || turmasInfo.length === 0) return '<span class="turma-badge-small">Geral</span>';
     
+    const agora = new Date();
+    const hojeUTC = Date.UTC(agora.getUTCFullYear(), agora.getUTCMonth(), agora.getUTCDate());
+    const horaUTC = agora.getUTCHours();
+    
     return turmasInfo.map(info => {
         const turmaLabel = info.turma === 't1-t3' ? 'T1-T3' : 'T4-T6';
         const turmaClass = info.turma === 't1-t3' ? 'turma-t1' : 'turma-t4';
         const entregaDate = new Date(info.entrega);
-        const hoje = new Date();
-        const isUrgent = entregaDate <= hoje && hoje.getHours() < 12;
+        const dataFormatada = `${entregaDate.getUTCDate().toString().padStart(2, '0')}/${(entregaDate.getUTCMonth() + 1).toString().padStart(2, '0')}/${entregaDate.getUTCFullYear()}`;
+        
+        // Verificar se é urgente (entrega hoje E antes das 12h Brasília)
+        const isUrgent = info.entrega === hojeUTC && horaUTC < 23;
         
         return `
             <div class="turma-info-tooltip" title="${info.observacao || 'Sem observações específicas'}">
@@ -144,7 +150,7 @@ function formatTurmasInfo(turmasInfo) {
                     ${turmaLabel}
                 </span>
                 <span class="turma-entrega ${isUrgent ? 'urgent-date' : ''}">
-                    ${entregaDate.toLocaleDateString('pt-BR')}
+                    ${dataFormatada}
                 </span>
                 ${info.observacao ? '<i class="fas fa-info-circle turma-info-icon"></i>' : ''}
             </div>
