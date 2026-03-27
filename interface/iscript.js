@@ -1,3 +1,51 @@
+// Array de aniversários (nome e data)
+const aniversarios = [
+    { nome: "Teste", data: "27/03", id: "teste" },
+    { nome: "Maria Clara Magalhães", data: "01/09", id: "mariaclara" },
+    { nome: "Laisa Vásquez", data: "11/03", id: "laisavasquez" },
+    { nome: "Mateus Cesarino", data: "03/01", id: "mateuscesarino" },
+    { nome: "Allan Campelo", data: "26/09", id: "allanarruda" },
+    { nome: "Anna Luiza Jaques", data: "02/04", id: "annaluizaj" },
+    { nome: "Eudson Amon", data: "15/01", id: "eudson" },
+    { nome: "Antunes Ruas", data: "21/08", id: "antunesruas" },
+    { nome: "João Pedro Chuvas", data: "31/05", id: "joaochuvas" },
+    { nome: "Thiago Luniere", data: "31/07", id: "thiagoluniere" },
+    { nome: "Cauã Lobão", data: "08/01", id: "caualobao" },
+    { nome: "Sophia Melo", data: "24/08", id: "sophiamelo" },
+    { nome: "Sara Cristina", data: "03/11", id: "saracristina" },
+    { nome: "Rayca Mar", data: "16/01", id: "rayca" },
+    { nome: "Felipe Bitencourt", data: "04/09", id: "bitencourt" },
+    { nome: "Maria Eduarda Bentes", data: "23/03", id: "mebentes" },
+    { nome: "Luana Dias", data: "27/01", id: "luanadias" },
+    { nome: "Isaías Nascimento", data: "18/07", id: "isaias" },
+    { nome: "Sol", data: "29/09", id: "sol" },
+    { nome: "Brayan Tomaz", data: "27/12", id: "brayantomaz" },
+    { nome: "Pedro Melo", data: "13/11", id: "pedrosouza" },
+    { nome: "Érica Luiza", data: "28/01", id: "ericasilva" },
+    { nome: "Ana Clara", data: "29/02", id: "anac" },
+    { nome: "Ayla Rita", data: "04/07", id: "aylarita" },
+    { nome: "Arlene Tavares", data: "14/04", id: "arlenetav" },
+    { nome: "Ítalo Freire", data: "03/12", id: "italocosta" },
+    { nome: "Vítor Leocádio", data: "23/09", id: "vitorleocadio" },
+    { nome: "Aylla Beatriz", data: "02/09", id: "ayllalopes" },
+    { nome: "Samuel Vicente", data: "13/06", id: "samuelvicente" },
+    { nome: "Maria Eduarda Costa", data: "04/09", id: "mecosta" },
+    { nome: "Anna Luiza Baraúna", data: "16/12", id: "annaluizab" },
+    { nome: "Beatriz Nogueira", data: "08/05", id: "beatrizn" },
+    { nome: "Eduardo Araújo", data: "03/11", id: "eduardoaraujo" },
+    { nome: "Anna Valentina", data: "06/04", id: "anavalentina" },
+    { nome: "Marcos Deywison", data: "25/04", id: "marcosd" },
+    { nome: "Mateus Sousa", data: "04/01", id: "mateussousa" },
+    { nome: "Vitório Gabriel", data: "13/11", id: "vitorio" },
+    { nome: "Anita de Medeiros", data: "01/07", id: "anita" },
+    { nome: "Allan Chaves", data: "19/06", id: "allanchaves" },
+    { nome: "Sofia Pachalian", data: "22/02", id: "sofiapachalian" },
+    { nome: "Maria Cristina", data: "30/07", id: "mariacristina" },
+    { nome: "Yanno Pereira", data: "18/09", id: "yanno" },
+    { nome: "Álvaro Henrique", data: "08/09", id: "alvarogaia" },
+    { nome: "Raphel Cohen", data: "21/09", id: "raphaelcohen" }
+];
+
 const urlParams = new URLSearchParams(window.location.search);
 const isAdmin = urlParams.get('admin');
 let currentTurma = 'all';
@@ -378,41 +426,72 @@ async function loadLembretes() {
         const lembretes = await response.json();
         
         const containerLembretes = document.getElementById('container-lembretes');
-        containerLembretes.innerHTML = '';   
+        containerLembretes.innerHTML = '';
+        
+        // Função para formatar data no padrão YYYY-MM-DD usando UTC
+        function formatarDataUTC(data) {
+            const ano = data.getUTCFullYear();
+            const mes = String(data.getUTCMonth() + 1).padStart(2, '0');
+            const dia = String(data.getUTCDate()).padStart(2, '0');
+            return `${ano}-${mes}-${dia}`;
+        }
+        
+        function formatarDataDDMM(data) {
+            const mes = String(data.getUTCMonth() + 1).padStart(2, '0');
+            const dia = String(data.getUTCDate()).padStart(2, '0');
+            return `${dia}/${mes}`;
+        }
+        
         // Data atual em UTC
         const agora = new Date();
         const hojeUTC = formatarDataUTC(agora);
+        const hojeDDMM = formatarDataDDMM(agora);
         
         // Verificar se deve incluir ontem (antes das 7h no horário de Brasília)
-        // Brasília é UTC-3
         const horaBrasilia = agora.getUTCHours() - 3;
-        const incluirOntem = horaBrasilia < 8;
+        const incluirOntem = horaBrasilia < 7;
         
         let ontemUTC = '';
+        let ontemDDMM = '';
         if (incluirOntem) {
             const dataOntem = new Date(agora);
             dataOntem.setUTCDate(dataOntem.getUTCDate() - 1);
             ontemUTC = formatarDataUTC(dataOntem);
+            ontemDDMM = formatarDataDDMM(dataOntem);
         }
         
-        // Filtrar lembretes que são para hoje ou para ontem (se for antes das 8h)
+        // Filtrar lembretes do banco
         const lembretesHoje = lembretes.filter(lembrete => {
-            // A data do lembrete já está no formato YYYY-MM-DD
             const dataLembrete = lembrete.date;
             return dataLembrete === hojeUTC || (incluirOntem && dataLembrete === ontemUTC);
         });
         
-        if (lembretesHoje.length > 0) {
+        // Adicionar lembretes de aniversário
+        const aniversariosHoje = aniversarios.filter(aniv => {
+            return aniv.data === hojeDDMM || (incluirOntem && aniv.data === ontemDDMM);
+        });
+        
+        // Combinar lembretes
+        const todosLembretes = [...lembretesHoje];
+        
+        aniversariosHoje.forEach(aniv => {
+            todosLembretes.push({
+                title: "🎂 Aniversário! 🎉",
+                desc: `Hoje é aniversário de ${aniv.nome}! Desejamos um dia muito especial e cheio de alegrias! 🥳🎈`
+            });
+        });
+        
+        if (todosLembretes.length > 0) {
             const alertDiv = document.createElement('div');
             alertDiv.className = 'alert alert-warning';
             alertDiv.innerHTML = `<i class="fas fa-bell"></i> <strong>Lembretes importantes</strong>`;
             containerLembretes.appendChild(alertDiv);
             
-            lembretesHoje.forEach(lembrete => {
+            todosLembretes.forEach(lembrete => {
                 const divLembrete = document.createElement('div');
                 divLembrete.className = 'lembrete-card';
                 divLembrete.innerHTML = `
-                    <i class="fas fa-sticky-note"></i>
+                    <i class="fas ${lembrete.title === '🎂 Aniversário! 🎉' ? 'fa-birthday-cake' : 'fa-sticky-note'}"></i>
                     <div class="lembrete-content">
                         <strong>${lembrete.title}</strong>
                         <span style="white-space: pre-wrap;">${lembrete.desc}</span>
