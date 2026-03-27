@@ -63,9 +63,18 @@
 
     <main class="main-container">
         <div class="tasks-section">
-            <div class="section-header">
-                <h2><i class="fas fa-tasks"></i> Atividades Pendentes</h2>
-                <p>Tarefas para entregar hoje ou nos próximos dias</p>
+            <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                <div>
+                    <h2><i class="fas fa-tasks"></i> Atividades Pendentes</h2>
+                    <p>Tarefas para entregar hoje ou nos próximos dias</p>
+                </div>
+                <div class="filter-provas-toggle">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="hideProvasToggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <span class="toggle-label"><i class="fas fa-eye-slash"></i> Ocultar provas</span>
+                </div>
             </div>
             <div class="table-responsive">
                 <table class="tasks-table">
