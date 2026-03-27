@@ -1,6 +1,5 @@
 // Array de aniversários (nome e data)
 const aniversarios = [
-    { nome: "Teste", data: "27/03", id: "teste" },
     { nome: "Maria Clara Magalhães", data: "01/09", id: "mariaclara" },
     { nome: "Laisa Vásquez", data: "11/03", id: "laisavasquez" },
     { nome: "Mateus Cesarino", data: "03/01", id: "mateuscesarino" },
@@ -447,9 +446,9 @@ async function loadLembretes() {
         const hojeUTC = formatarDataUTC(agora);
         const hojeDDMM = formatarDataDDMM(agora);
         
-        // Verificar se deve incluir ontem (antes das 7h no horário de Brasília)
+        // Verificar se deve incluir ontem (antes das 9h no horário de Brasília)
         const horaBrasilia = agora.getUTCHours() - 3;
-        const incluirOntem = horaBrasilia < 7;
+        const incluirOntem = horaBrasilia < 9;
         
         let ontemUTC = '';
         let ontemDDMM = '';
