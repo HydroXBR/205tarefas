@@ -48,6 +48,8 @@ const aniversarios = [
 const urlParams = new URLSearchParams(window.location.search);
 const isAdmin = urlParams.get('admin');
 let currentTurma = 'all';
+let hideProvas = false; 
+let cachedTasks = [];
 
 
 function pmaiuscula(string) {
@@ -64,9 +66,17 @@ document.querySelectorAll('.turma-btn').forEach(btn => {
         document.querySelectorAll('.turma-btn').forEach(b => b.classList.remove('active'));
         this.classList.add('active');
         currentTurma = this.dataset.turma;
-        loadTasks();
+        applyFiltersAndRender(); // Apenas reaplica os filtros, sem nova requisição
     });
 });
+
+const hideProvasToggle = document.getElementById('hideProvasToggle');
+if (hideProvasToggle) {
+    hideProvasToggle.addEventListener('change', function(e) {
+        hideProvas = e.target.checked;
+        applyFiltersAndRender(); // Apenas reaplica os filtros, sem nova requisição
+    });
+}
 
 const disciplinas = [
     // 1º Período
@@ -269,39 +279,53 @@ function getEarliestDelivery(task) {
 
 async function loadTasks() {
     try {
-        // SEMPRE buscar todas as tarefas
         const response = await fetch('/tasks');
         const tasks = await response.json();
         
+        // Guarda as tarefas originais em cache
+        cachedTasks = tasks;
+        
         // Ordenar por data de entrega (a mais próxima primeiro)
-        tasks.sort((a, b) => getEarliestDelivery(a) - getEarliestDelivery(b));
+        cachedTasks.sort((a, b) => getEarliestDelivery(a) - getEarliestDelivery(b));
         
-        // FILTRAR POR TURMA no frontend
-        let tasksFiltradas = tasks;
-        if (currentTurma !== 'all') {
-            tasksFiltradas = tasks.filter(task => {
-                // Verifica se a tarefa tem a turma selecionada
-                if (task.turmasInfo && task.turmasInfo.length > 0) {
-                    return task.turmasInfo.some(info => info.turma === currentTurma);
-                }
-                // Compatibilidade com formato antigo
-                return task.turma === currentTurma;
-            });
-        }
-        
-        // Separar pendentes e anteriores das tarefas já filtradas
-        const tasksPendentes = tasksFiltradas.filter(task => isTaskPending(task));
-        const tasksAnteriores = tasksFiltradas.filter(task => !isTaskPending(task));
-        
-        // Renderizar tabelas
-        renderTabelaPendentes(tasksPendentes);
-        renderTabelaAnteriores(tasksAnteriores);
+        // Aplica os filtros e renderiza
+        applyFiltersAndRender();
         
     } catch (err) {
         console.error('Erro ao obter dados das tarefas:', err);
         const tableBody = document.getElementById('tabela-tarefas');
-        tableBody.innerHTML = '<tr><td colspan="7" class="error-cell"><i class="fas fa-exclamation-triangle"></i> Erro ao carregar tarefas</td></tr>';
+        tableBody.innerHTML = '}<tr><td colspan="5" class="error-cell"><i class="fas fa-exclamation-triangle"></i> Erro ao carregar tarefas</td></tr>';
     }
+}
+
+function applyFiltersAndRender() {
+    if (!cachedTasks || cachedTasks.length === 0) return;
+    
+    // Filtro por turma
+    let tasksFiltradas = cachedTasks;
+    if (currentTurma !== 'all') {
+        tasksFiltradas = tasksFiltradas.filter(task => {
+            if (task.turmasInfo && task.turmasInfo.length > 0) {
+                return task.turmasInfo.some(info => info.turma === currentTurma);
+            }
+            return task.turma === currentTurma;
+        });
+    }
+    
+    // Filtro para ocultar provas (apenas esconde visualmente, não remove do cache)
+    if (hideProvas) {
+        tasksFiltradas = tasksFiltradas.filter(task => {
+            return task.tipo?.toLowerCase() !== 'prova';
+        });
+    }
+    
+    // Separar pendentes e anteriores
+    const tasksPendentes = tasksFiltradas.filter(task => isTaskPending(task));
+    const tasksAnteriores = tasksFiltradas.filter(task => !isTaskPending(task));
+    
+    // Renderizar tabelas
+    renderTabelaPendentes(tasksPendentes);
+    renderTabelaAnteriores(tasksAnteriores);
 }
 
 // Funções de renderização separadas para organizar
