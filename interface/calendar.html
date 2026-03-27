@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Calendário - MedTasks</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/nqmZ9nGr/Logo-IG-Med-Ufam116-3x.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .calendar-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            background: var(--bg-card);
+            padding: 1rem 2rem;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .calendar-nav {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .calendar-nav button {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 0.5rem 1rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+        
+        .calendar-nav button:hover {
+            border-color: var(--primary-green);
+            color: var(--primary-green);
+        }
+        
+        .current-month {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-green);
+        }
+        
+        .turma-filter {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .filter-btn {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+        }
+        
+        .filter-btn.active {
+            background: var(--primary-green);
+            border-color: var(--primary-green);
+            color: white;
+        }
+        
+        .calendar-grid {
+            background: var(--bg-card);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+        
+        .weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            background: var(--bg-elevated);
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .weekday {
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+            color: var(--primary-green);
+        }
+        
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+        }
+        
+        .calendar-day {
+            min-height: 100px;
+            border-right: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.5rem;
+            transition: background 0.3s ease;
+            position: relative;
+        }
+        
+        .calendar-day:nth-child(7n) {
+            border-right: none;
+        }
+        
+        .calendar-day.other-month {
+            opacity: 0.4;
+        }
+        
+        .calendar-day.today {
+            background: rgba(105, 120, 37, 0.1);
+            border: 1px solid var(--primary-green);
+        }
+        
+        .day-number {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 50%;
+        }
+        
+        .today .day-number {
+            background: var(--primary-green);
+            color: white;
+        }
+        
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        
+        .task-badge {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.4rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .task-badge:hover {
+            transform: scale(1.02);
+            filter: brightness(1.1);
+        }
+        
+        .task-badge.prova { background: rgba(239, 68, 68, 0.2); color: #ef4444; border-left: 3px solid #ef4444; }
+        .task-badge.trabalho { background: rgba(59, 130, 246, 0.2); color: #3b82f6; border-left: 3px solid #3b82f6; }
+        .task-badge.seminário { background: rgba(139, 92, 246, 0.2); color: #a855f7; border-left: 3px solid #a855f7; }
+        .task-badge.atividade { background: rgba(16, 185, 129, 0.2); color: #10b981; border-left: 3px solid #10b981; }
+        .task-badge.leitura { background: rgba(245, 158, 11, 0.2); color: #f59e0b; border-left: 3px solid #f59e0b; }
+        .task-badge.prática { background: rgba(236, 72, 153, 0.2); color: #ec489a; border-left: 3px solid #ec489a; }
+        
+        .more-tasks {
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            text-align: center;
+            padding: 0.2rem;
+        }
+        
+        .more-tasks:hover {
+            color: var(--primary-green);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: var(--bg-card);
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-dark) 100%);
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h3 {
+            margin: 0;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .modal-task-item {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .modal-task-item:hover {
+            background: var(--bg-elevated);
+        }
+        
+        .modal-task-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .modal-task-type {
+            font-size: 0.7rem;
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            margin-top: 0.25rem;
+        }
+        
+        .loading-calendar {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+        
+        @media (max-width: 768px) {
+            .calendar-container {
+                padding: 1rem;
+            }
+            
+            .calendar-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .calendar-nav {
+                justify-content: center;
+            }
+            
+            .calendar-day {
+                min-height: 80px;
+                font-size: 0.7rem;
+            }
+            
+            .task-badge {
+                font-size: 0.6rem;
+                white-space: normal;
+                word-break: break-word;
+            }
+            
+            .weekday {
+                font-size: 0.7rem;
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="https://i.ibb.co/5XVmGm7h/marca-ufam-vetor-positivo.png" alt="UFAM Logo" class="ufam-logo">
+                <div class="turma-logo-container">
+                    <img src="https://i.ibb.co/nqmZ9nGr/Logo-IG-Med-Ufam116-3x.png" alt="Turma 116" class="turma-logo">
+                </div>
+                <div class="logo-text">
+                    <span class="med-text">Med</span><span class="tasks-text">Tasks</span>
+                    <span class="turma-badge">Turma 116</span>
+                </div>
+            </div>
+            <div class="menu-icon" id="menuIcon">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="/"><i class="fas fa-home"></i> Início</a>
+                <a href="/ppc"><i class="fas fa-book-open"></i> PPC</a>
+                <a href="/sobre"><i class="fas fa-info-circle"></i> Sobre</a>
+                <a href="/horarios"><i class="fas fa-calendar-alt"></i> Horários</a>
+                <a href="/calendar" class="active"><i class="fas fa-calendar-week"></i> Calendário</a>
+                <a href="/add" class="btn-add"><i class="fas fa-plus"></i> Adicionar</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="calendar-container">
+        <div class="calendar-header">
+            <div class="calendar-nav">
+                <button id="prevMonth"><i class="fas fa-chevron-left"></i></button>
+                <span class="current-month" id="currentMonth">Janeiro 2024</span>
+                <button id="nextMonth"><i class="fas fa-chevron-right"></i></button>
+                <button id="todayBtn">Hoje</button>
+            </div>
+            <div class="turma-filter">
+                <button class="filter-btn active" data-turma="all">Todas</button>
+                <button class="filter-btn" data-turma="t1-t3">T1-T3</button>
+                <button class="filter-btn" data-turma="t4-t6">T4-T6</button>
+            </div>
+        </div>
+        
+        <div class="calendar-grid">
+            <div class="weekdays">
+                <div class="weekday">Dom</div>
+                <div class="weekday">Seg</div>
+                <div class="weekday">Ter</div>
+                <div class="weekday">Qua</div>
+                <div class="weekday">Qui</div>
+                <div class="weekday">Sex</div>
+                <div class="weekday">Sáb</div>
+            </div>
+            <div class="calendar-days" id="calendarDays">
+                <div class="loading-calendar">
+                    <div class="loader"></div>
+                    <p>Carregando calendário...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de detalhes -->
+    <div class="modal" id="taskModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-tasks"></i> Tarefas do dia</h3>
+                <button class="modal-close" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Tarefas serão inseridas aqui -->
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p><i class="far fa-copyright"></i> 2026 MedTasks - Turma 116 - Faculdade de Medicina UFAM</p>
+        </div>
+    </footer>
+
+    <script>
+        let currentDate = new Date();
+        let allTasks = [];
+        let currentTurma = 'all';
+        
+        const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+        
+        // Função para formatar data em YYYY-MM-DD (UTC)
+        function formatDateUTC(timestamp) {
+            const date = new Date(timestamp);
+            const year = date.getUTCFullYear();
+            const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+            const day = String(date.getUTCDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+        
+        // Função para obter a data atual em UTC
+        function getTodayUTC() {
+            const now = new Date();
+            return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+        }
+        
+        // Função para verificar se uma tarefa pertence à turma selecionada
+        function taskBelongsToTurma(task, turma) {
+            if (turma === 'all') return true;
+            if (task.turmasInfo && task.turmasInfo.length > 0) {
+                return task.turmasInfo.some(info => info.turma === turma);
+            }
+            return task.turma === turma;
+        }
+        
+        // Função para obter tarefas de uma data específica
+        function getTasksForDate(dateStr) {
+            const tasksForDate = [];
+            
+            allTasks.forEach(task => {
+                if (task.turmasInfo && task.turmasInfo.length > 0) {
+                    task.turmasInfo.forEach(info => {
+                        const entregaStr = formatDateUTC(info.entrega);
+                        if (entregaStr === dateStr && taskBelongsToTurma(task, currentTurma)) {
+                            tasksForDate.push({
+                                id: task._id,
+                                title: task.title,
+                                tipo: task.tipo,
+                                turma: info.turma,
+                                disciplina: task.disc,
+                                observacao: info.observacao
+                            });
+                        }
+                    });
+                } else if (task.entrega) {
+                    const entregaStr = formatDateUTC(task.entrega);
+                    if (entregaStr === dateStr && taskBelongsToTurma(task, currentTurma)) {
+                        tasksForDate.push({
+                            id: task._id,
+                            title: task.title,
+                            tipo: task.tipo,
+                            turma: task.turma,
+                            disciplina: task.disc
+                        });
+                    }
+                }
+            });
+            
+            return tasksForDate;
+        }
+        
+        // Função para obter o tipo de badge
+        function getTipoClass(tipo) {
+            const classes = {
+                'prova': 'prova',
+                'trabalho': 'trabalho',
+                'seminário': 'seminário',
+                'atividade': 'atividade',
+                'leitura': 'leitura',
+                'prática': 'prática'
+            };
+            return classes[tipo?.toLowerCase()] || 'atividade';
+        }
+        
+        // Função para carregar o calendário
+        async function loadCalendar() {
+            try {
+                const response = await fetch('/tasks');
+                allTasks = await response.json();
+                renderCalendar();
+            } catch (error) {
+                console.error('Erro ao carregar tarefas:', error);
+                document.getElementById('calendarDays').innerHTML = '<div class="loading-calendar"><i class="fas fa-exclamation-triangle"></i> Erro ao carregar calendário</div>';
+            }
+        }
+        
+        // Função para renderizar o calendário
+        function renderCalendar() {
+            const year = currentDate.getUTCFullYear();
+            const month = currentDate.getUTCMonth();
+            
+            document.getElementById('currentMonth').textContent = `${meses[month]} ${year}`;
+            
+            const firstDayOfMonth = new Date(Date.UTC(year, month, 1));
+            const startDay = firstDayOfMonth.getUTCDay();
+            
+            const daysInMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+            const daysInPrevMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
+            
+            const calendarDays = document.getElementById('calendarDays');
+            calendarDays.innerHTML = '';
+            
+            const todayUTC = getTodayUTC();
+            const todayStr = formatDateUTC(todayUTC.getTime());
+            
+            // Dias do mês anterior
+            for (let i = startDay - 1; i >= 0; i--) {
+                const day = daysInPrevMonth - i;
+                const date = new Date(Date.UTC(year, month - 1, day));
+                const dateStr = formatDateUTC(date.getTime());
+                const tasks = getTasksForDate(dateStr);
+                calendarDays.appendChild(createDayCell(day, true, dateStr, tasks, false));
+            }
+            
+            // Dias do mês atual
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(Date.UTC(year, month, day));
+                const dateStr = formatDateUTC(date.getTime());
+                const tasks = getTasksForDate(dateStr);
+                const isToday = dateStr === todayStr;
+                calendarDays.appendChild(createDayCell(day, false, dateStr, tasks, isToday));
+            }
+            
+            // Dias do próximo mês
+            const totalCells = Math.ceil((startDay + daysInMonth) / 7) * 7;
+            const nextMonthDays = totalCells - (startDay + daysInMonth);
+            for (let day = 1; day <= nextMonthDays; day++) {
+                const date = new Date(Date.UTC(year, month + 1, day));
+                const dateStr = formatDateUTC(date.getTime());
+                const tasks = getTasksForDate(dateStr);
+                calendarDays.appendChild(createDayCell(day, true, dateStr, tasks, false));
+            }
+        }
+        
+        // Função para criar uma célula do dia
+        function createDayCell(day, isOtherMonth, dateStr, tasks, isToday) {
+            const cell = document.createElement('div');
+            cell.className = 'calendar-day';
+            if (isOtherMonth) cell.classList.add('other-month');
+            if (isToday) cell.classList.add('today');
+            
+            const dayNumber = document.createElement('div');
+            dayNumber.className = 'day-number';
+            dayNumber.textContent = day;
+            cell.appendChild(dayNumber);
+            
+            if (tasks.length > 0) {
+                const taskList = document.createElement('div');
+                taskList.className = 'task-list';
+                
+                const maxDisplay = 3;
+                const displayedTasks = tasks.slice(0, maxDisplay);
+                
+                displayedTasks.forEach(task => {
+                    const taskBadge = document.createElement('div');
+                    taskBadge.className = `task-badge ${getTipoClass(task.tipo)}`;
+                    taskBadge.textContent = task.title.length > 20 ? task.title.substring(0, 18) + '...' : task.title;
+                    taskBadge.title = `${task.title} (${task.turma === 't1-t3' ? 'T1-T3' : 'T4-T6'})`;
+                    taskBadge.onclick = (e) => {
+                        e.stopPropagation();
+                        window.location.href = `/tarefa?id=${task.id}`;
+                    };
+                    taskList.appendChild(taskBadge);
+                });
+                
+                if (tasks.length > maxDisplay) {
+                    const moreBtn = document.createElement('div');
+                    moreBtn.className = 'more-tasks';
+                    moreBtn.textContent = `+ ${tasks.length - maxDisplay} mais`;
+                    moreBtn.onclick = (e) => {
+                        e.stopPropagation();
+                        showModal(dateStr, tasks);
+                    };
+                    taskList.appendChild(moreBtn);
+                }
+                
+                cell.appendChild(taskList);
+            }
+            
+            cell.onclick = () => {
+                if (tasks.length > 0) {
+                    showModal(dateStr, tasks);
+                }
+            };
+            
+            return cell;
+        }
+        
+        // Função para mostrar modal com tarefas do dia
+        function showModal(dateStr, tasks) {
+            const modal = document.getElementById('taskModal');
+            const modalBody = document.getElementById('modalBody');
+            
+            const [year, month, day] = dateStr.split('-');
+            const dateFormatted = `${day}/${month}/${year}`;
+            
+            modalBody.innerHTML = `
+                <p style="margin-bottom: 1rem;"><strong>📅 ${dateFormatted}</strong> - ${tasks.length} tarefa(s)</p>
+                ${tasks.map(task => `
+                    <div class="modal-task-item" onclick="window.location.href='/tarefa?id=${task.id}'">
+                        <div class="modal-task-title">${task.title}</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">${task.disciplina ? getLabelByValue(task.disciplina) : ''}</div>
+                        <span class="modal-task-type ${getTipoClass(task.tipo)}" style="background: rgba(0,0,0,0.2);">${task.tipo}</span>
+                        <span style="font-size: 0.7rem; margin-left: 0.5rem;">${task.turma === 't1-t3' ? 'T1-T3' : 'T4-T6'}</span>
+                        ${task.observacao ? `<div style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 0.25rem;"><i class="fas fa-info-circle"></i> ${task.observacao}</div>` : ''}
+                    </div>
+                `).join('')}
+            `;
+            
+            modal.classList.add('active');
+        }
+        
+        // Função auxiliar para pegar nome da disciplina
+        function getLabelByValue(value) {
+            const disciplinas = [
+                { value: "isc", label: "Introdução à Saúde Coletiva" },
+                { value: "bcm", label: "Biologia Celular e Molecular" },
+                { value: "ah1", label: "Anatomia Humana I" },
+                { value: "emb", label: "Embriologia" },
+                { value: "metodologia", label: "Metodologia do Trabalho Científico" },
+                { value: "etica", label: "Ética Médica" }
+            ];
+            const disc = disciplinas.find(d => d.value === value);
+            return disc ? disc.label : value;
+        }
+        
+        // Navegação do calendário
+        document.getElementById('prevMonth').addEventListener('click', () => {
+            currentDate.setUTCMonth(currentDate.getUTCMonth() - 1);
+            renderCalendar();
+        });
+        
+        document.getElementById('nextMonth').addEventListener('click', () => {
+            currentDate.setUTCMonth(currentDate.getUTCMonth() + 1);
+            renderCalendar();
+        });
+        
+        document.getElementById('todayBtn').addEventListener('click', () => {
+            currentDate = new Date();
+            renderCalendar();
+        });
+        
+        // Filtro por turma
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentTurma = btn.dataset.turma;
+                renderCalendar();
+            });
+        });
+        
+        // Modal
+        document.getElementById('closeModal').addEventListener('click', () => {
+            document.getElementById('taskModal').classList.remove('active');
+        });
+        
+        document.getElementById('taskModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('taskModal')) {
+                document.getElementById('taskModal').classList.remove('active');
+            }
+        });
+        
+        // Menu mobile
+        document.getElementById('menuIcon').addEventListener('click', () => {
+            document.getElementById('navLinks').classList.toggle('active');
+        });
+        
+        // Inicializar
+        loadCalendar();
+    </script>
+</body>
+</html>
