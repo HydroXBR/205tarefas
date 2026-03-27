@@ -406,36 +406,60 @@
         }
         
         // Função para obter tarefas de uma data específica
+        // Função para obter tarefas de uma data específica (sem duplicar)
         function getTasksForDate(dateStr) {
             const tasksForDate = [];
+            const tasksMap = new Map(); // Para evitar duplicatas
             
             allTasks.forEach(task => {
                 if (task.turmasInfo && task.turmasInfo.length > 0) {
                     task.turmasInfo.forEach(info => {
                         const entregaStr = formatDateUTC(info.entrega);
                         if (entregaStr === dateStr && taskBelongsToTurma(task, currentTurma)) {
-                            tasksForDate.push({
-                                id: task._id,
-                                title: task.title,
-                                tipo: task.tipo,
-                                turma: info.turma,
-                                disciplina: task.disc,
-                                observacao: info.observacao
-                            });
+                            // Usar o ID da tarefa como chave para não duplicar
+                            const key = task._id;
+                            if (!tasksMap.has(key)) {
+                                tasksMap.set(key, {
+                                    id: task._id,
+                                    title: task.title,
+                                    tipo: task.tipo,
+                                    turmas: [info.turma],
+                                    disciplina: task.disc,
+                                    observacoes: info.observacao ? [info.observacao] : []
+                                });
+                            } else {
+                                // Se já existe, adiciona a turma e observação
+                                const existing = tasksMap.get(key);
+                                if (!existing.turmas.includes(info.turma)) {
+                                    existing.turmas.push(info.turma);
+                                }
+                                if (info.observacao && !existing.observacoes.includes(info.observacao)) {
+                                    existing.observacoes.push(info.observacao);
+                                }
+                            }
                         }
                     });
                 } else if (task.entrega) {
                     const entregaStr = formatDateUTC(task.entrega);
                     if (entregaStr === dateStr && taskBelongsToTurma(task, currentTurma)) {
-                        tasksForDate.push({
-                            id: task._id,
-                            title: task.title,
-                            tipo: task.tipo,
-                            turma: task.turma,
-                            disciplina: task.disc
-                        });
+                        const key = task._id;
+                        if (!tasksMap.has(key)) {
+                            tasksMap.set(key, {
+                                id: task._id,
+                                title: task.title,
+                                tipo: task.tipo,
+                                turmas: [task.turma || 'geral'],
+                                disciplina: task.disc,
+                                observacoes: []
+                            });
+                        }
                     }
                 }
+            });
+            
+            // Converter o Map para array
+            tasksMap.forEach((value, key) => {
+                tasksForDate.push(value);
             });
             
             return tasksForDate;
@@ -534,10 +558,14 @@
                 const displayedTasks = tasks.slice(0, maxDisplay);
                 
                 displayedTasks.forEach(task => {
+                    // Formatar título com indicador de múltiplas turmas
+                    const turmasLabel = task.turmas.length > 1 ? ' [Ambas]' : (task.turmas[0] === 't1-t3' ? ' [T1-T3]' : (task.turmas[0] === 't4-t6' ? ' [T4-T6]' : ''));
+                    const displayTitle = task.title.length > 15 ? task.title.substring(0, 13) + '...' : task.title;
+                    
                     const taskBadge = document.createElement('div');
                     taskBadge.className = `task-badge ${getTipoClass(task.tipo)}`;
-                    taskBadge.textContent = task.title.length > 20 ? task.title.substring(0, 18) + '...' : task.title;
-                    taskBadge.title = `${task.title} (${task.turma === 't1-t3' ? 'T1-T3' : 'T4-T6'})`;
+                    taskBadge.textContent = displayTitle + turmasLabel;
+                    taskBadge.title = `${task.title} (${task.turmas.map(t => t === 't1-t3' ? 'T1-T3' : 'T4-T6').join(' e ')})`;
                     taskBadge.onclick = (e) => {
                         e.stopPropagation();
                         window.location.href = `/tarefa?id=${task.id}`;
@@ -578,15 +606,21 @@
             
             modalBody.innerHTML = `
                 <p style="margin-bottom: 1rem;"><strong>📅 ${dateFormatted}</strong> - ${tasks.length} tarefa(s)</p>
-                ${tasks.map(task => `
-                    <div class="modal-task-item" onclick="window.location.href='/tarefa?id=${task.id}'">
-                        <div class="modal-task-title">${task.title}</div>
-                        <div style="font-size: 0.8rem; color: var(--text-secondary);">${task.disciplina ? getLabelByValue(task.disciplina) : ''}</div>
-                        <span class="modal-task-type ${getTipoClass(task.tipo)}" style="background: rgba(0,0,0,0.2);">${task.tipo}</span>
-                        <span style="font-size: 0.7rem; margin-left: 0.5rem;">${task.turma === 't1-t3' ? 'T1-T3' : 'T4-T6'}</span>
-                        ${task.observacao ? `<div style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 0.25rem;"><i class="fas fa-info-circle"></i> ${task.observacao}</div>` : ''}
-                    </div>
-                `).join('')}
+                ${tasks.map(task => {
+                    // Formatar as turmas
+                    const turmasLabel = task.turmas.map(t => t === 't1-t3' ? 'T1-T3' : (t === 't4-t6' ? 'T4-T6' : 'Geral')).join(' e ');
+                    const observacao = task.observacoes.length > 0 ? task.observacoes.join(' | ') : '';
+                    
+                    return `
+                        <div class="modal-task-item" onclick="window.location.href='/tarefa?id=${task.id}'">
+                            <div class="modal-task-title">${task.title}</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">${getLabelByValue(task.disciplina)}</div>
+                            <span class="modal-task-type ${getTipoClass(task.tipo)}" style="background: rgba(0,0,0,0.2);">${task.tipo}</span>
+                            <span style="font-size: 0.7rem; margin-left: 0.5rem;">${turmasLabel}</span>
+                            ${observacao ? `<div style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 0.25rem;"><i class="fas fa-info-circle"></i> ${observacao}</div>` : ''}
+                        </div>
+                    `;
+                }).join('')}
             `;
             
             modal.classList.add('active');
