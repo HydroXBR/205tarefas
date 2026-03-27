@@ -310,7 +310,7 @@ function renderTabelaPendentes(tasks) {
     tableBody.innerHTML = '';
     
     if (tasks.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="7" class="empty-cell"><i class="fas fa-check-circle"></i> Nenhuma tarefa pendente!</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="6" class="empty-cell"><i class="fas fa-check-circle"></i> Nenhuma tarefa pendente!</td></tr>';
         return;
     }
     
@@ -321,8 +321,7 @@ function renderTabelaPendentes(tasks) {
         const disciplinaCell = row.insertCell(2);
         const turmaCell = row.insertCell(3);
         const pedidaCell = row.insertCell(4);
-        const entregaCell = row.insertCell(5);
-        const nivelCell = row.insertCell(6);
+        const nivelCell = row.insertCell(5);
         
         // Tipo
         const tipoSpan = document.createElement("span");
@@ -341,27 +340,13 @@ function renderTabelaPendentes(tasks) {
         // Disciplina
         disciplinaCell.textContent = getLabelByValue(task.disc);
         
-        // Turmas
+        // Turmas (já mostra a data de entrega)
         turmaCell.innerHTML = formatTurmasInfo(task.turmasInfo);
         
+        // Data solicitada em UTC
         const pedidaTimestamp = task.pedida;
         const pedidaDate = new Date(pedidaTimestamp);
         pedidaCell.textContent = `${pedidaDate.getUTCDate().toString().padStart(2, '0')}/${(pedidaDate.getUTCMonth() + 1).toString().padStart(2, '0')}/${pedidaDate.getUTCFullYear()}`;
-        
-        // Data de entrega
-        if (task.turmasInfo && task.turmasInfo.length > 0) {
-            const agora = new Date();
-            const hojeUTC = Date.UTC(agora.getUTCFullYear(), agora.getUTCMonth(), agora.getUTCDate());
-            const horaUTC = agora.getUTCHours();
-            
-            const entregas = task.turmasInfo.map(info => {
-                const entregaDate = new Date(info.entrega);
-                const isUrgent = info.entrega === hojeUTC && horaUTC < 15;
-                const dataFormatada = `${entregaDate.getUTCDate().toString().padStart(2, '0')}/${(entregaDate.getUTCMonth() + 1).toString().padStart(2, '0')}/${entregaDate.getUTCFullYear()}`;
-                return `<span class="${isUrgent ? 'urgent-date' : ''}">${info.turma === 't1-t3' ? 'T1-T3' : 'T4-T6'}: ${dataFormatada}</span>`;
-            }).join('<br>');
-            entregaCell.innerHTML = entregas;
-        }
         
         // Nível
         nivelCell.innerHTML = `<span class="nivel-badge nivel-${task.nivel.toLowerCase()}">${task.nivel}</span>`;
@@ -373,7 +358,7 @@ function renderTabelaAnteriores(tasks) {
     tableBody2.innerHTML = '';
     
     if (tasks.length === 0) {
-        tableBody2.innerHTML = '<tr><td colspan="7" class="empty-cell"><i class="fas fa-smile"></i> Nenhuma tarefa anterior</td></tr>';
+        tableBody2.innerHTML = '<tr><td colspan="6" class="empty-cell"><i class="fas fa-smile"></i> Nenhuma tarefa anterior</td></tr>';
         return;
     }
     
@@ -384,8 +369,7 @@ function renderTabelaAnteriores(tasks) {
         const disciplinaCell2 = row2.insertCell(2);
         const turmaCell2 = row2.insertCell(3);
         const pedidaCell2 = row2.insertCell(4);
-        const entregaCell2 = row2.insertCell(5);
-        const nivelCell2 = row2.insertCell(6);
+        const nivelCell2 = row2.insertCell(5);
         
         const tipoSpan2 = document.createElement("span");
         tipoSpan2.innerHTML = pmaiuscula(task.tipo);
@@ -401,19 +385,11 @@ function renderTabelaAnteriores(tasks) {
         
         disciplinaCell2.textContent = getLabelByValue(task.disc);
         turmaCell2.innerHTML = formatTurmasInfo(task.turmasInfo);
-        pedidaCell2.textContent = new Date(task.pedida).toLocaleDateString('pt-BR');
         
-        if (task.turmasInfo && task.turmasInfo.length > 0) {
-            const entregas = task.turmasInfo.map(info => {
-                const entregaDate = new Date(info.entrega);
-                return `${info.turma === 't1-t3' ? 'T1-T3' : 'T4-T6'}: ${entregaDate.toLocaleDateString('pt-BR')}`;
-            }).join('<br>');
-            entregaCell2.innerHTML = entregas;
-        } else if (task.entrega) {
-            entregaCell2.textContent = new Date(task.entrega).toLocaleDateString('pt-BR');
-        } else {
-            entregaCell2.textContent = '—';
-        }
+        // Data solicitada em UTC
+        const pedidaTimestamp = task.pedida;
+        const pedidaDate = new Date(pedidaTimestamp);
+        pedidaCell2.textContent = `${pedidaDate.getUTCDate().toString().padStart(2, '0')}/${(pedidaDate.getUTCMonth() + 1).toString().padStart(2, '0')}/${pedidaDate.getUTCFullYear()}`;
         
         nivelCell2.innerHTML = `<span class="nivel-badge nivel-${task.nivel.toLowerCase()}">${task.nivel}</span>`;
     });
