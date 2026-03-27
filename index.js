@@ -87,6 +87,11 @@ app.get('/horarios',function(req,res) {
 	res.sendFile(__dirname + '/interface/horarios.html')
 })
 
+app.get('/calendar', function(req, res) {
+    console.log("Access CALENDAR: " + new Date());
+    res.sendFile(__dirname + '/interface/calendar.html');
+});
+
 app.get('/apagar', async function(req, res) {
 	console.log("Access APAGAR: " + new Date())
 
