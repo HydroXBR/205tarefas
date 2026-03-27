@@ -187,8 +187,10 @@
         /* Destaque da Turma */
         .turma-highlight {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 2rem;
+            justify-content: center;
+            text-align: center;
             background: linear-gradient(135deg, var(--bg-elevated) 0%, var(--bg-card) 100%);
             border-radius: 24px;
             padding: 2rem;
@@ -210,34 +212,29 @@
         }
         
         .turma-highlight-logo {
-            flex-shrink: 0;
-            width: 120px;
-            height: 120px;
+            width: 180px;
+            height: 180px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-dark) 100%);
             display: flex;
             align-items: center;
             justify-content: center;
+            margin-bottom: 1.5rem;
             box-shadow: 0 8px 20px rgba(105, 120, 37, 0.3);
             animation: pulse 2s ease-in-out infinite;
         }
         
         .turma-highlight-logo img {
-            width: 100px;
-            height: 100px;
+            width: 160px;
+            height: 160px;
             border-radius: 50%;
             object-fit: cover;
-            border: 3px solid white;
-        }
-        
-        .turma-highlight-info {
-            flex: 1;
         }
         
         .turma-highlight-info h1 {
-            font-size: 2.2rem;
+            font-size: 2.5rem;
             font-weight: 800;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.5rem;
             background: linear-gradient(135deg, var(--primary-green) 0%, #ffffff 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -245,28 +242,13 @@
         }
         
         .turma-highlight-info h2 {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 600;
             color: var(--text-primary);
-            margin-bottom: 0.5rem;
         }
         
         .turma-highlight-info h2 span {
             color: var(--primary-green);
-            font-size: 1.8rem;
-        }
-        
-        .turma-highlight-info p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-        
-        .turma-highlight-info p i {
-            color: var(--primary-green);
-            margin-right: 0.25rem;
         }
         
         @keyframes pulse {
@@ -281,33 +263,22 @@
         }
         
         @media (max-width: 768px) {
-            .turma-highlight {
-                flex-direction: column;
-                text-align: center;
-                padding: 1.5rem;
-                gap: 1rem;
-            }
-            
             .turma-highlight-logo {
-                width: 100px;
-                height: 100px;
+                width: 140px;
+                height: 140px;
             }
             
             .turma-highlight-logo img {
-                width: 80px;
-                height: 80px;
+                width: 120px;
+                height: 120px;
             }
             
             .turma-highlight-info h1 {
-                font-size: 1.5rem;
+                font-size: 1.8rem;
             }
             
             .turma-highlight-info h2 {
-                font-size: 1.2rem;
-            }
-            
-            .turma-highlight-info p {
-                justify-content: center;
+                font-size: 1.4rem;
             }
         }
     </style>
@@ -353,8 +324,7 @@
                     </div>
                     <div class="turma-highlight-info">
                         <h1>MEDICINA - UFAM</h1>
-                        <h2>Turma CXVI (116)</h2>
-                        <p><i class="fas fa-calendar-alt"></i> 2026.1 | <i class="fas fa-users"></i> 1º Período</p>
+                        <h2>Turma <span>CXVI</span></h2>
                     </div>
                 </div>
                 <div class="creator-section">
