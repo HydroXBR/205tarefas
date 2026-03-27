@@ -186,10 +186,10 @@ function formatTurmasInfo(turmasInfo) {
         const turmaLabel = info.turma === 't1-t3' ? 'T1-T3' : 'T4-T6';
         const turmaClass = info.turma === 't1-t3' ? 'turma-t1' : 'turma-t4';
         const entregaDate = new Date(info.entrega);
-        const dataFormatada = `${entregaDate.getUTCDate().toString().padStart(2, '0')}/${(entregaDate.getUTCMonth() + 1).toString().padStart(2, '0')}/${entregaDate.getUTCFullYear()}`;
+        const dataFormatada = `${entregaDate.getUTCDate().toString().padStart(2, '0')}/${(entregaDate.getUTCMonth() + 1).toString().padStart(2, '0')}`;
         
-        // Verificar se é urgente (entrega hoje E antes das 12h Brasília)
-        const isUrgent = info.entrega === hojeUTC && horaUTC < 23;
+        // Só fica vermelho se for entrega hoje E antes das 12h Brasília (15h UTC)
+        const isUrgent = info.entrega === hojeUTC && horaUTC < 15;
         
         return `
             <div class="turma-info-tooltip" title="${info.observacao || 'Sem observações específicas'}">
@@ -197,7 +197,7 @@ function formatTurmasInfo(turmasInfo) {
                     ${turmaLabel}
                 </span>
                 <span class="turma-entrega ${isUrgent ? 'urgent-date' : ''}">
-                    ${dataFormatada}
+                    📅 ${dataFormatada}
                 </span>
                 ${info.observacao ? '<i class="fas fa-info-circle turma-info-icon"></i>' : ''}
             </div>
@@ -310,7 +310,7 @@ function renderTabelaPendentes(tasks) {
     tableBody.innerHTML = '';
     
     if (tasks.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="6" class="empty-cell"><i class="fas fa-check-circle"></i> Nenhuma tarefa pendente!</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="5" class="empty-cell"><i class="fas fa-check-circle"></i> Nenhuma tarefa pendente!</td></tr>';
         return;
     }
     
@@ -320,8 +320,7 @@ function renderTabelaPendentes(tasks) {
         const tituloCell = row.insertCell(1);
         const disciplinaCell = row.insertCell(2);
         const turmaCell = row.insertCell(3);
-        const pedidaCell = row.insertCell(4);
-        const nivelCell = row.insertCell(5);
+        const nivelCell = row.insertCell(4);
         
         // Tipo
         const tipoSpan = document.createElement("span");
@@ -343,11 +342,6 @@ function renderTabelaPendentes(tasks) {
         // Turmas (já mostra a data de entrega)
         turmaCell.innerHTML = formatTurmasInfo(task.turmasInfo);
         
-        // Data solicitada em UTC
-        const pedidaTimestamp = task.pedida;
-        const pedidaDate = new Date(pedidaTimestamp);
-        pedidaCell.textContent = `${pedidaDate.getUTCDate().toString().padStart(2, '0')}/${(pedidaDate.getUTCMonth() + 1).toString().padStart(2, '0')}/${pedidaDate.getUTCFullYear()}`;
-        
         // Nível
         nivelCell.innerHTML = `<span class="nivel-badge nivel-${task.nivel.toLowerCase()}">${task.nivel}</span>`;
     });
@@ -358,7 +352,7 @@ function renderTabelaAnteriores(tasks) {
     tableBody2.innerHTML = '';
     
     if (tasks.length === 0) {
-        tableBody2.innerHTML = '<tr><td colspan="6" class="empty-cell"><i class="fas fa-smile"></i> Nenhuma tarefa anterior</td></tr>';
+        tableBody2.innerHTML = '<tr><td colspan="5" class="empty-cell"><i class="fas fa-smile"></i> Nenhuma tarefa anterior</td></tr>';
         return;
     }
     
@@ -368,8 +362,7 @@ function renderTabelaAnteriores(tasks) {
         const tituloCell2 = row2.insertCell(1);
         const disciplinaCell2 = row2.insertCell(2);
         const turmaCell2 = row2.insertCell(3);
-        const pedidaCell2 = row2.insertCell(4);
-        const nivelCell2 = row2.insertCell(5);
+        const nivelCell2 = row2.insertCell(4);
         
         const tipoSpan2 = document.createElement("span");
         tipoSpan2.innerHTML = pmaiuscula(task.tipo);
@@ -385,11 +378,6 @@ function renderTabelaAnteriores(tasks) {
         
         disciplinaCell2.textContent = getLabelByValue(task.disc);
         turmaCell2.innerHTML = formatTurmasInfo(task.turmasInfo);
-        
-        // Data solicitada em UTC
-        const pedidaTimestamp = task.pedida;
-        const pedidaDate = new Date(pedidaTimestamp);
-        pedidaCell2.textContent = `${pedidaDate.getUTCDate().toString().padStart(2, '0')}/${(pedidaDate.getUTCMonth() + 1).toString().padStart(2, '0')}/${pedidaDate.getUTCFullYear()}`;
         
         nivelCell2.innerHTML = `<span class="nivel-badge nivel-${task.nivel.toLowerCase()}">${task.nivel}</span>`;
     });
