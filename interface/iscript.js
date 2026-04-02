@@ -434,9 +434,10 @@ async function loadLembretes() {
         const hojeUTC = formatarDataUTC(agora);
         const hojeDDMM = formatarDataDDMM(agora);
         
-        // Verificar se deve incluir ontem (antes das 9h no horário de Brasília)
+        // Verificar se deve incluir ontem (antes das 7h no horário de Brasília)
+        // Brasília é UTC-3
         const horaBrasilia = agora.getUTCHours() - 3;
-        const incluirOntem = horaBrasilia < 9;
+        const incluirOntem = horaBrasilia < 7;
         
         let ontemUTC = '';
         let ontemDDMM = '';
