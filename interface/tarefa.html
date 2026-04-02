@@ -575,16 +575,19 @@
 
         function formatarData(timestamp) {
             const data = new Date(timestamp);
-            return data.toLocaleDateString('pt-BR');
+            const dia = data.getUTCDate().toString().padStart(2, '0');
+            const mes = (data.getUTCMonth() + 1).toString().padStart(2, '0');
+            const ano = data.getUTCFullYear();
+            return `${dia}/${mes}/${ano}`;
         }
 
         function formatarDataCompleta(timestamp) {
             const data = new Date(timestamp);
-            const dia = data.getDate().toString().padStart(2, '0');
-            const mes = (data.getMonth() + 1).toString().padStart(2, '0');
-            const ano = data.getFullYear();
-            const horas = data.getHours().toString().padStart(2, '0');
-            const minutos = data.getMinutes().toString().padStart(2, '0');
+            const dia = data.getUTCDate().toString().padStart(2, '0');
+            const mes = (data.getUTCMonth() + 1).toString().padStart(2, '0');
+            const ano = data.getUTCFullYear();
+            const horas = data.getUTCHours().toString().padStart(2, '0');
+            const minutos = data.getUTCMinutes().toString().padStart(2, '0');
             return `${dia}/${mes}/${ano} às ${horas}:${minutos}`;
         }
 
