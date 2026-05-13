@@ -105,34 +105,11 @@
         .nav-brand-name .alfa { color: var(--amber); }
         .nav-brand-name .core { color: var(--text-primary); }
 
-        .nav-right {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .nav-link {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 500;
-            padding: 6px 12px;
-            border-radius: var(--radius-sm);
-            transition: all 0.2s;
-        }
-
-        .nav-link:hover, .nav-link.active {
-            color: var(--text-primary);
-            background: var(--bg-raised);
-        }
-
-        .nav-link.active { color: var(--amber); }
-
-        /* ── HERO STRIP ── */
+        /* ── HERO STRIP — responsive ── */
         .hero {
             background: var(--bg-surface);
             border-bottom: 1px solid var(--border);
-            padding: 28px 1.5rem 24px;
+            padding: 22px 1.5rem 20px;
             position: relative;
             overflow: hidden;
         }
@@ -151,13 +128,22 @@
             margin: 0 auto;
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .hero-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex: 1;
+            min-width: 0;
         }
 
         .hero-avatar {
-            width: 52px;
-            height: 52px;
-            border-radius: 14px;
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
             border: 2px solid var(--amber);
             overflow: hidden;
             flex-shrink: 0;
@@ -184,7 +170,7 @@
 
         .hero-text h1 {
             font-family: 'Syne', sans-serif;
-            font-size: 1.45rem;
+            font-size: 1.35rem;
             font-weight: 800;
             letter-spacing: -0.5px;
             color: var(--amber);
@@ -192,32 +178,44 @@
         }
 
         .hero-text p {
-            font-size: 0.82rem;
+            font-size: 0.78rem;
             color: var(--text-secondary);
             margin-top: 3px;
-            font-weight: 400;
         }
 
+        /* Stats row — sits below on small screens, inline on wide */
         .hero-stats {
-            margin-left: auto;
             display: flex;
             gap: 16px;
+            /* On mobile: full width row below */
+            width: 100%;
+        }
+
+        @media (min-width: 560px) {
+            .hero-stats {
+                width: auto;
+                margin-left: auto;
+            }
         }
 
         .hero-stat {
-            text-align: right;
+            text-align: left;
+        }
+
+        @media (min-width: 560px) {
+            .hero-stat { text-align: right; }
         }
 
         .hero-stat-num {
             font-family: 'Syne', sans-serif;
-            font-size: 1.3rem;
+            font-size: 1.25rem;
             font-weight: 700;
             color: var(--amber);
             line-height: 1;
         }
 
         .hero-stat-label {
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             color: var(--text-tertiary);
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -334,13 +332,8 @@
             transform: translateY(-1px);
         }
 
-        .pergunta-card:hover::before {
-            opacity: 1;
-        }
-
-        .pergunta-card:active {
-            transform: translateY(0);
-        }
+        .pergunta-card:hover::before { opacity: 1; }
+        .pergunta-card:active { transform: translateY(0); }
 
         .card-top {
             display: flex;
@@ -489,18 +482,19 @@
         .fab-primary:hover { background: #fdb944; transform: scale(1.06); }
 
         .fab-secondary {
-            background: var(--bg-raised);
-            color: var(--amber);
-            border: 1px solid var(--border-strong);
-            width: 46px;
-            height: 46px;
-            font-size: 1rem;
+            background: var(--amber);
+            color: #000;
+            /* Flashcard FAB: bigger and more prominent */
+            width: 56px;
+            height: 56px;
+            font-size: 1.25rem;
+            box-shadow: 0 4px 24px rgba(245,166,35,0.4);
         }
 
         .fab-secondary:hover {
-            background: var(--amber-glow);
-            border-color: var(--amber);
-            transform: scale(1.06);
+            background: #fdb944;
+            transform: scale(1.08);
+            box-shadow: 0 6px 30px rgba(245,166,35,0.55);
         }
 
         /* ── MODAL BASE ── */
@@ -602,6 +596,37 @@
             overflow-y: auto;
             padding: 18px 20px 24px;
             overscroll-behavior: contain;
+        }
+
+        /* ── FLASHCARD FULLSCREEN ── */
+        #flashcardModal .modal-sheet {
+            max-width: 100%;
+            width: 100%;
+            max-height: 100%;
+            height: 100%;
+            border-radius: 0;
+            border: none;
+        }
+
+        @media (min-width: 600px) {
+            #flashcardModal .modal-sheet {
+                max-width: 700px;
+                width: 100%;
+                max-height: 95vh;
+                height: auto;
+                border-radius: var(--radius-xl);
+                border: 1px solid var(--border);
+            }
+        }
+
+        #flashcardModal.active {
+            align-items: flex-end;
+        }
+
+        @media (min-width: 600px) {
+            #flashcardModal.active {
+                align-items: center;
+            }
         }
 
         /* ── DETAIL MODAL ── */
@@ -723,6 +748,54 @@
             margin-top: 4px;
         }
 
+        /* ── HASHTAG SELECTOR ── */
+        .hashtag-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            padding: 10px;
+            background: var(--bg-raised);
+            border: 1px solid var(--border-strong);
+            border-radius: var(--radius-sm);
+        }
+
+        .hashtag-selector.focused {
+            border-color: var(--amber);
+        }
+
+        .htag-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px 4px 10px;
+            border-radius: 99px;
+            border: 1px solid var(--border-strong);
+            background: var(--bg-surface);
+            color: var(--text-secondary);
+            font-size: 0.76rem;
+            font-weight: 500;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.15s;
+        }
+
+        .htag-pill:hover {
+            border-color: var(--amber);
+            color: var(--text-primary);
+        }
+
+        .htag-pill.selected {
+            background: var(--amber);
+            border-color: var(--amber);
+            color: #000;
+            font-weight: 700;
+        }
+
+        .htag-pill.selected::before {
+            content: '✓ ';
+            font-size: 0.7rem;
+        }
+
         /* Buttons */
         .btn {
             display: inline-flex;
@@ -842,28 +915,31 @@
 
         .fc-question {
             font-family: 'Syne', sans-serif;
-            font-size: 1.05rem;
+            font-size: 1.1rem;
             font-weight: 600;
             color: var(--text-primary);
-            line-height: 1.4;
-            margin-bottom: 20px;
+            line-height: 1.45;
+            margin-bottom: 24px;
         }
 
         .fc-reveal-btn {
-            background: var(--amber-glow);
-            border: 1px solid var(--amber);
-            color: var(--amber);
-            padding: 8px 20px;
-            border-radius: 99px;
-            font-size: 0.82rem;
-            font-weight: 600;
+            background: var(--amber);
+            border: none;
+            color: #000;
+            padding: 14px 36px;
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.15s;
+            box-shadow: 0 4px 20px rgba(245,166,35,0.35);
+            letter-spacing: 0.2px;
         }
 
         .fc-reveal-btn:hover {
-            background: var(--amber);
-            color: #000;
+            background: #fdb944;
+            transform: scale(1.03);
+            box-shadow: 0 6px 28px rgba(245,166,35,0.5);
         }
 
         .fc-answer {
@@ -974,13 +1050,15 @@
     <!-- HERO -->
     <div class="hero">
         <div class="hero-inner">
-            <div class="hero-avatar">
-                <img src="/src/alfa.jpg" alt="Projeto Alfa" onerror="this.parentElement.innerHTML='<div class=\'hero-avatar-fallback\'>α</div>'">
-            </div>
-            <div class="hero-text">
-                <h1>AlfaCore</h1>
-                <p>Banco de perguntas · Processo Seletivo UFAM</p>
-                <p>Por Isaías Nascimento. Não oficial e não relacionado ao Projeto Alfa - Manaus.</p>
+            <div class="hero-left">
+                <div class="hero-avatar">
+                    <img src="/src/alfa.jpg" alt="Projeto Alfa" onerror="this.parentElement.innerHTML='<div class=\'hero-avatar-fallback\'>α</div>'">
+                </div>
+                <div class="hero-text">
+                    <h1>AlfaCore</h1>
+                    <p>Banco de perguntas · Processo Seletivo UFAM</p>
+                    <p style="font-size:0.72rem;color:var(--text-tertiary);margin-top:1px">Por Isaías Nascimento · Não oficial</p>
+                </div>
             </div>
             <div class="hero-stats">
                 <div class="hero-stat">
@@ -1051,8 +1129,8 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label">Hashtags</label>
-                    <input type="text" id="addHashtags" class="form-input" placeholder="#RCP #Trauma #OVA">
-                    <div class="form-helper">Separe por espaço · use # antes de cada assunto</div>
+                    <div class="hashtag-selector" id="addHashtagSelector"></div>
+                    <div class="form-helper">Toque para selecionar um ou mais temas</div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Pergunta *</label>
@@ -1089,6 +1167,11 @@
     </div>
 
     <script>
+        const TEMAS = [
+            "Intro_Socorro","Parto","OVA","PCR","Fisiologia",
+            "Hemorragia","Choque","RCP","TME","LTA","Queimaduras","Lesão por Animais"
+        ];
+
         const participantes = ["Pedro Liberato","Fernando Facundes","Daniel Santana","Esther Luniere","Érica Luiza","Victória Sophia","Lucas Milhomem","Davi da Costa","Thiago Veloso","Gabriela Parente","Miguel Fuzatto","Mateus Cavalcanti","Thiago Luniere","Geovanna Viégas","Fernando Fama","Ana Gabriela ","Isaías Nascimento","Giorgia Buoni","João Lucas","João Pedro","Samuel Cacau","Lara Francisca","Anna Jaques","Luiz Gustavo","Maria Clara","Luiz Felipe","Samuel Vicente","Ianna Priscilla","Camila Kuhlkamp","Marcelo Cruz"];
 
         let perguntas = [];
@@ -1096,6 +1179,10 @@
         let currentFlashcards = [];
         let fcIndex = 0;
         let fcShowAnswer = false;
+
+        // Tracks selected hashtags for add/edit forms
+        // key -> Set of selected tags
+        const selectedTags = { add: new Set(), edit: new Set() };
 
         function esc(t) {
             if (!t) return '';
@@ -1121,13 +1208,44 @@
             document.body.style.overflow = '';
         }
 
-        // Click outside to close
         document.querySelectorAll('.modal-overlay').forEach(el => {
             el.addEventListener('click', function(e) {
                 if (e.target === el) closeModal(el.id);
             });
         });
 
+        /* ── HASHTAG SELECTOR WIDGET ── */
+        function buildHashtagSelector(containerId, namespace, initialTags = []) {
+            selectedTags[namespace] = new Set(initialTags);
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            container.innerHTML = TEMAS.map(t => `
+                <span class="htag-pill ${selectedTags[namespace].has(t) ? 'selected' : ''}"
+                      data-tag="${esc(t)}"
+                      data-ns="${namespace}"
+                      onclick="toggleHashtag(this)">
+                    #${esc(t)}
+                </span>
+            `).join('');
+        }
+
+        function toggleHashtag(el) {
+            const tag = el.dataset.tag;
+            const ns = el.dataset.ns;
+            if (selectedTags[ns].has(tag)) {
+                selectedTags[ns].delete(tag);
+                el.classList.remove('selected');
+            } else {
+                selectedTags[ns].add(tag);
+                el.classList.add('selected');
+            }
+        }
+
+        function getSelectedTagsString(namespace) {
+            return [...selectedTags[namespace]].map(t => `#${t}`).join(' ');
+        }
+
+        /* ── DATA ── */
         async function loadPerguntas() {
             try {
                 const res = await fetch('/alfa/perguntas');
@@ -1183,7 +1301,6 @@
                 });
             });
 
-            // Sync flashcard filter
             const ff = document.getElementById('flashcardFilter');
             ff.innerHTML = '<option value="all">Todos os assuntos</option>' +
                 tags.map(([t]) => `<option value="${esc(t)}">${esc(t)}</option>`).join('');
@@ -1247,9 +1364,12 @@
                         <div class="detail-author-chip"><i class="fas fa-clock"></i>${fmtDate(p.createdAt)}</div>
                         ${answered ? `<span class="answered-badge"><i class="fas fa-check-circle"></i>Respondida</span>` : `<span class="unanswered-badge">Sem resposta</span>`}
                     </div>
-                    <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:10px">
-                        ${p.hashtags.map(t => `<span class="tag">${esc(t)}</span>`).join('')}
-                    </div>
+                </div>
+
+                <div class="section-divider"><i class="fas fa-tags"></i>Hashtags</div>
+                <div class="form-group">
+                    <div class="hashtag-selector" id="editHashtagSelector"></div>
+                    <div class="form-helper">Toque para adicionar ou remover temas</div>
                 </div>
 
                 <div class="section-divider"><i class="fas fa-comment-dots"></i>Resposta</div>
@@ -1265,7 +1385,7 @@
                 </div>
                 <div class="btn-row">
                     <button class="btn btn-primary" style="flex:1" onclick="updateResposta('${id}')">
-                        <i class="fas fa-save"></i> Salvar resposta
+                        <i class="fas fa-save"></i> Salvar alterações
                     </button>
                 </div>
 
@@ -1301,15 +1421,19 @@
                 </div>
             `;
 
+            // Build hashtag selector with current tags pre-selected
+            buildHashtagSelector('editHashtagSelector', 'edit', p.hashtags || []);
+
             openModal('detailModal');
         }
 
         async function updateResposta(id) {
             const resposta = document.getElementById('editResposta').value;
             const autor = document.getElementById('editAutor').value;
+            const hashtags = getSelectedTagsString('edit');
             if (!autor) { alert('Selecione seu nome'); return; }
             try {
-                const res = await fetch(`/alfa/update?id=${id}&resposta=${encodeURIComponent(resposta)}&autor=${encodeURIComponent(autor)}`);
+                const res = await fetch(`/alfa/update?id=${id}&resposta=${encodeURIComponent(resposta)}&autor=${encodeURIComponent(autor)}&hashtags=${encodeURIComponent(hashtags)}`);
                 const data = await res.json();
                 if (data.success) {
                     closeModal('detailModal');
@@ -1335,7 +1459,7 @@
 
         async function submitPergunta() {
             const autor = document.getElementById('addAutor').value;
-            const hashtags = document.getElementById('addHashtags').value;
+            const hashtags = getSelectedTagsString('add');
             const pergunta = document.getElementById('addPergunta').value.trim();
             const resposta = document.getElementById('addResposta').value.trim();
             if (!autor) { alert('Selecione seu nome'); return; }
@@ -1346,7 +1470,8 @@
                 const data = await res.json();
                 if (data.success) {
                     closeModal('addModal');
-                    document.getElementById('addHashtags').value = '';
+                    selectedTags.add.clear();
+                    buildHashtagSelector('addHashtagSelector', 'add');
                     document.getElementById('addPergunta').value = '';
                     document.getElementById('addResposta').value = '';
                     await loadPerguntas();
@@ -1393,7 +1518,9 @@
                     <div class="fc-question">${esc(card.pergunta)}</div>
                     ${fcShowAnswer
                         ? `<div class="fc-answer">${esc(card.resposta)}</div>`
-                        : `<button class="fc-reveal-btn" onclick="fcToggle()"><i class="fas fa-eye" style="margin-right:5px"></i>Ver resposta</button>`
+                        : `<button class="fc-reveal-btn" onclick="fcToggle()">
+                                <i class="fas fa-eye" style="margin-right:8px"></i>Ver resposta
+                           </button>`
                     }
                     <div class="fc-nav">
                         <button class="btn btn-ghost" onclick="fcPrev()"><i class="fas fa-chevron-left"></i> Anterior</button>
@@ -1413,15 +1540,9 @@
         }
 
         function fcNext() {
-            if (fcIndex + 1 < currentFlashcards.length) {
-                fcIndex++;
-                fcShowAnswer = false;
-                updateFCDisplay();
-            } else {
-                fcIndex = 0;
-                fcShowAnswer = false;
-                updateFCDisplay();
-            }
+            fcIndex = (fcIndex + 1) % currentFlashcards.length;
+            fcShowAnswer = false;
+            updateFCDisplay();
         }
 
         function fcPrev() {
@@ -1435,6 +1556,9 @@
         // Init
         const optionsHtml = participantes.map(n => `<option value="${esc(n)}">${esc(n)}</option>`).join('');
         document.getElementById('addAutor').innerHTML += optionsHtml;
+
+        // Build hashtag selector for add modal
+        buildHashtagSelector('addHashtagSelector', 'add');
 
         document.getElementById('addBtn').addEventListener('click', () => openModal('addModal'));
         document.getElementById('flashcardBtn').addEventListener('click', openFlashcardModal);
