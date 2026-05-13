@@ -160,15 +160,22 @@ app.get('/alfa/perguntas', async (req, res) => {
 });
 
 // Adicionar nova pergunta
-app.get('/alfa/add', async (req, res) => {
-    const { pergunta: texto, autor, hashtags, resposta } = req.query;
+app.post('/alfa/add', async (req, res) => {
+    const { autor, pergunta: texto, hashtags, resposta } = req.body;
     
     if (!texto || !autor) {
         return res.json({ success: false, reason: "Missing parameters" });
     }
     
-    // Processar hashtags (ex: #RCP #OVA -> ["RCP", "OVA"])
-    const tags = hashtags ? hashtags.match(/#(\w+)/g)?.map(t => t.slice(1)) || [] : [];
+    // Processar hashtags: pode vir como string "#RCP #OVA" ou array
+    let tags = [];
+    if (hashtags) {
+        if (Array.isArray(hashtags)) {
+            tags = hashtags;
+        } else if (typeof hashtags === 'string') {
+            tags = hashtags.match(/#(\w+)/g)?.map(t => t.slice(1)) || [];
+        }
+    }
     
     const novaPergunta = new pergunta({
         pergunta: texto,
@@ -189,8 +196,9 @@ app.get('/alfa/add', async (req, res) => {
 });
 
 // Atualizar resposta de uma pergunta
-app.get('/alfa/update', async (req, res) => {
-    const { id, resposta, autor } = req.query;
+// Atualizar resposta e hashtags de uma pergunta
+app.post('/alfa/update', async (req, res) => {
+    const { id, resposta, autor, hashtags } = req.body;
     
     if (!id || !autor) {
         return res.json({ success: false, reason: "Missing parameters" });
@@ -202,7 +210,12 @@ app.get('/alfa/update', async (req, res) => {
             return res.json({ success: false, reason: "Pergunta não encontrada" });
         }
         
-        perguntaExistente.resposta = resposta || "";
+        if (resposta !== undefined) {
+            perguntaExistente.resposta = resposta || "";
+        }
+        if (hashtags && Array.isArray(hashtags)) {
+            perguntaExistente.hashtags = hashtags;
+        }
         perguntaExistente.updatedAt = Date.now();
         await perguntaExistente.save();
         
