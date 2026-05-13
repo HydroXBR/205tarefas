@@ -10,6 +10,7 @@ import bodyParser from "body-parser"
 const __dirname = dirname(fileURLToPath(import.meta.url))
 import tarefa from "./database/tarefa.js"
 import lembrete from "./database/lembrete.js"
+import pergunta from "./database/pergunta.js";
 import visit from "./database/visits.js";
 import Db from "mongodb"
 import im from "./db_connect.js"
@@ -146,6 +147,104 @@ app.get('/sobre',function(req,res) {
 app.get('/add',function(req,res) {
 	console.log("Access ADD: "+ new Date())
 	res.sendFile(__dirname + '/interface/add.html')
+});
+
+app.get('/alfa/perguntas', async (req, res) => {
+    try {
+        const perguntas = await pergunta.find().sort({ createdAt: -1 });
+        res.json(perguntas);
+    } catch (err) {
+        console.error('Erro ao buscar perguntas:', err);
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// Adicionar nova pergunta
+app.get('/alfa/add', async (req, res) => {
+    const { pergunta: texto, autor, hashtags, resposta } = req.query;
+    
+    if (!texto || !autor) {
+        return res.json({ success: false, reason: "Missing parameters" });
+    }
+    
+    // Processar hashtags (ex: #RCP #OVA -> ["RCP", "OVA"])
+    const tags = hashtags ? hashtags.match(/#(\w+)/g)?.map(t => t.slice(1)) || [] : [];
+    
+    const novaPergunta = new pergunta({
+        pergunta: texto,
+        resposta: resposta || "",
+        autor: autor,
+        hashtags: tags,
+        createdAt: Date.now(),
+        updatedAt: Date.now()
+    });
+    
+    try {
+        await novaPergunta.save();
+        res.json({ success: true, id: novaPergunta._id });
+    } catch (err) {
+        console.error('Erro ao salvar:', err);
+        res.json({ success: false, reason: err.message });
+    }
+});
+
+// Atualizar resposta de uma pergunta
+app.get('/alfa/update', async (req, res) => {
+    const { id, resposta, autor } = req.query;
+    
+    if (!id || !autor) {
+        return res.json({ success: false, reason: "Missing parameters" });
+    }
+    
+    try {
+        const perguntaExistente = await pergunta.findById(id);
+        if (!perguntaExistente) {
+            return res.json({ success: false, reason: "Pergunta não encontrada" });
+        }
+        
+        perguntaExistente.resposta = resposta || "";
+        perguntaExistente.updatedAt = Date.now();
+        await perguntaExistente.save();
+        
+        res.json({ success: true });
+    } catch (err) {
+        console.error('Erro ao atualizar:', err);
+        res.json({ success: false, reason: err.message });
+    }
+});
+
+// Adicionar comentário
+app.get('/alfa/comment', async (req, res) => {
+    const { id, autor, comentario } = req.query;
+    
+    if (!id || !autor || !comentario) {
+        return res.json({ success: false, reason: "Missing parameters" });
+    }
+    
+    try {
+        const perguntaExistente = await pergunta.findById(id);
+        if (!perguntaExistente) {
+            return res.json({ success: false, reason: "Pergunta não encontrada" });
+        }
+        
+        perguntaExistente.comentarios.push({
+            author: autor,
+            comment: comentario,
+            date: Date.now()
+        });
+        
+        await perguntaExistente.save();
+        res.json({ success: true });
+    } catch (err) {
+        console.error('Erro ao adicionar comentário:', err);
+        res.json({ success: false, reason: err.message });
+    }
+});
+
+// Rota da página AlfaCore
+app.get('/alfa', function(req, res) {
+    console.log("Access ALFA: " + new Date());
+    res.sendFile(__dirname + '/interface/alfa.html');
 });
 
 app.get('/src/*', function(req, res) {
