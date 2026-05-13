@@ -1430,16 +1430,41 @@
         async function updateResposta(id) {
             const resposta = document.getElementById('editResposta').value;
             const autor = document.getElementById('editAutor').value;
-            const hashtags = getSelectedTagsString('edit');
+            // Pegar as hashtags selecionadas (array de strings, sem #)
+            const hashtagsArray = [...selectedTags.edit];
+            
             if (!autor) { alert('Selecione seu nome'); return; }
+            
             try {
-                const res = await fetch(`/alfa/update?id=${id}&resposta=${encodeURIComponent(resposta)}&autor=${encodeURIComponent(autor)}&hashtags=${encodeURIComponent(hashtags)}`);
+                // Enviar hashtags como array via JSON
+                const res = await fetch(`/alfa/update`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        id: id,
+                        resposta: resposta,
+                        autor: autor,
+                        hashtags: hashtagsArray
+                    })
+                });
                 const data = await res.json();
                 if (data.success) {
+                    // Atualizar a pergunta localmente
+                    const index = perguntas.findIndex(p => p._id === id);
+                    if (index !== -1) {
+                        perguntas[index].resposta = resposta;
+                        perguntas[index].hashtags = hashtagsArray;
+                        perguntas[index].updatedAt = Date.now();
+                    }
                     closeModal('detailModal');
-                    await loadPerguntas();
-                } else { alert('Erro: ' + data.reason); }
-            } catch { alert('Erro ao salvar'); }
+                    await loadPerguntas(); // Recarregar para garantir consistência
+                } else { 
+                    alert('Erro: ' + (data.reason || 'Erro desconhecido')); 
+                }
+            } catch (err) { 
+                console.error(err);
+                alert('Erro ao salvar'); 
+            }
         }
 
         async function addComment(id) {
@@ -1459,14 +1484,24 @@
 
         async function submitPergunta() {
             const autor = document.getElementById('addAutor').value;
-            const hashtags = getSelectedTagsString('add');
+            const hashtagsArray = [...selectedTags.add];
             const pergunta = document.getElementById('addPergunta').value.trim();
             const resposta = document.getElementById('addResposta').value.trim();
+            
             if (!autor) { alert('Selecione seu nome'); return; }
             if (!pergunta) { alert('Digite a pergunta'); return; }
+            
             try {
-                const url = `/alfa/add?autor=${encodeURIComponent(autor)}&pergunta=${encodeURIComponent(pergunta)}&hashtags=${encodeURIComponent(hashtags)}&resposta=${encodeURIComponent(resposta)}`;
-                const res = await fetch(url);
+                const res = await fetch('/alfa/add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        autor: autor,
+                        pergunta: pergunta,
+                        hashtags: hashtagsArray,
+                        resposta: resposta
+                    })
+                });
                 const data = await res.json();
                 if (data.success) {
                     closeModal('addModal');
@@ -1475,8 +1510,14 @@
                     document.getElementById('addPergunta').value = '';
                     document.getElementById('addResposta').value = '';
                     await loadPerguntas();
-                } else { alert('Erro: ' + data.reason); }
-            } catch { alert('Erro ao adicionar'); }
+                    alert('Pergunta adicionada com sucesso!');
+                } else { 
+                    alert('Erro: ' + (data.reason || 'Erro desconhecido')); 
+                }
+            } catch (err) { 
+                console.error(err);
+                alert('Erro ao adicionar'); 
+            }
         }
 
         function openFlashcardModal() {
