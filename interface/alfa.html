@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>AlfaCore - Projeto Alfa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            padding-bottom: 80px;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: #000000;
+            border-bottom: 2px solid #f5a623;
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-logo img {
+            height: 45px;
+        }
+
+        .logo-text {
+            font-weight: 800;
+            font-size: 1.3rem;
+        }
+
+        .logo-text span:first-child { color: #f5a623; }
+        .logo-text span:last-child { color: white; }
+
+        .menu-icon {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #f5a623;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #f5a623;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        /* Header */
+        .alfa-header {
+            text-align: center;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+            border-bottom: 2px solid #f5a623;
+            margin-bottom: 1.5rem;
+        }
+
+        .alfa-header img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid #f5a623;
+            margin-bottom: 0.5rem;
+        }
+
+        .alfa-header h1 {
+            font-size: 1.8rem;
+            color: #f5a623;
+        }
+
+        .alfa-header p {
+            color: #aaa;
+            font-size: 0.85rem;
+        }
+
+        /* Filtro de Assuntos */
+        .filter-section {
+            background: #111;
+            border-radius: 12px;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .filter-label {
+            font-size: 0.8rem;
+            color: #f5a623;
+            font-weight: 600;
+        }
+
+        .filter-tag {
+            background: #222;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #ccc;
+        }
+
+        .filter-tag.active {
+            background: #f5a623;
+            color: #000;
+            font-weight: 600;
+        }
+
+        .filter-tag.all-tag {
+            background: #333;
+        }
+
+        .filter-tag.all-tag.active {
+            background: #f5a623;
+            color: #000;
+        }
+
+        /* Lista de Perguntas */
+        .pergunta-item {
+            background: #111;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border-left: 4px solid #f5a623;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .pergunta-item:hover {
+            transform: translateX(5px);
+            background: #161616;
+        }
+
+        .pergunta-texto {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            word-break: break-word;
+        }
+
+        .pergunta-meta {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.7rem;
+            color: #888;
+        }
+
+        .hashtags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+
+        .hashtag {
+            background: #1a2a1a;
+            color: #f5a623;
+            padding: 0.15rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.65rem;
+        }
+
+        .resposta-status {
+            color: #f5a623;
+            font-size: 0.7rem;
+        }
+
+        .resposta-status.respondida {
+            color: #4caf50;
+        }
+
+        /* Botão Flutuante */
+        .fab {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #f5a623;
+            color: #000;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(245, 166, 35, 0.4);
+            transition: transform 0.2s;
+            z-index: 90;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .fab:hover {
+            transform: scale(1.05);
+        }
+
+        .flashcard-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #222;
+            color: #f5a623;
+            border: 2px solid #f5a623;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+            z-index: 90;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .flashcard-btn:hover {
+            transform: scale(1.05);
+            background: #f5a623;
+            color: #000;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 200;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .modal.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-content {
+            background: #111;
+            border-radius: 20px;
+            max-width: 700px;
+            width: 100%;
+            margin: auto;
+            border: 1px solid #333;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: #1a1a1a;
+            padding: 1rem;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            color: #f5a623;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 1rem;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .pergunta-detalhe {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .pergunta-detalhe h4 {
+            color: #f5a623;
+            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .pergunta-detalhe p {
+            white-space: pre-wrap;
+            word-break: break-word;
+            line-height: 1.5;
+        }
+
+        .resposta-area {
+            margin-top: 1rem;
+        }
+
+        .resposta-area textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background: #222;
+            border: 1px solid #333;
+            border-radius: 10px;
+            color: #fff;
+            font-family: inherit;
+            resize: vertical;
+            margin-bottom: 0.5rem;
+        }
+
+        .select-nome {
+            width: 100%;
+            padding: 0.75rem;
+            background: #222;
+            border: 1px solid #333;
+            border-radius: 10px;
+            color: #fff;
+            margin-bottom: 0.75rem;
+        }
+
+        .btn {
+            background: #f5a623;
+            color: #000;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-secondary {
+            background: #333;
+            color: #fff;
+        }
+
+        .comentarios-list {
+            margin-top: 1rem;
+            border-top: 1px solid #333;
+            padding-top: 1rem;
+        }
+
+        .comentario-item {
+            background: #1a1a1a;
+            border-radius: 10px;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .comentario-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.25rem;
+            font-size: 0.7rem;
+            color: #f5a623;
+        }
+
+        .comentario-text {
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        /* Modal de Adicionar */
+        .modal-sm {
+            max-width: 500px;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.3rem;
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background: #222;
+            border: 1px solid #333;
+            border-radius: 10px;
+            color: #fff;
+            font-family: inherit;
+        }
+
+        .helper-text {
+            font-size: 0.7rem;
+            color: #888;
+            margin-top: 0.25rem;
+        }
+
+        /* Flashcard Modal */
+        .flashcard-card {
+            text-align: center;
+            padding: 2rem;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .flashcard-pergunta {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .flashcard-resposta {
+            background: #1a1a1a;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .flashcard-resposta.show {
+            display: block;
+        }
+
+        .flashcard-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+            gap: 0.5rem;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #888;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .menu-icon {
+                display: block;
+            }
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: #000;
+                padding: 1rem;
+                border-bottom: 2px solid #f5a623;
+            }
+            .nav-links.active {
+                display: flex;
+            }
+            .container {
+                padding: 0.75rem;
+            }
+            .pergunta-texto {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="/src/alfa.jpeg" alt="Alfa Logo" onerror="this.src='https://via.placeholder.com/45'">
+                <div class="logo-text"><span>Alfa</span><span>Core</span></div>
+            </div>
+            <div class="menu-icon" id="menuIcon">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="/">MedTasks</a>
+                <a href="/alfa" class="active">AlfaCore</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="alfa-header">
+        <img src="/src/alfa.jpeg" alt="Projeto Alfa" onerror="this.src='https://via.placeholder.com/80'">
+        <h1>AlfaCore</h1>
+        <p>Banco de Perguntas - Processo Seletivo</p>
+    </div>
+
+    <div class="container">
+        <div class="filter-section">
+            <span class="filter-label"><i class="fas fa-tag"></i> Assunto:</span>
+            <div class="filter-tag all-tag active" data-tag="all">Todos</div>
+            <div id="filterTagsContainer"></div>
+        </div>
+        <div id="perguntasList"></div>
+    </div>
+
+    <button class="flashcard-btn" id="flashcardBtn"><i class="fas fa-bolt"></i></button>
+    <button class="fab" id="addBtn"><i class="fas fa-plus"></i></button>
+
+    <!-- Modal de Detalhes -->
+    <div class="modal" id="detailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-question-circle"></i> Detalhes</h3>
+                <button class="modal-close" onclick="closeDetailModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="detailModalBody"></div>
+        </div>
+    </div>
+
+    <!-- Modal de Adicionar -->
+    <div class="modal" id="addModal">
+        <div class="modal-content modal-sm">
+            <div class="modal-header">
+                <h3><i class="fas fa-plus"></i> Nova Pergunta</h3>
+                <button class="modal-close" onclick="closeAddModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Seu nome *</label>
+                    <select id="addAutor" class="select-nome"></select>
+                </div>
+                <div class="form-group">
+                    <label>Hashtags (ex: #RCP #OVA)</label>
+                    <input type="text" id="addHashtags" placeholder="#RCP #Trauma">
+                    <div class="helper-text">Separe por espaço. Use # para cada assunto</div>
+                </div>
+                <div class="form-group">
+                    <label>Pergunta *</label>
+                    <textarea id="addPergunta" rows="3" placeholder="Digite a pergunta..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Resposta (opcional)</label>
+                    <textarea id="addResposta" rows="4" placeholder="Digite a resposta..."></textarea>
+                </div>
+                <button class="btn" onclick="submitPergunta()" style="width:100%">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Flashcard -->
+    <div class="modal" id="flashcardModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-bolt"></i> Flashcards</h3>
+                <button class="modal-close" onclick="closeFlashcardModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Filtrar por assunto:</label>
+                    <select id="flashcardFilter" class="select-nome">
+                        <option value="all">Todos os assuntos</option>
+                    </select>
+                </div>
+                <div id="flashcardContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Lista de participantes
+        const participantes = [
+            "Isaías Nascimento", "Ana Clara", "Mateus Cesarino", "Laisa Vásquez",
+            "Maria Clara", "Sofia Pachalian", "Thiago Luniere", "Samuel Vicente",
+            "Luana Dias", "Allan Arruda", "Anna Luiza Jaques", "Cauã Lobão",
+            "Felipe Bitencourt", "Eduardo Araújo", "Vitório Gabriel", "Ítalo Costa"
+        ];
+
+        let perguntas = [];
+        let currentFilter = "all";
+
+        // Elementos
+        const perguntasList = document.getElementById('perguntasList');
+        const filterTagsContainer = document.getElementById('filterTagsContainer');
+        const addAutor = document.getElementById('addAutor');
+        const flashcardFilter = document.getElementById('flashcardFilter');
+
+        // Funções auxiliares
+        function formatDate(timestamp) {
+            const d = new Date(timestamp);
+            return `${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            }).replace(/\n/g, '<br>');
+        }
+
+        // Carregar perguntas
+        async function loadPerguntas() {
+            perguntasList.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Carregando...</div>';
+            try {
+                const res = await fetch('/alfa/perguntas');
+                perguntas = await res.json();
+                renderFilterTags();
+                renderPerguntas();
+            } catch (err) {
+                console.error(err);
+                perguntasList.innerHTML = '<div class="loading">Erro ao carregar</div>';
+            }
+        }
+
+        // Renderizar tags de filtro
+        function renderFilterTags() {
+            const allTags = new Set();
+            perguntas.forEach(p => {
+                p.hashtags.forEach(t => allTags.add(t));
+            });
+            const sortedTags = Array.from(allTags).sort();
+            filterTagsContainer.innerHTML = sortedTags.map(tag => `
+                <div class="filter-tag" data-tag="${tag}">${tag}</div>
+            `).join('');
+            
+            document.querySelectorAll('.filter-tag').forEach(el => {
+                el.addEventListener('click', () => {
+                    document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
+                    document.querySelector('.all-tag').classList.remove('active');
+                    el.classList.add('active');
+                    currentFilter = el.dataset.tag;
+                    renderPerguntas();
+                });
+            });
+        }
+
+        // Renderizar lista de perguntas
+        function renderPerguntas() {
+            let filtered = perguntas;
+            if (currentFilter !== 'all') {
+                filtered = perguntas.filter(p => p.hashtags.includes(currentFilter));
+            }
+            
+            if (filtered.length === 0) {
+                perguntasList.innerHTML = '<div class="loading">Nenhuma pergunta encontrada</div>';
+                return;
+            }
+            
+            perguntasList.innerHTML = filtered.map(p => `
+                <div class="pergunta-item" onclick="openDetailModal('${p._id}')">
+                    <div class="pergunta-texto">${escapeHtml(p.pergunta)}</div>
+                    <div class="pergunta-meta">
+                        <div class="hashtags">
+                            ${p.hashtags.map(t => `<span class="hashtag">#${t}</span>`).join('')}
+                        </div>
+                        <div class="resposta-status ${p.resposta ? 'respondida' : ''}">
+                            ${p.resposta ? '✓ Respondida' : '✗ Sem resposta'}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Abrir modal de detalhes
+        async function openDetailModal(id) {
+            const pergunta = perguntas.find(p => p._id === id);
+            if (!pergunta) return;
+            
+            const modalBody = document.getElementById('detailModalBody');
+            modalBody.innerHTML = `
+                <div class="pergunta-detalhe">
+                    <h4><i class="fas fa-question-circle"></i> Pergunta</h4>
+                    <p>${escapeHtml(pergunta.pergunta)}</p>
+                    <div style="margin-top:0.5rem; font-size:0.7rem; color:#888">
+                        <i class="fas fa-user"></i> ${escapeHtml(pergunta.autor)} • <i class="fas fa-clock"></i> ${formatDate(pergunta.createdAt)}
+                    </div>
+                    <div class="hashtags" style="margin-top:0.5rem">
+                        ${pergunta.hashtags.map(t => `<span class="hashtag">#${t}</span>`).join('')}
+                    </div>
+                </div>
+                
+                <div class="resposta-area">
+                    <h4><i class="fas fa-comment-dots"></i> Resposta</h4>
+                    <textarea id="editResposta" rows="5" placeholder="Adicione ou edite a resposta...">${pergunta.resposta || ''}</textarea>
+                    <select id="editAutor" class="select-nome">
+                        <option value="">Selecione seu nome</option>
+                        ${participantes.map(n => `<option value="${n}" ${pergunta.autor === n ? 'selected' : ''}>${n}</option>`).join('')}
+                    </select>
+                    <button class="btn" onclick="updateResposta('${id}')" style="margin-top:0.5rem">Salvar Resposta</button>
+                </div>
+                
+                <div class="comentarios-list">
+                    <h4><i class="fas fa-comments"></i> Comentários (${pergunta.comentarios?.length || 0})</h4>
+                    <div id="comentariosContainer">
+                        ${pergunta.comentarios?.map(c => `
+                            <div class="comentario-item">
+                                <div class="comentario-header">
+                                    <span><i class="fas fa-user"></i> ${escapeHtml(c.author)}</span>
+                                    <span>${formatDate(c.date)}</span>
+                                </div>
+                                <div class="comentario-text">${escapeHtml(c.comment)}</div>
+                            </div>
+                        `).join('') || '<div style="color:#666; text-align:center">Nenhum comentário</div>'}
+                    </div>
+                    <div style="margin-top:1rem">
+                        <select id="commentAutor" class="select-nome">
+                            <option value="">Selecione seu nome</option>
+                            ${participantes.map(n => `<option value="${n}">${n}</option>`).join('')}
+                        </select>
+                        <textarea id="newComment" rows="2" placeholder="Digite seu comentário..." style="width:100%; margin-top:0.5rem; padding:0.75rem; background:#222; border:1px solid #333; border-radius:10px; color:#fff"></textarea>
+                        <button class="btn btn-secondary" onclick="addComment('${id}')" style="margin-top:0.5rem">Enviar Comentário</button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('detailModal').classList.add('active');
+        }
+
+        function closeDetailModal() {
+            document.getElementById('detailModal').classList.remove('active');
+        }
+
+        // Atualizar resposta
+        async function updateResposta(id) {
+            const resposta = document.getElementById('editResposta').value;
+            const autor = document.getElementById('editAutor').value;
+            if (!autor) {
+                alert('Selecione seu nome');
+                return;
+            }
+            try {
+                const res = await fetch(`/alfa/update?id=${id}&resposta=${encodeURIComponent(resposta)}&autor=${encodeURIComponent(autor)}`);
+                const data = await res.json();
+                if (data.success) {
+                    alert('Resposta salva!');
+                    await loadPerguntas();
+                    closeDetailModal();
+                } else {
+                    alert('Erro: ' + data.reason);
+                }
+            } catch (err) {
+                alert('Erro ao salvar');
+            }
+        }
+
+        // Adicionar comentário
+        async function addComment(id) {
+            const autor = document.getElementById('commentAutor').value;
+            const comentario = document.getElementById('newComment').value;
+            if (!autor) {
+                alert('Selecione seu nome');
+                return;
+            }
+            if (!comentario.trim()) {
+                alert('Digite um comentário');
+                return;
+            }
+            try {
+                const res = await fetch(`/alfa/comment?id=${id}&autor=${encodeURIComponent(autor)}&comentario=${encodeURIComponent(comentario)}`);
+                const data = await res.json();
+                if (data.success) {
+                    alert('Comentário adicionado!');
+                    await loadPerguntas();
+                    openDetailModal(id);
+                } else {
+                    alert('Erro: ' + data.reason);
+                }
+            } catch (err) {
+                alert('Erro ao comentar');
+            }
+        }
+
+        // Modal de adicionar
+        function openAddModal() {
+            document.getElementById('addModal').classList.add('active');
+        }
+        function closeAddModal() {
+            document.getElementById('addModal').classList.remove('active');
+        }
+
+        async function submitPergunta() {
+            const autor = document.getElementById('addAutor').value;
+            const hashtags = document.getElementById('addHashtags').value;
+            const pergunta = document.getElementById('addPergunta').value.trim();
+            const resposta = document.getElementById('addResposta').value.trim();
+            
+            if (!autor) {
+                alert('Selecione seu nome');
+                return;
+            }
+            if (!pergunta) {
+                alert('Digite a pergunta');
+                return;
+            }
+            
+            try {
+                const url = `/alfa/add?autor=${encodeURIComponent(autor)}&pergunta=${encodeURIComponent(pergunta)}&hashtags=${encodeURIComponent(hashtags)}&resposta=${encodeURIComponent(resposta)}`;
+                const res = await fetch(url);
+                const data = await res.json();
+                if (data.success) {
+                    alert('Pergunta adicionada!');
+                    closeAddModal();
+                    document.getElementById('addHashtags').value = '';
+                    document.getElementById('addPergunta').value = '';
+                    document.getElementById('addResposta').value = '';
+                    await loadPerguntas();
+                } else {
+                    alert('Erro: ' + data.reason);
+                }
+            } catch (err) {
+                alert('Erro ao adicionar');
+            }
+        }
+
+        // Flashcard
+        function openFlashcardModal() {
+            const allTags = new Set();
+            perguntas.forEach(p => {
+                p.hashtags.forEach(t => allTags.add(t));
+            });
+            flashcardFilter.innerHTML = '<option value="all">Todos os assuntos</option>' + 
+                Array.from(allTags).sort().map(t => `<option value="${t}">${t}</option>`).join('');
+            
+            renderFlashcard();
+            document.getElementById('flashcardModal').classList.add('active');
+        }
+        
+        function closeFlashcardModal() {
+            document.getElementById('flashcardModal').classList.remove('active');
+        }
+        
+        let currentFlashcards = [];
+        let currentFlashcardIndex = 0;
+        let showAnswer = false;
+        
+        function renderFlashcard() {
+            const filter = flashcardFilter.value;
+            let filtered = perguntas;
+            if (filter !== 'all') {
+                filtered = perguntas.filter(p => p.hashtags.includes(filter));
+            }
+            filtered = filtered.filter(p => p.resposta && p.resposta.trim() !== '');
+            
+            if (filtered.length === 0) {
+                document.getElementById('flashcardContent').innerHTML = '<div class="loading">Nenhuma pergunta com resposta para este assunto</div>';
+                return;
+            }
+            
+            currentFlashcards = filtered;
+            currentFlashcardIndex = 0;
+            showAnswer = false;
+            updateFlashcardDisplay();
+        }
+        
+        function updateFlashcardDisplay() {
+            if (currentFlashcards.length === 0) return;
+            const card = currentFlashcards[currentFlashcardIndex];
+            const html = `
+                <div class="flashcard-card">
+                    <div class="flashcard-pergunta">${escapeHtml(card.pergunta)}</div>
+                    <div class="flashcard-resposta ${showAnswer ? 'show' : ''}" id="flashcardResposta">
+                        ${escapeHtml(card.resposta)}
+                    </div>
+                    <div class="flashcard-nav">
+                        <button class="btn btn-secondary" onclick="prevFlashcard()"><i class="fas fa-chevron-left"></i> Anterior</button>
+                        <button class="btn" onclick="toggleAnswer()">${showAnswer ? 'Ocultar' : 'Mostrar'} Resposta</button>
+                        <button class="btn btn-secondary" onclick="nextFlashcard()">Próximo <i class="fas fa-chevron-right"></i></button>
+                    </div>
+                    <div style="text-align:center; margin-top:1rem; font-size:0.7rem; color:#888">
+                        ${currentFlashcardIndex + 1} de ${currentFlashcards.length}
+                    </div>
+                </div>
+            `;
+            document.getElementById('flashcardContent').innerHTML = html;
+        }
+        
+        function toggleAnswer() {
+            showAnswer = !showAnswer;
+            updateFlashcardDisplay();
+        }
+        
+        function nextFlashcard() {
+            if (currentFlashcardIndex + 1 < currentFlashcards.length) {
+                currentFlashcardIndex++;
+                showAnswer = false;
+                updateFlashcardDisplay();
+            } else {
+                alert('Você chegou ao fim! Comece novamente.');
+                currentFlashcardIndex = 0;
+                showAnswer = false;
+                updateFlashcardDisplay();
+            }
+        }
+        
+        function prevFlashcard() {
+            if (currentFlashcardIndex - 1 >= 0) {
+                currentFlashcardIndex--;
+                showAnswer = false;
+                updateFlashcardDisplay();
+            } else {
+                alert('Primeiro flashcard');
+            }
+        }
+        
+        // Event listeners
+        document.getElementById('menuIcon').addEventListener('click', () => {
+            document.getElementById('navLinks').classList.toggle('active');
+        });
+        document.getElementById('addBtn').addEventListener('click', openAddModal);
+        document.getElementById('flashcardBtn').addEventListener('click', openFlashcardModal);
+        flashcardFilter.addEventListener('change', renderFlashcard);
+        
+        // Fechar modais ao clicar fora
+        window.onclick = function(e) {
+            if (e.target === document.getElementById('detailModal')) closeDetailModal();
+            if (e.target === document.getElementById('addModal')) closeAddModal();
+            if (e.target === document.getElementById('flashcardModal')) closeFlashcardModal();
+        };
+        
+        // Inicializar selects
+        function initSelects() {
+            const options = participantes.map(n => `<option value="${n}">${n}</option>`).join('');
+            addAutor.innerHTML = '<option value="">Selecione seu nome</option>' + options;
+        }
+        
+        initSelects();
+        loadPerguntas();
+    </script>
+</body>
+</html>
