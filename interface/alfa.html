@@ -6,6 +6,7 @@
     <title>AlfaCore — Projeto Alfa</title>
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="/src/alfa.jpg">
     <style>
         :root {
             --amber: #f5a623;
@@ -1525,15 +1526,25 @@
             openModal('flashcardModal');
         }
 
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
         function renderFlashcard() {
             const filter = document.getElementById('flashcardFilter').value;
             let list = perguntas.filter(p => p.resposta && p.resposta.trim());
             if (filter !== 'all') list = list.filter(p => p.hashtags.includes(filter));
-
-            currentFlashcards = list;
+        
+            // Embaralhar o array para ordem aleatória
+            currentFlashcards = shuffleArray(list);
             fcIndex = 0;
             fcShowAnswer = false;
-
+        
             if (!list.length) {
                 document.getElementById('flashcardContent').innerHTML = `
                     <div class="fc-empty">
