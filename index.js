@@ -93,6 +93,11 @@ app.get('/calendar', function(req, res) {
     res.sendFile(__dirname + '/interface/calendar.html');
 });
 
+app.get('/naovempf', function(req, res) {
+    console.log("Access NAOVEMPF: " + new Date());
+    res.sendFile(__dirname + '/interface/naovempf.html');
+});
+
 app.get('/apagar', async function(req, res) {
 	console.log("Access APAGAR: " + new Date())
 
