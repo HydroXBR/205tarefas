@@ -290,6 +290,13 @@
             background: rgba(220, 38, 38, 0.05);
         }
 
+        .result-card .result-image {
+            max-width: 200px;
+            margin: 0 auto 1rem auto;
+            border-radius: 12px;
+            display: block;
+        }
+
         .result-card .result-title {
             font-size: 1.8rem;
             font-weight: 900;
@@ -322,13 +329,6 @@
         .result-card .result-details .highlight-fail {
             color: #dc2626;
             font-weight: 700;
-        }
-
-        .result-image {
-            max-width: 200px;
-            margin: 1rem auto;
-            border-radius: 12px;
-            display: block;
         }
 
         @keyframes slideIn {
@@ -388,7 +388,7 @@
     <div class="pf-container">
         <div class="pf-card">
             <div class="pf-header">
-                <h1><i class="fas fa-calculator"></i> Não Vem PF?</h1>
+                <h1><i class="fas fa-calculator"></i> Não Vem PF!</h1>
                 <p>Descubra se você precisa fazer a Prova Final</p>
             </div>
             <div class="pf-body">
@@ -487,9 +487,9 @@
 
                 <!-- Resultado -->
                 <div class="result-card" id="resultCard">
+                    <img class="result-image" id="resultImage" src="" alt="" style="display:none;">
                     <div class="result-title" id="resultTitle">Resultado</div>
                     <div class="result-details" id="resultDetails"></div>
-                    <img class="result-image" id="resultImage" src="" alt="" style="display:none;">
                 </div>
 
                 <!-- Reset -->
@@ -528,10 +528,10 @@
             audioFah = new Audio('/src/fah.mp3');
             audioFah.volume = 0.5;
             
-            audioTriste = new Audio('/src/mtriste.png');
+            audioTriste = new Audio('/src/mtriste.mp3');
             audioTriste.volume = 0.7;
             
-            audioFeliz = new Audio('/src/mfeliz.png');
+            audioFeliz = new Audio('/src/mfeliz.mp3');
             audioFeliz.volume = 0.7;
         }
 
@@ -587,8 +587,6 @@
             document.getElementById('resultadoNotaFaltanteMedia').textContent = '';
             document.getElementById('simuladorPainel').classList.remove('show');
             document.getElementById('simuladorPainelMedia').classList.remove('show');
-            
-            // Não para a música ao trocar de modo
         }
 
         // ===== NOTAS =====
@@ -675,12 +673,14 @@
             const pfNecessaria = Math.max(0, 15 - (mediaFinal * 2));
             const pfArredondada = Math.ceil(pfNecessaria * 10) / 10;
 
+            // Mostrar a imagem primeiro, centralizada
+            img.style.display = 'block';
+            
             if (pass) {
                 const saldo = mediaFinal - 7.5;
                 title.textContent = 'PASSOU! 🎉';
                 card.className = 'result-card show pass';
                 img.src = '/src/mfeliz.png';
-                img.style.display = 'block';
                 playFeliz();
 
                 details.innerHTML = `
@@ -700,10 +700,9 @@
                 `;
             } else {
                 const diferenca = 7.5 - mediaFinal;
-                title.textContent = 'NÃO PASSOU! 😢';
+                title.textContent = 'NÃO PASSOU!';
                 card.className = 'result-card show fail';
                 img.src = '/src/mtriste.png';
-                img.style.display = 'block';
                 playTriste();
 
                 details.innerHTML = `
@@ -886,8 +885,15 @@
         document.addEventListener('DOMContentLoaded', function() {
             preloadAudios();
             // Toca a música imediatamente ao carregar a página
-            setTimeout(playSuspense, 100);
+            playSuspense();
         });
+
+        // Garantir que a música toque com interação do usuário
+        document.addEventListener('click', function() {
+            if (audioSuspense && audioSuspense.paused) {
+                audioSuspense.play().catch(() => {});
+            }
+        }, { once: true });
     </script>
 </body>
 </html>
