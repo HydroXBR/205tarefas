@@ -398,14 +398,14 @@
                         <i class="fas fa-calculator"></i> Cálculo Completo
                     </button>
                     <button class="mode-btn" data-mode="average" onclick="switchMode('average')">
-                        <i class="fas fa-chart-line"></i> Pela Média Final
+                        <i class="fas fa-chart-line"></i> Pela Média dos Exercícios
                     </button>
                 </div>
 
                 <!-- Modo Completo -->
                 <div id="completeMode">
                     <div class="form-group" style="margin-bottom:1rem;">
-                        <label><i class="fas fa-info-circle"></i> Insira suas notas e pesos</label>
+                        <label><i class="fas fa-info-circle"></i> Insira suas notas e pesos dos exercícios</label>
                     </div>
                     <div id="notesContainer">
                         <div class="form-row note-entry">
@@ -449,24 +449,24 @@
                     
                     <div style="margin-top:0.75rem;">
                         <button class="btn btn-primary btn-block" onclick="calculateComplete()">
-                            <i class="fas fa-calculator"></i> Calcular Média
+                            <i class="fas fa-calculator"></i> Calcular
                         </button>
                     </div>
                 </div>
 
-                <!-- Modo Média Final -->
+                <!-- Modo Média dos Exercícios -->
                 <div id="averageMode" style="display:none;">
                     <div class="form-group">
-                        <label>Média Final (nota que você tem hoje)</label>
-                        <input type="number" id="mediaFinal" class="form-control" step="0.1" min="0" max="10" placeholder="0-10">
+                        <label>Média dos Exercícios (média ponderada das suas notas)</label>
+                        <input type="number" id="mediaExercicios" class="form-control" step="0.1" min="0" max="10" placeholder="0-10">
                     </div>
                     
-                    <!-- Botão "Falta uma prova?" para modo média final -->
+                    <!-- Botão "Falta uma prova?" para modo média -->
                     <button class="falta-prova-btn" onclick="toggleSimuladorMedia()">
                         <i class="fas fa-question-circle"></i> Falta uma prova? Adicione só o peso e saiba quanto você precisa tirar nela
                     </button>
                     
-                    <!-- Painel do Simulador para modo média final -->
+                    <!-- Painel do Simulador para modo média -->
                     <div class="simulador-painel" id="simuladorPainelMedia">
                         <label><i class="fas fa-bullseye"></i> Qual o peso da prova que falta?</label>
                         <div class="form-row">
@@ -639,7 +639,7 @@
         }
 
         // ===== CÁLCULOS =====
-        function getMediaAtual() {
+        function getMediaExercicios() {
             const notas = document.querySelectorAll('.nota-input');
             const pesos = document.querySelectorAll('.peso-input');
             let somaPonderada = 0;
@@ -660,7 +660,7 @@
             return { media: somaPonderada / somaPesos, somaPesos: somaPesos };
         }
 
-        function exibirResultado(mediaFinal) {
+        function exibirResultado(mediaExercicios) {
             stopSuspense();
             playFah();
 
@@ -669,18 +669,24 @@
             const details = document.getElementById('resultDetails');
             const img = document.getElementById('resultImage');
 
-            const pass = mediaFinal >= 7.5;
-            const pfNecessaria = Math.max(0, 15 - (mediaFinal * 2));
+            const pass = mediaExercicios >= 7.5;
+            const pfNecessaria = Math.max(0, 15 - (mediaExercicios * 2));
             const pfArredondada = Math.ceil(pfNecessaria * 10) / 10;
+            
+            // Cálculo da Média Final (após PF)
+            let mediaFinal = 0;
+            if (!pass) {
+                mediaFinal = ((mediaExercicios * 2) + pfArredondada) / 3;
+            }
 
             // Mostrar a imagem primeiro, centralizada
             img.style.display = 'block';
             
             if (pass) {
-                const saldo = mediaFinal - 7.5;
+                const saldo = mediaExercicios - 7.5;
                 title.textContent = 'PASSOU! 🎉';
                 card.className = 'result-card show pass';
-                img.src = '/src/mfeliz.png';
+                img.src = '/src/mtriste.png';
                 playFeliz();
 
                 details.innerHTML = `
@@ -688,54 +694,57 @@
                     <div style="margin-top:0.5rem; padding:0.75rem; background:rgba(16,185,129,0.1); border-radius:10px;">
                         <span class="highlight-pass">✨ Você passou com saldo de ${saldo.toFixed(2)} pontos!</span>
                         <br><br>
-                        <strong>Sua média final: ${mediaFinal.toFixed(2)}</strong>
+                        <strong>Média dos Exercícios: ${mediaExercicios.toFixed(2)}</strong>
                         <br>
                         <span style="font-size:0.85rem;">Nota necessária para passar: <strong>7.5</strong></span>
                         <br>
                         <span style="font-size:0.85rem; color:var(--text-tertiary);">Você está ${saldo.toFixed(2)} pontos acima do necessário ✅</span>
                     </div>
                     <p style="margin-top:0.75rem; font-size:0.85rem; color:var(--text-tertiary);">
-                        <i class="fas fa-info-circle"></i> Para passar direto, você precisa ter média final ≥ 7.5
+                        <i class="fas fa-info-circle"></i> Para passar direto, a Média dos Exercícios deve ser ≥ 7.5
                     </p>
                 `;
             } else {
-                const diferenca = 7.5 - mediaFinal;
+                const diferenca = 7.5 - mediaExercicios;
                 title.textContent = 'NÃO PASSOU!';
                 card.className = 'result-card show fail';
-                img.src = '/src/mtriste.png';
+                img.src = '/src/mfeliz.png';
                 playTriste();
 
                 details.innerHTML = `
                     <p>Você <span class="highlight-fail">NÃO PASSOU</span> e precisa fazer a Prova Final</p>
                     <div style="margin-top:0.5rem; padding:0.75rem; background:rgba(220,38,38,0.1); border-radius:10px;">
-                        <span class="highlight-fail">📉 Faltam ${diferenca.toFixed(2)} pontos para atingir 7.5</span>
+                        <span class="highlight-fail">📉 Faltam ${diferenca.toFixed(2)} pontos na Média dos Exercícios para atingir 7.5</span>
                         <br><br>
-                        <strong>Sua média final: ${mediaFinal.toFixed(2)}</strong>
+                        <strong>Média dos Exercícios: ${mediaExercicios.toFixed(2)}</strong>
                         <br>
-                        <span style="font-size:0.85rem;">Nota necessária para passar: <strong>7.5</strong></span>
-                        <br>
-                        <span style="font-size:0.85rem; color:var(--text-tertiary);">
-                            Para passar sem PF você precisaria de <strong>${diferenca.toFixed(2)}</strong> pontos a mais
-                        </span>
+                        <span style="font-size:0.85rem;">Nota necessária para passar direto: <strong>7.5</strong></span>
                     </div>
                     <div style="margin-top:0.75rem; padding:0.75rem; background:rgba(220,38,38,0.05); border-radius:10px; border:1px solid rgba(220,38,38,0.2);">
                         <strong style="font-size:1.1rem;">📝 Você precisa tirar ${pfArredondada.toFixed(1)} na Prova Final</strong>
-                        <br>
+                        <br><br>
                         <span style="font-size:0.85rem; color:var(--text-tertiary);">
-                            Cálculo: PF = (5 × 3) − (2 × ${mediaFinal.toFixed(2)}) = ${pfNecessaria.toFixed(2)}
+                            Cálculo da nota necessária na PF:
+                            <br>
+                            PF necessária = (5 × 3) − (2 × ${mediaExercicios.toFixed(2)}) = ${pfNecessaria.toFixed(2)}
                             <br>
                             Arredondando para cima: <strong>${pfArredondada.toFixed(1)}</strong>
                         </span>
+                        <br><br>
+                        <span style="font-size:0.85rem; color:var(--text-primary);">
+                            <strong>Sua Média Final será: (${mediaExercicios.toFixed(2)} × 2 + ${pfArredondada.toFixed(1)}) ÷ 3 = ${mediaFinal.toFixed(2)}</strong>
+                            ${mediaFinal >= 5 ? '<span style="color:#10b981;"> ✅ Passou!</span>' : '<span style="color:#dc2626;"> ❌ Não passou</span>'}
+                        </span>
                     </div>
                     <p style="margin-top:0.75rem; font-size:0.85rem; color:var(--text-tertiary);">
-                        <i class="fas fa-info-circle"></i> Fórmula da Prova Final: [ (Média Final × 2) + PF ] / 3 ≥ 5
+                        <i class="fas fa-info-circle"></i> Média Final = (Média dos Exercícios × 2 + PF) ÷ 3 ≥ 5
                     </p>
                 `;
             }
         }
 
         function calculateComplete() {
-            const result = getMediaAtual();
+            const result = getMediaExercicios();
             if (!result) {
                 alert('Adicione pelo menos uma nota válida!');
                 return;
@@ -744,12 +753,12 @@
         }
 
         function calculateAverage() {
-            const mediaFinal = parseFloat(document.getElementById('mediaFinal').value);
-            if (isNaN(mediaFinal) || mediaFinal < 0 || mediaFinal > 10) {
-                alert('Digite uma média final válida (0-10)!');
+            const mediaExercicios = parseFloat(document.getElementById('mediaExercicios').value);
+            if (isNaN(mediaExercicios) || mediaExercicios < 0 || mediaExercicios > 10) {
+                alert('Digite uma Média dos Exercícios válida (0-10)!');
                 return;
             }
-            exibirResultado(mediaFinal);
+            exibirResultado(mediaExercicios);
         }
 
         // ===== CALCULAR NOTA FALTANTE =====
@@ -762,7 +771,7 @@
                 return;
             }
 
-            const dados = getMediaAtual();
+            const dados = getMediaExercicios();
             if (!dados) {
                 resultado.innerHTML = '<span style="color:#dc2626;">⚠️ Adicione pelo menos uma nota com peso antes de calcular!</span>';
                 return;
@@ -778,7 +787,7 @@
                     <div style="color:#10b981; padding:0.75rem; background:rgba(16,185,129,0.1); border-radius:10px;">
                         🎉 <strong>Você já está aprovado!</strong>
                         <br>
-                        <span style="font-size:0.85rem;">Sua média atual (${mediaAtual.toFixed(2)}) já é suficiente para passar sem PF, mesmo se tirar 0 nessa prova.</span>
+                        <span style="font-size:0.85rem;">Sua Média dos Exercícios atual (${mediaAtual.toFixed(2)}) já é suficiente para passar sem PF, mesmo se tirar 0 nessa prova.</span>
                     </div>
                 `;
             } else if (notaNecessaria > 10) {
@@ -797,7 +806,7 @@
                         🎯 <strong>Você precisa tirar ${notaNecessariaArredondada.toFixed(1)}</strong> nessa prova
                         <br>
                         <span style="font-size:0.85rem; color:var(--text-tertiary);">
-                            Com peso ${peso}, sua média atual é <strong>${mediaAtual.toFixed(2)}</strong> e você precisa chegar a 7.5
+                            Com peso ${peso}, sua Média dos Exercícios atual é <strong>${mediaAtual.toFixed(2)}</strong> e você precisa chegar a 7.5
                         </span>
                     </div>
                 `;
@@ -805,12 +814,12 @@
         }
 
         function calcularNotaFaltanteMedia() {
-            const mediaAtual = parseFloat(document.getElementById('mediaFinal').value);
+            const mediaAtual = parseFloat(document.getElementById('mediaExercicios').value);
             const peso = parseFloat(document.getElementById('pesoProvaFaltanteMedia').value);
             const resultado = document.getElementById('resultadoNotaFaltanteMedia');
 
             if (isNaN(mediaAtual) || mediaAtual < 0 || mediaAtual > 10) {
-                resultado.innerHTML = '<span style="color:#dc2626;">⚠️ Digite sua média final primeiro!</span>';
+                resultado.innerHTML = '<span style="color:#dc2626;">⚠️ Digite sua Média dos Exercícios primeiro!</span>';
                 return;
             }
 
@@ -819,7 +828,6 @@
                 return;
             }
 
-            // Considerando que a média atual tem peso 1 (já é a média de tudo que foi feito)
             const notaNecessaria = (7.5 * (1 + peso) - mediaAtual * 1) / peso;
             const notaNecessariaArredondada = Math.ceil(notaNecessaria * 10) / 10;
 
@@ -828,7 +836,7 @@
                     <div style="color:#10b981; padding:0.75rem; background:rgba(16,185,129,0.1); border-radius:10px;">
                         🎉 <strong>Você já está aprovado!</strong>
                         <br>
-                        <span style="font-size:0.85rem;">Sua média atual (${mediaAtual.toFixed(2)}) já é suficiente para passar sem PF.</span>
+                        <span style="font-size:0.85rem;">Sua Média dos Exercícios atual (${mediaAtual.toFixed(2)}) já é suficiente para passar sem PF.</span>
                     </div>
                 `;
             } else if (notaNecessaria > 10) {
@@ -847,7 +855,7 @@
                         🎯 <strong>Você precisa tirar ${notaNecessariaArredondada.toFixed(1)}</strong> nessa prova
                         <br>
                         <span style="font-size:0.85rem; color:var(--text-tertiary);">
-                            Com peso ${peso}, sua média atual é <strong>${mediaAtual.toFixed(2)}</strong> e você precisa chegar a 7.5
+                            Com peso ${peso}, sua Média dos Exercícios atual é <strong>${mediaAtual.toFixed(2)}</strong> e você precisa chegar a 7.5
                         </span>
                     </div>
                 `;
@@ -858,7 +866,7 @@
         function resetAll() {
             document.querySelectorAll('.nota-input').forEach(i => i.value = '');
             document.querySelectorAll('.peso-input').forEach(i => i.value = '1');
-            document.getElementById('mediaFinal').value = '';
+            document.getElementById('mediaExercicios').value = '';
             document.getElementById('resultCard').classList.remove('show');
             document.getElementById('resultImage').style.display = 'none';
             document.getElementById('resultadoNotaFaltante').textContent = '';
