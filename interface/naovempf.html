@@ -3,59 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Não Vem PF!</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <title>Não Vem PF? 🤔 - MedTasks</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/nqmZ9nGr/Logo-IG-Med-Ufam116-3x.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #0a0a0a;
-            color: #fff;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 1.5rem;
-        }
-
-        .container {
-            max-width: 700px;
-            width: 100%;
+        .pf-container {
+            max-width: 800px;
             margin: 0 auto;
+            padding: 2rem;
         }
 
-        /* Header */
-        .header {
-            text-align: center;
-            margin-bottom: 2rem;
-            padding: 1.5rem;
-            background: linear-gradient(135deg, #111 0%, #1a1a1a 100%);
+        .pf-card {
+            background: var(--bg-card);
             border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.08);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
         }
 
-        .header h1 {
-            font-size: 2.2rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, #f5a623, #ff6b6b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        .pf-header {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-dark) 100%);
+            padding: 1.5rem;
+            text-align: center;
         }
 
-        .header p {
-            color: #888;
-            margin-top: 0.5rem;
+        .pf-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .pf-header p {
+            opacity: 0.9;
             font-size: 0.9rem;
         }
 
-        /* Modo Selector */
+        .pf-body {
+            padding: 1.5rem;
+        }
+
+        /* Mode Selector */
         .mode-selector {
             display: flex;
             gap: 0.75rem;
@@ -66,56 +58,31 @@
         .mode-btn {
             flex: 1;
             padding: 0.75rem 1rem;
-            border: 2px solid rgba(255,255,255,0.1);
+            border: 2px solid var(--border-color);
             border-radius: 12px;
-            background: #111;
-            color: #888;
+            background: var(--bg-elevated);
+            color: var(--text-secondary);
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
             text-align: center;
             font-size: 0.85rem;
+            font-family: 'Inter', sans-serif;
         }
 
         .mode-btn:hover {
-            border-color: #f5a623;
-            color: #fff;
+            border-color: var(--primary-green);
+            color: var(--text-primary);
         }
 
         .mode-btn.active {
-            border-color: #f5a623;
-            background: rgba(245, 166, 35, 0.1);
-            color: #f5a623;
+            border-color: var(--primary-green);
+            background: rgba(105, 120, 37, 0.1);
+            color: var(--primary-green);
         }
 
         .mode-btn i {
             margin-right: 6px;
-        }
-
-        /* Cards */
-        .card {
-            background: #111;
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 16px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            transition: all 0.3s;
-        }
-
-        .card-title {
-            font-size: 0.85rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: #f5a623;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .card-title i {
-            font-size: 0.9rem;
         }
 
         /* Form */
@@ -127,7 +94,7 @@
             display: block;
             font-size: 0.78rem;
             font-weight: 600;
-            color: #aaa;
+            color: var(--text-secondary);
             margin-bottom: 4px;
         }
 
@@ -144,10 +111,10 @@
         .form-control {
             width: 100%;
             padding: 0.6rem 0.8rem;
-            background: #1a1a1a;
-            border: 1px solid rgba(255,255,255,0.08);
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-color);
             border-radius: 10px;
-            color: #fff;
+            color: var(--text-primary);
             font-size: 0.9rem;
             transition: border-color 0.3s;
             font-family: 'Inter', sans-serif;
@@ -155,30 +122,14 @@
 
         .form-control:focus {
             outline: none;
-            border-color: #f5a623;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(105, 120, 37, 0.2);
         }
 
         .form-control::placeholder {
-            color: #555;
+            color: var(--text-tertiary);
         }
 
-        .input-group {
-            display: flex;
-            gap: 0.5rem;
-            align-items: center;
-        }
-
-        .input-group .form-control {
-            flex: 1;
-        }
-
-        .input-group .weight-label {
-            color: #888;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        /* Buttons */
         .btn {
             padding: 0.7rem 1.5rem;
             border: none;
@@ -191,32 +142,32 @@
         }
 
         .btn-primary {
-            background: #f5a623;
-            color: #000;
+            background: var(--primary-green);
+            color: #fff;
         }
 
         .btn-primary:hover {
-            background: #fdb944;
+            background: var(--primary-green-light);
             transform: scale(1.02);
         }
 
         .btn-secondary {
-            background: #1a1a1a;
-            color: #fff;
-            border: 1px solid rgba(255,255,255,0.1);
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
         }
 
         .btn-secondary:hover {
-            background: #222;
+            background: var(--border-color);
         }
 
         .btn-danger {
-            background: #ff6b6b;
-            color: #000;
+            background: #dc2626;
+            color: #fff;
         }
 
         .btn-danger:hover {
-            background: #ff8787;
+            background: #ef4444;
             transform: scale(1.02);
         }
 
@@ -229,13 +180,12 @@
             font-size: 0.75rem;
         }
 
-        /* Add note button */
         .add-note-btn {
             padding: 0.5rem 1rem;
             background: transparent;
-            border: 2px dashed rgba(255,255,255,0.1);
+            border: 2px dashed var(--border-color);
             border-radius: 10px;
-            color: #888;
+            color: var(--text-secondary);
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
@@ -245,8 +195,20 @@
         }
 
         .add-note-btn:hover {
-            border-color: #f5a623;
-            color: #f5a623;
+            border-color: var(--primary-green);
+            color: var(--primary-green);
+        }
+
+        .remove-note {
+            display: none;
+        }
+
+        .note-entry .remove-note {
+            display: block;
+        }
+
+        .note-entry:only-of-type .remove-note {
+            display: none;
         }
 
         /* Result */
@@ -270,8 +232,8 @@
         }
 
         .result-card.fail {
-            border-color: #ff6b6b;
-            background: rgba(255, 107, 107, 0.05);
+            border-color: #dc2626;
+            background: rgba(220, 38, 38, 0.05);
         }
 
         .result-card .result-emoji {
@@ -290,17 +252,17 @@
         }
 
         .result-card.fail .result-title {
-            color: #ff6b6b;
+            color: #dc2626;
         }
 
         .result-card .result-details {
-            color: #aaa;
+            color: var(--text-secondary);
             font-size: 0.95rem;
             line-height: 1.6;
         }
 
         .result-card .result-details strong {
-            color: #fff;
+            color: var(--text-primary);
         }
 
         .result-card .result-details .highlight-pass {
@@ -309,7 +271,7 @@
         }
 
         .result-card .result-details .highlight-fail {
-            color: #ff6b6b;
+            color: #dc2626;
             font-weight: 700;
         }
 
@@ -320,53 +282,284 @@
             display: block;
         }
 
+        .calcular-prox-btn {
+            margin-top: 0.5rem;
+            padding: 0.4rem 1rem;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .calcular-prox-btn:hover {
+            border-color: var(--primary-green);
+            color: var(--primary-green);
+        }
+
+        .prox-resultado {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
         @keyframes slideIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Responsive */
-        @media (max-width: 600px) {
-            body { padding: 1rem; }
-            .header h1 { font-size: 1.6rem; }
-            .mode-selector { flex-direction: column; }
-            .form-row { flex-direction: column; gap: 0.5rem; }
-            .card { padding: 1rem; }
-            .result-card .result-title { font-size: 1.3rem; }
+        @media (max-width: 768px) {
+            .pf-container {
+                padding: 1rem;
+            }
+            .pf-body {
+                padding: 1rem;
+            }
+            .form-row {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            .mode-selector {
+                flex-direction: column;
+            }
+            .result-card .result-title {
+                font-size: 1.3rem;
+            }
         }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 99px; }
     </style>
 </head>
 <body>
+    <!-- NAVBAR PADRÃO MEDTASKS -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="https://i.ibb.co/5XVmGm7h/marca-ufam-vetor-positivo.png" alt="UFAM Logo" class="ufam-logo">
+                <div class="turma-logo-container">
+                    <img src="https://i.ibb.co/nqmZ9nGr/Logo-IG-Med-Ufam116-3x.png" alt="Turma 116" class="turma-logo">
+                </div>
+                <div class="logo-text">
+                    <span class="med-text">Med</span><span class="tasks-text">Tasks</span>
+                    <span class="turma-badge">MED UFAM 116</span>
+                </div>
+            </div>
+            <div class="menu-icon" id="menuIcon">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="/"><i class="fas fa-home"></i> Início</a>
+                <a href="/horarios"><i class="fas fa-calendar-alt"></i> Horários</a>
+                <a href="/calendar"><i class="fas fa-calendar-week"></i> Calendário</a>
+                <a href="/ppc"><i class="fas fa-book-open"></i> PPC</a>
+                <a href="/sobre"><i class="fas fa-info-circle"></i> Sobre</a>
+                <a href="/naovempf" class="active" style="background: #dc2626; color:#fff; border-radius:8px; padding:0.5rem 1rem;"><i class="fas fa-calculator"></i> Não Vem PF?</a>
+                <a href="/add" class="btn-add"><i class="fas fa-plus"></i> Adicionar Tarefa</a>
+                <a href="/addlembrete" class="btn-add" style="background: #3b82f6;"><i class="fas fa-bell"></i> Adicionar Lembrete</a>
+            </div>
+        </div>
+    </nav>
 
-<div class="container">
-    <!-- Header -->
-    <div class="header">
-        <h1>🤔 Não Vem PF?</h1>
-        <p>Descubra se você precisa fazer a Prova Final</p>
+    <div class="pf-container">
+        <div class="pf-card">
+            <div class="pf-header">
+                <h1><i class="fas fa-calculator"></i> Não Vem PF?</h1>
+                <p>Descubra se você precisa fazer a Prova Final</p>
+            </div>
+            <div class="pf-body">
+                <!-- Mode Selector -->
+                <div class="mode-selector">
+                    <button class="mode-btn active" data-mode="complete" onclick="switchMode('complete')">
+                        <i class="fas fa-calculator"></i> Cálculo Completo
+                    </button>
+                    <button class="mode-btn" data-mode="average" onclick="switchMode('average')">
+                        <i class="fas fa-chart-line"></i> Pela Média Final
+                    </button>
+                </div>
+
+                <!-- Modo Completo -->
+                <div id="completeMode">
+                    <div class="form-group" style="margin-bottom:1rem;">
+                        <label><i class="fas fa-info-circle"></i> Insira suas notas e pesos</label>
+                    </div>
+                    <div id="notesContainer">
+                        <div class="form-row note-entry">
+                            <div class="form-group">
+                                <label>Nota</label>
+                                <input type="number" class="form-control nota-input" step="0.1" min="0" max="10" placeholder="0-10">
+                            </div>
+                            <div class="form-group">
+                                <label>Peso</label>
+                                <input type="number" class="form-control peso-input" step="0.1" min="0" max="10" placeholder="Peso" value="1">
+                            </div>
+                            <div class="form-group" style="flex:0 0 40px; display:flex; align-items:flex-end;">
+                                <button class="btn btn-danger btn-sm remove-note" onclick="removeNote(this)">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="add-note-btn" onclick="addNote()">
+                        <i class="fas fa-plus"></i> Adicionar outra nota
+                    </button>
+                    <div style="margin-top:0.75rem;">
+                        <button class="btn btn-primary btn-block" onclick="calculateComplete()">
+                            <i class="fas fa-calculator"></i> Calcular
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Modo Média Final -->
+                <div id="averageMode" style="display:none;">
+                    <div class="form-group">
+                        <label>Média Final (nota que você tem hoje)</label>
+                        <input type="number" id="mediaFinal" class="form-control" step="0.1" min="0" max="10" placeholder="0-10">
+                    </div>
+                    <button class="btn btn-primary btn-block" onclick="calculateAverage()">
+                        <i class="fas fa-calculator"></i> Calcular
+                    </button>
+                </div>
+
+                <!-- Resultado -->
+                <div class="result-card" id="resultCard">
+                    <div class="result-emoji" id="resultEmoji">🎭</div>
+                    <div class="result-title" id="resultTitle">Resultado</div>
+                    <div class="result-details" id="resultDetails"></div>
+                    <img class="result-image" id="resultImage" src="" alt="" style="display:none;">
+                </div>
+
+                <!-- Reset -->
+                <div style="text-align: center; margin-top: 1rem;">
+                    <button class="btn btn-secondary btn-sm" onclick="resetAll()">
+                        <i class="fas fa-redo"></i> Limpar tudo
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card: Simulador Próxima Nota (integrado) -->
+        <div class="pf-card" style="border-color: rgba(105,120,37,0.3);">
+            <div class="pf-header" style="background: linear-gradient(135deg, var(--bg-elevated) 0%, var(--bg-card) 100%); border-bottom: 2px solid var(--primary-green);">
+                <h2 style="font-size:1.2rem; color:var(--primary-green);"><i class="fas fa-bullseye"></i> Simulador: Próxima Prova</h2>
+                <p style="font-size:0.8rem; color:var(--text-secondary);">Adicione uma nota em branco com o peso da próxima prova e veja quanto precisa tirar</p>
+            </div>
+            <div class="pf-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Peso da próxima prova</label>
+                        <input type="number" id="proximoPeso" class="form-control" step="0.1" min="0" max="10" placeholder="Peso" value="1">
+                    </div>
+                    <div class="form-group" style="flex:0 0 auto; display:flex; align-items:flex-end;">
+                        <button class="btn btn-primary btn-sm" onclick="calcularProximaNota()" style="padding:0.6rem 1.2rem;">
+                            <i class="fas fa-bullseye"></i> Calcular
+                        </button>
+                    </div>
+                </div>
+                <div id="proximaNotaResultado" class="prox-resultado"></div>
+                <div style="margin-top:0.75rem; font-size:0.75rem; color:var(--text-tertiary);">
+                    <i class="fas fa-lightbulb"></i> Dica: adicione uma nova nota com peso, deixe o campo "Nota" em branco e clique em "Calcular" para ver quanto precisa tirar.
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Mode Selector -->
-    <div class="mode-selector">
-        <button class="mode-btn active" data-mode="complete" onclick="switchMode('complete')">
-            <i class="fas fa-calculator"></i> Cálculo Completo
-        </button>
-        <button class="mode-btn" data-mode="average" onclick="switchMode('average')">
-            <i class="fas fa-chart-line"></i> Pela Média Final
-        </button>
-    </div>
+    <footer class="footer">
+        <div class="footer-content">
+            <p><i class="far fa-copyright"></i> 2026 MedTasks - MED UFAM 116 - Faculdade de Medicina UFAM</p>
+        </div>
+    </footer>
 
-    <!-- Card: Cálculo Completo -->
-    <div class="card" id="completeMode">
-        <div class="card-title"><i class="fas fa-calculator"></i> Insira suas notas e pesos</div>
-        <div id="notesContainer">
-            <div class="form-row note-entry">
+    <script>
+        // ===== NAVBAR MOBILE =====
+        document.getElementById('menuIcon').addEventListener('click', function() {
+            document.getElementById('navLinks').classList.toggle('active');
+        });
+
+        // ===== ÁUDIO =====
+        let audioSuspense = null;
+        let audioFah = null;
+        let audioTriste = null;
+        let audioFeliz = null;
+
+        function preloadAudios() {
+            audioSuspense = new Audio('/src/suspense.mp3');
+            audioSuspense.loop = true;
+            audioSuspense.volume = 0.3;
+            
+            audioFah = new Audio('/src/fah.mp3');
+            audioFah.volume = 0.5;
+            
+            audioTriste = new Audio('/src/mtriste.png');
+            audioTriste.volume = 0.7;
+            
+            audioFeliz = new Audio('/src/mfeliz.png');
+            audioFeliz.volume = 0.7;
+        }
+
+        function playSuspense() {
+            if (audioSuspense) {
+                audioSuspense.currentTime = 0;
+                audioSuspense.play().catch(() => {});
+            }
+        }
+
+        function stopSuspense() {
+            if (audioSuspense) {
+                audioSuspense.pause();
+                audioSuspense.currentTime = 0;
+            }
+        }
+
+        function playFah() {
+            if (audioFah) {
+                audioFah.currentTime = 0;
+                audioFah.play().catch(() => {});
+            }
+        }
+
+        function playTriste() {
+            if (audioTriste) {
+                audioTriste.currentTime = 0;
+                audioTriste.play().catch(() => {});
+            }
+        }
+
+        function playFeliz() {
+            if (audioFeliz) {
+                audioFeliz.currentTime = 0;
+                audioFeliz.play().catch(() => {});
+            }
+        }
+
+        // ===== MODOS =====
+        let currentMode = 'complete';
+        let noteCount = 1;
+
+        function switchMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector(`.mode-btn[data-mode="${mode}"]`).classList.add('active');
+            
+            document.getElementById('completeMode').style.display = mode === 'complete' ? 'block' : 'none';
+            document.getElementById('averageMode').style.display = mode === 'average' ? 'block' : 'none';
+            
+            document.getElementById('resultCard').classList.remove('show');
+            document.getElementById('proximaNotaResultado').textContent = '';
+            
+            stopSuspense();
+            setTimeout(playSuspense, 300);
+        }
+
+        // ===== NOTAS =====
+        function addNote() {
+            noteCount++;
+            const container = document.getElementById('notesContainer');
+            const newEntry = document.createElement('div');
+            newEntry.className = 'form-row note-entry';
+            newEntry.innerHTML = `
                 <div class="form-group">
-                    <label>Nota</label>
+                    <label>Nota ${noteCount}</label>
                     <input type="number" class="form-control nota-input" step="0.1" min="0" max="10" placeholder="0-10">
                 </div>
                 <div class="form-group">
@@ -374,446 +567,236 @@
                     <input type="number" class="form-control peso-input" step="0.1" min="0" max="10" placeholder="Peso" value="1">
                 </div>
                 <div class="form-group" style="flex:0 0 40px; display:flex; align-items:flex-end;">
-                    <button class="btn btn-danger btn-sm remove-note" onclick="removeNote(this)" style="display:none;">
+                    <button class="btn btn-danger btn-sm remove-note" onclick="removeNote(this)">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
-            </div>
-        </div>
-        <button class="add-note-btn" onclick="addNote()">
-            <i class="fas fa-plus"></i> Adicionar outra nota
-        </button>
-
-        <div style="margin-top: 1rem;">
-            <button class="btn btn-primary btn-block" onclick="calculateComplete()">
-                <i class="fas fa-calculator"></i> Calcular
-            </button>
-        </div>
-    </div>
-
-    <!-- Card: Pela Média Final -->
-    <div class="card" id="averageMode" style="display:none;">
-        <div class="card-title"><i class="fas fa-chart-line"></i> Insira sua média final atual</div>
-        <div class="form-group">
-            <label>Média Final (nota que você tem hoje)</label>
-            <input type="number" id="mediaFinal" class="form-control" step="0.1" min="0" max="10" placeholder="0-10">
-        </div>
-        <div style="margin-top: 1rem;">
-            <button class="btn btn-primary btn-block" onclick="calculateAverage()">
-                <i class="fas fa-calculator"></i> Calcular
-            </button>
-        </div>
-    </div>
-
-    <!-- Resultado -->
-    <div class="result-card" id="resultCard">
-        <div class="result-emoji" id="resultEmoji">🎭</div>
-        <div class="result-title" id="resultTitle">Resultado</div>
-        <div class="result-details" id="resultDetails"></div>
-        <img class="result-image" id="resultImage" src="" alt="" style="display:none;">
-    </div>
-
-    <!-- Próxima Nota -->
-    <div class="card" style="margin-top: 1rem; border-color: rgba(245,166,35,0.2);">
-        <div class="card-title"><i class="fas fa-bullseye"></i> Simulador: Próxima Prova</div>
-        <p style="color:#888; font-size:0.8rem; margin-bottom: 0.75rem;">
-            Calcule quanto você precisa tirar na próxima prova para passar
-        </p>
-        <div class="form-row">
-            <div class="form-group">
-                <label>Peso da próxima prova</label>
-                <input type="number" id="proximoPeso" class="form-control" step="0.1" min="0" max="10" placeholder="Peso" value="1">
-            </div>
-            <div class="form-group" style="flex:0 0 auto; display:flex; align-items:flex-end;">
-                <button class="btn btn-primary btn-sm" onclick="calcularProximaNota()" style="padding:0.6rem 1.2rem;">
-                    <i class="fas fa-bullseye"></i> Calcular
-                </button>
-            </div>
-        </div>
-        <div id="proximaNotaResultado" style="margin-top:0.5rem; font-size:0.9rem; color:#aaa;"></div>
-    </div>
-
-    <!-- Reset -->
-    <div style="text-align: center; margin-top: 1.5rem;">
-        <button class="btn btn-secondary btn-sm" onclick="resetAll()">
-            <i class="fas fa-redo"></i> Limpar tudo
-        </button>
-    </div>
-</div>
-
-<script>
-    let currentMode = 'complete';
-    let noteCount = 1;
-
-    // Áudio
-    let audioSuspense = null;
-    let audioFah = null;
-    let audioTriste = null;
-    let audioFeliz = null;
-
-    function preloadAudios() {
-        audioSuspense = new Audio('/src/suspense.mp3');
-        audioSuspense.loop = true;
-        audioSuspense.volume = 0.3;
-        
-        audioFah = new Audio('/src/fah.mp3');
-        audioFah.volume = 0.5;
-        
-        audioTriste = new Audio('/src/mtriste.mp3');
-        audioTriste.volume = 0.7;
-        
-        audioFeliz = new Audio('/src/mfeliz.mp3');
-        audioFeliz.volume = 0.7;
-    }
-
-    function playSuspense() {
-        if (audioSuspense) {
-            audioSuspense.currentTime = 0;
-            audioSuspense.play().catch(() => {});
+            `;
+            container.appendChild(newEntry);
         }
-    }
 
-    function stopSuspense() {
-        if (audioSuspense) {
-            audioSuspense.pause();
-            audioSuspense.currentTime = 0;
-        }
-    }
-
-    function playFah() {
-        if (audioFah) {
-            audioFah.currentTime = 0;
-            audioFah.play().catch(() => {});
-        }
-    }
-
-    function playTriste() {
-        if (audioTriste) {
-            audioTriste.currentTime = 0;
-            audioTriste.play().catch(() => {});
-        }
-    }
-
-    function playFeliz() {
-        if (audioFeliz) {
-            audioFeliz.currentTime = 0;
-            audioFeliz.play().catch(() => {});
-        }
-    }
-
-    // Iniciar suspense ao carregar a página
-    document.addEventListener('DOMContentLoaded', function() {
-        preloadAudios();
-        setTimeout(playSuspense, 500);
-    });
-
-    // Modos
-    function switchMode(mode) {
-        currentMode = mode;
-        document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-        document.querySelector(`.mode-btn[data-mode="${mode}"]`).classList.add('active');
-        
-        document.getElementById('completeMode').style.display = mode === 'complete' ? 'block' : 'none';
-        document.getElementById('averageMode').style.display = mode === 'average' ? 'block' : 'none';
-        
-        document.getElementById('resultCard').classList.remove('show');
-        document.getElementById('proximaNotaResultado').textContent = '';
-        
-        // Reiniciar suspense
-        stopSuspense();
-        setTimeout(playSuspense, 300);
-    }
-
-    // Adicionar nota
-    function addNote() {
-        noteCount++;
-        const container = document.getElementById('notesContainer');
-        const newEntry = document.createElement('div');
-        newEntry.className = 'form-row note-entry';
-        newEntry.innerHTML = `
-            <div class="form-group">
-                <label>Nota ${noteCount}</label>
-                <input type="number" class="form-control nota-input" step="0.1" min="0" max="10" placeholder="0-10">
-            </div>
-            <div class="form-group">
-                <label>Peso</label>
-                <input type="number" class="form-control peso-input" step="0.1" min="0" max="10" placeholder="Peso" value="1">
-            </div>
-            <div class="form-group" style="flex:0 0 40px; display:flex; align-items:flex-end;">
-                <button class="btn btn-danger btn-sm remove-note" onclick="removeNote(this)" style="display:block;">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-        `;
-        container.appendChild(newEntry);
-    }
-
-    function removeNote(btn) {
-        const entry = btn.closest('.note-entry');
-        if (document.querySelectorAll('.note-entry').length > 1) {
-            entry.remove();
-            noteCount--;
-            // Renumerar labels
-            const labels = document.querySelectorAll('.note-entry .form-group:first-child label');
-            labels.forEach((label, i) => {
-                label.textContent = `Nota ${i + 1}`;
-            });
-        }
-    }
-
-    // Cálculo Completo
-    function calculateComplete() {
-        const notas = document.querySelectorAll('.nota-input');
-        const pesos = document.querySelectorAll('.peso-input');
-        
-        let somaPonderada = 0;
-        let somaPesos = 0;
-        let notasValidas = 0;
-        let pesosValidos = 0;
-
-        notas.forEach((n, i) => {
-            const nota = parseFloat(n.value);
-            const peso = parseFloat(pesos[i].value);
-            if (!isNaN(nota) && !isNaN(peso) && peso > 0) {
-                somaPonderada += nota * peso;
-                somaPesos += peso;
-                notasValidas++;
-                pesosValidos++;
+        function removeNote(btn) {
+            const entry = btn.closest('.note-entry');
+            if (document.querySelectorAll('.note-entry').length > 1) {
+                entry.remove();
+                noteCount--;
+                const labels = document.querySelectorAll('.note-entry .form-group:first-child label');
+                labels.forEach((label, i) => {
+                    label.textContent = `Nota ${i + 1}`;
+                });
             }
-        });
-
-        if (notasValidas === 0) {
-            alert('Adicione pelo menos uma nota válida!');
-            return;
         }
 
-        const mediaFinal = somaPonderada / somaPesos;
-        exibirResultado(mediaFinal);
-    }
-
-    // Cálculo pela Média Final
-    function calculateAverage() {
-        const mediaFinal = parseFloat(document.getElementById('mediaFinal').value);
-        if (isNaN(mediaFinal) || mediaFinal < 0 || mediaFinal > 10) {
-            alert('Digite uma média final válida (0-10)!');
-            return;
-        }
-        exibirResultado(mediaFinal);
-    }
-
-    // Exibir Resultado
-    function exibirResultado(mediaFinal) {
-        stopSuspense();
-        playFah();
-
-        const card = document.getElementById('resultCard');
-        const emoji = document.getElementById('resultEmoji');
-        const title = document.getElementById('resultTitle');
-        const details = document.getElementById('resultDetails');
-        const img = document.getElementById('resultImage');
-
-        // Fórmula: Média = (mediaFinal * 2 + PF) / 3
-        // Para média >= 5, PF pode ser 0
-        // Para passar sem PF: mediaFinal >= 7.5 (pois 7.5*2/3 = 5)
-        // Para calcular PF necessária: PF = (5 * 3) - (mediaFinal * 2) = 15 - 2*mediaFinal
-        
-        const pass = mediaFinal >= 7.5;
-        const pfNecessaria = Math.max(0, 15 - (mediaFinal * 2));
-        const pfArredondada = Math.ceil(pfNecessaria * 10) / 10;
-
-        let saldo = 0;
-        let saldoTexto = '';
-
-        if (pass) {
-            saldo = mediaFinal - 7.5;
-            emoji.textContent = '🎉';
-            title.textContent = 'PASSOU!';
-            title.style.color = '#10b981';
-            card.className = 'result-card show pass';
-            img.style.display = 'none';
-            
-            // Som triste (prof triste pq a pessoa passou)
-            playTriste();
-            
-            saldoTexto = `
-                <div style="margin-top:0.5rem; padding:0.75rem; background:rgba(16,185,129,0.1); border-radius:10px;">
-                    <span class="highlight-pass">✨ Você passou com saldo de ${saldo.toFixed(2)} pontos!</span>
-                    <br>
-                    Sua média final é <strong>${mediaFinal.toFixed(2)}</strong>, e você precisava de <strong>7.5</strong>.
-                    <br>
-                    <span style="font-size:0.85rem; color:#888;">Isso significa que você está ${saldo.toFixed(2)} pontos acima do necessário.</span>
-                </div>
-            `;
-
-            details.innerHTML = `
-                <p>Você <span class="highlight-pass">PASSOU</span> sem precisar fazer a Prova Final! 🎉</p>
-                ${saldoTexto}
-                <p style="margin-top:0.75rem; font-size:0.85rem; color:#888;">
-                    <i class="fas fa-info-circle"></i> Para passar, você precisa ter média final ≥ 7.5.
-                </p>
-            `;
-
-            // Esconder triste (só tocar)
-        } else {
-            const diferenca = 7.5 - mediaFinal;
-            emoji.textContent = '😈';
-            title.textContent = 'NÃO PASSOU!';
-            title.style.color = '#ff6b6b';
-            card.className = 'result-card show fail';
-            
-            // Som feliz (prof feliz pq a pessoa não passou)
-            playFeliz();
-            img.src = '/src/mfeliz.mp3';
-            img.style.display = 'block';
-
-            saldoTexto = `
-                <div style="margin-top:0.5rem; padding:0.75rem; background:rgba(255,107,107,0.1); border-radius:10px;">
-                    <span class="highlight-fail">😈 Você NÃO passou! Falta ${diferenca.toFixed(2)} pontos para 7.5.</span>
-                    <br>
-                    Sua média final é <strong>${mediaFinal.toFixed(2)}</strong>, e você precisava de <strong>7.5</strong>.
-                    <br>
-                    <span style="font-size:0.85rem; color:#888;">
-                        Para passar sem PF você precisaria de <strong>${(7.5 - mediaFinal).toFixed(2)}</strong> pontos a mais.
-                    </span>
-                </div>
-            `;
-
-            const pfTexto = pfArredondada > 0 ? `
-                <div style="margin-top:0.75rem; padding:0.75rem; background:rgba(255,107,107,0.05); border-radius:10px; border:1px solid rgba(255,107,107,0.2);">
-                    <strong style="color:#ff6b6b; font-size:1.1rem;">📝 Você precisa tirar ${pfArredondada.toFixed(1)} na Prova Final</strong>
-                    <br>
-                    <span style="font-size:0.85rem; color:#888;">
-                        Fórmula: PF = (5 × 3) − (2 × ${mediaFinal.toFixed(2)}) = ${pfNecessaria.toFixed(2)}
-                        <br>
-                        Arredondado para cima: ${pfArredondada.toFixed(1)}
-                    </span>
-                    <br>
-                    <span style="font-size:0.8rem; color:#666;">
-                        <i class="fas fa-lightbulb"></i> Com essa nota na PF, sua média final será 5.0
-                    </span>
-                </div>
-            ` : '';
-
-            details.innerHTML = `
-                <p>Você <span class="highlight-fail">NÃO PASSOU</span> e precisa fazer a Prova Final! 😈</p>
-                ${saldoTexto}
-                ${pfTexto}
-                <p style="margin-top:0.75rem; font-size:0.85rem; color:#888;">
-                    <i class="fas fa-info-circle"></i> Fórmula: [ (Média Final × 2) + PF ] / 3 ≥ 5
-                </p>
-            `;
-        }
-    }
-
-    // Calcular Próxima Nota
-    function calcularProximaNota() {
-        const peso = parseFloat(document.getElementById('proximoPeso').value);
-        const resultado = document.getElementById('proximaNotaResultado');
-
-        if (isNaN(peso) || peso <= 0) {
-            resultado.innerHTML = '<span style="color:#ff6b6b;">Digite um peso válido!</span>';
-            return;
-        }
-
-        // Pega a média atual do modo atual
-        let mediaAtual = 0;
-        if (currentMode === 'complete') {
+        // ===== CÁLCULOS =====
+        function getMediaAtual() {
             const notas = document.querySelectorAll('.nota-input');
             const pesos = document.querySelectorAll('.peso-input');
             let somaPonderada = 0;
             let somaPesos = 0;
+            let temNota = false;
+            
             notas.forEach((n, i) => {
                 const nota = parseFloat(n.value);
-                const pesoAtual = parseFloat(pesos[i].value);
-                if (!isNaN(nota) && !isNaN(pesoAtual) && pesoAtual > 0) {
-                    somaPonderada += nota * pesoAtual;
-                    somaPesos += pesoAtual;
+                const peso = parseFloat(pesos[i].value);
+                if (!isNaN(nota) && !isNaN(peso) && peso > 0) {
+                    somaPonderada += nota * peso;
+                    somaPesos += peso;
+                    temNota = true;
                 }
             });
-            if (somaPesos === 0) {
-                resultado.innerHTML = '<span style="color:#ff6b6b;">Adicione suas notas primeiro!</span>';
-                return;
-            }
-            mediaAtual = somaPonderada / somaPesos;
-        } else {
-            mediaAtual = parseFloat(document.getElementById('mediaFinal').value);
-            if (isNaN(mediaAtual) || mediaAtual < 0 || mediaAtual > 10) {
-                resultado.innerHTML = '<span style="color:#ff6b6b;">Digite sua média final!</span>';
-                return;
+            
+            if (!temNota || somaPesos === 0) return null;
+            return { media: somaPonderada / somaPesos, somaPesos: somaPesos };
+        }
+
+        function exibirResultado(mediaFinal) {
+            stopSuspense();
+            playFah();
+
+            const card = document.getElementById('resultCard');
+            const emoji = document.getElementById('resultEmoji');
+            const title = document.getElementById('resultTitle');
+            const details = document.getElementById('resultDetails');
+            const img = document.getElementById('resultImage');
+
+            const pass = mediaFinal >= 7.5;
+            const pfNecessaria = Math.max(0, 15 - (mediaFinal * 2));
+            const pfArredondada = Math.ceil(pfNecessaria * 10) / 10;
+
+            if (pass) {
+                const saldo = mediaFinal - 7.5;
+                emoji.textContent = '🎉';
+                title.textContent = 'PASSOU!';
+                card.className = 'result-card show pass';
+                img.style.display = 'none';
+                playTriste();
+
+                details.innerHTML = `
+                    <p>Você <span class="highlight-pass">PASSOU</span> sem precisar da Prova Final! 🎉</p>
+                    <div style="margin-top:0.5rem; padding:0.75rem; background:rgba(16,185,129,0.1); border-radius:10px;">
+                        <span class="highlight-pass">✨ Você passou com saldo de ${saldo.toFixed(2)} pontos!</span>
+                        <br>
+                        Sua média final é <strong>${mediaFinal.toFixed(2)}</strong>, e você precisava de <strong>7.5</strong>.
+                        <br>
+                        <span style="font-size:0.85rem; color:var(--text-tertiary);">Isso significa que você está ${saldo.toFixed(2)} pontos acima do necessário.</span>
+                    </div>
+                    <p style="margin-top:0.75rem; font-size:0.85rem; color:var(--text-tertiary);">
+                        <i class="fas fa-info-circle"></i> Para passar, você precisa ter média final ≥ 7.5.
+                    </p>
+                `;
+            } else {
+                const diferenca = 7.5 - mediaFinal;
+                emoji.textContent = '😈';
+                title.textContent = 'NÃO PASSOU!';
+                card.className = 'result-card show fail';
+                playFeliz();
+                img.src = '/src/mfeliz.png';
+                img.style.display = 'block';
+
+                details.innerHTML = `
+                    <p>Você <span class="highlight-fail">NÃO PASSOU</span> e precisa fazer a Prova Final! 😈</p>
+                    <div style="margin-top:0.5rem; padding:0.75rem; background:rgba(220,38,38,0.1); border-radius:10px;">
+                        <span class="highlight-fail">😈 Você NÃO passou! Falta ${diferenca.toFixed(2)} pontos para 7.5.</span>
+                        <br>
+                        Sua média final é <strong>${mediaFinal.toFixed(2)}</strong>, e você precisava de <strong>7.5</strong>.
+                        <br>
+                        <span style="font-size:0.85rem; color:var(--text-tertiary);">
+                            Para passar sem PF você precisaria de <strong>${diferenca.toFixed(2)}</strong> pontos a mais.
+                        </span>
+                    </div>
+                    <div style="margin-top:0.75rem; padding:0.75rem; background:rgba(220,38,38,0.05); border-radius:10px; border:1px solid rgba(220,38,38,0.2);">
+                        <strong style="color:#dc2626; font-size:1.1rem;">📝 Você precisa tirar ${pfArredondada.toFixed(1)} na Prova Final</strong>
+                        <br>
+                        <span style="font-size:0.85rem; color:var(--text-tertiary);">
+                            Fórmula: PF = (5 × 3) − (2 × ${mediaFinal.toFixed(2)}) = ${pfNecessaria.toFixed(2)}
+                            <br>
+                            Arredondado para cima: ${pfArredondada.toFixed(1)}
+                        </span>
+                    </div>
+                    <p style="margin-top:0.75rem; font-size:0.85rem; color:var(--text-tertiary);">
+                        <i class="fas fa-info-circle"></i> Fórmula: [ (Média Final × 2) + PF ] / 3 ≥ 5
+                    </p>
+                `;
             }
         }
 
-        // Calcular quanto precisa tirar na próxima prova
-        // (mediaAtual * somaPesos + nota * peso) / (somaPesos + peso) >= 7.5
-        // nota = (7.5 * (somaPesos + peso) - mediaAtual * somaPesos) / peso
-        
-        let somaPesosAtual = 0;
-        if (currentMode === 'complete') {
-            const pesos = document.querySelectorAll('.peso-input');
-            pesos.forEach(p => {
-                const pVal = parseFloat(p.value);
-                if (!isNaN(pVal) && pVal > 0) somaPesosAtual += pVal;
-            });
-        } else {
-            somaPesosAtual = 1; // Apenas para o cálculo
+        function calculateComplete() {
+            const result = getMediaAtual();
+            if (!result) {
+                alert('Adicione pelo menos uma nota válida!');
+                return;
+            }
+            exibirResultado(result.media);
         }
 
-        const notaNecessaria = (7.5 * (somaPesosAtual + peso) - mediaAtual * somaPesosAtual) / peso;
-        const notaNecessariaArredondada = Math.ceil(notaNecessaria * 10) / 10;
+        function calculateAverage() {
+            const mediaFinal = parseFloat(document.getElementById('mediaFinal').value);
+            if (isNaN(mediaFinal) || mediaFinal < 0 || mediaFinal > 10) {
+                alert('Digite uma média final válida (0-10)!');
+                return;
+            }
+            exibirResultado(mediaFinal);
+        }
 
-        if (notaNecessaria <= 0) {
-            resultado.innerHTML = `
-                <span style="color:#10b981;">
-                    🎉 Você já está aprovado! ${notaNecessariaArredondada <= 0 ? 'Não precisa de nota mínima.' : ''}
-                </span>
-            `;
-        } else if (notaNecessaria > 10) {
-            resultado.innerHTML = `
-                <span style="color:#ff6b6b;">
-                    😈 Mesmo tirando 10 você não passa! 
-                    <br>
-                    <span style="font-size:0.85rem; color:#888;">Você precisaria de ${notaNecessariaArredondada.toFixed(1)}, mas a nota máxima é 10.</span>
-                </span>
-            `;
-        } else {
-            resultado.innerHTML = `
-                <span style="color:#f5a623;">
-                    🎯 Você precisa tirar <strong>${notaNecessariaArredondada.toFixed(1)}</strong> na próxima prova (peso ${peso}) para passar sem PF!
-                    <br>
-                    <span style="font-size:0.85rem; color:#888;">
-                        Sua média atual é ${mediaAtual.toFixed(2)} e você precisa chegar a 7.5.
+        // ===== PRÓXIMA NOTA =====
+        function calcularProximaNota() {
+            const peso = parseFloat(document.getElementById('proximoPeso').value);
+            const resultado = document.getElementById('proximaNotaResultado');
+
+            if (isNaN(peso) || peso <= 0) {
+                resultado.innerHTML = '<span style="color:#dc2626;">Digite um peso válido!</span>';
+                return;
+            }
+
+            let mediaAtual = 0;
+            let somaPesosAtual = 0;
+            let temNota = false;
+
+            if (currentMode === 'complete') {
+                const notas = document.querySelectorAll('.nota-input');
+                const pesos = document.querySelectorAll('.peso-input');
+                let somaPonderada = 0;
+                
+                notas.forEach((n, i) => {
+                    const nota = parseFloat(n.value);
+                    const pesoAtual = parseFloat(pesos[i].value);
+                    if (!isNaN(nota) && !isNaN(pesoAtual) && pesoAtual > 0) {
+                        somaPonderada += nota * pesoAtual;
+                        somaPesosAtual += pesoAtual;
+                        temNota = true;
+                    }
+                });
+                
+                if (!temNota || somaPesosAtual === 0) {
+                    resultado.innerHTML = '<span style="color:#dc2626;">Adicione suas notas primeiro!</span>';
+                    return;
+                }
+                mediaAtual = somaPonderada / somaPesosAtual;
+            } else {
+                mediaAtual = parseFloat(document.getElementById('mediaFinal').value);
+                if (isNaN(mediaAtual) || mediaAtual < 0 || mediaAtual > 10) {
+                    resultado.innerHTML = '<span style="color:#dc2626;">Digite sua média final!</span>';
+                    return;
+                }
+                somaPesosAtual = 1;
+            }
+
+            const notaNecessaria = (7.5 * (somaPesosAtual + peso) - mediaAtual * somaPesosAtual) / peso;
+            const notaNecessariaArredondada = Math.ceil(notaNecessaria * 10) / 10;
+
+            if (notaNecessaria <= 0) {
+                resultado.innerHTML = `
+                    <span style="color:#10b981;">
+                        🎉 Você já está aprovado! Não precisa de nota mínima.
                     </span>
-                </span>
-            `;
+                `;
+            } else if (notaNecessaria > 10) {
+                resultado.innerHTML = `
+                    <span style="color:#dc2626;">
+                        😈 Mesmo tirando 10 você não passa! 
+                        <br>
+                        <span style="font-size:0.85rem; color:var(--text-tertiary);">Você precisaria de ${notaNecessariaArredondada.toFixed(1)}, mas a nota máxima é 10.</span>
+                    </span>
+                `;
+            } else {
+                resultado.innerHTML = `
+                    <span style="color:var(--primary-green);">
+                        🎯 Você precisa tirar <strong>${notaNecessariaArredondada.toFixed(1)}</strong> na próxima prova (peso ${peso}) para passar sem PF!
+                        <br>
+                        <span style="font-size:0.85rem; color:var(--text-tertiary);">
+                            Sua média atual é ${mediaAtual.toFixed(2)} e você precisa chegar a 7.5.
+                        </span>
+                    </span>
+                `;
+            }
         }
-    }
 
-    // Reset
-    function resetAll() {
-        document.querySelectorAll('.nota-input').forEach(i => i.value = '');
-        document.querySelectorAll('.peso-input').forEach(i => i.value = '1');
-        document.getElementById('mediaFinal').value = '';
-        document.getElementById('resultCard').classList.remove('show');
-        document.getElementById('proximaNotaResultado').textContent = '';
-        document.getElementById('resultImage').style.display = 'none';
-        
-        // Manter apenas uma nota
-        const entries = document.querySelectorAll('.note-entry');
-        entries.forEach((e, i) => {
-            if (i > 0) e.remove();
+        // ===== RESET =====
+        function resetAll() {
+            document.querySelectorAll('.nota-input').forEach(i => i.value = '');
+            document.querySelectorAll('.peso-input').forEach(i => i.value = '1');
+            document.getElementById('mediaFinal').value = '';
+            document.getElementById('resultCard').classList.remove('show');
+            document.getElementById('proximaNotaResultado').textContent = '';
+            document.getElementById('resultImage').style.display = 'none';
+            
+            const entries = document.querySelectorAll('.note-entry');
+            entries.forEach((e, i) => {
+                if (i > 0) e.remove();
+            });
+            noteCount = 1;
+            const label = document.querySelector('.note-entry .form-group:first-child label');
+            if (label) label.textContent = 'Nota 1';
+            
+            stopSuspense();
+            setTimeout(playSuspense, 300);
+        }
+
+        // ===== INICIAR =====
+        document.addEventListener('DOMContentLoaded', function() {
+            preloadAudios();
+            setTimeout(playSuspense, 500);
         });
-        noteCount = 1;
-        const label = document.querySelector('.note-entry .form-group:first-child label');
-        if (label) label.textContent = 'Nota 1';
-        
-        stopSuspense();
-        setTimeout(playSuspense, 300);
-    }
-
-    // Iniciar
-    preloadAudios();
-    setTimeout(playSuspense, 500);
-</script>
-
+    </script>
 </body>
 </html>
