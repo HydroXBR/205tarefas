@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Não Vem PF? 🤔 - MedTasks</title>
+    <title>Não Vem PF! - MedTasks</title>
     <link rel="stylesheet" href="index.css">
     <link rel="icon" type="image/png" href="https://i.ibb.co/nqmZ9nGr/Logo-IG-Med-Ufam116-3x.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -290,11 +290,6 @@
             background: rgba(220, 38, 38, 0.05);
         }
 
-        .result-card .result-emoji {
-            font-size: 4rem;
-            margin-bottom: 0.5rem;
-        }
-
         .result-card .result-title {
             font-size: 1.8rem;
             font-weight: 900;
@@ -384,7 +379,6 @@
                 <a href="/calendar"><i class="fas fa-calendar-week"></i> Calendário</a>
                 <a href="/ppc"><i class="fas fa-book-open"></i> PPC</a>
                 <a href="/sobre"><i class="fas fa-info-circle"></i> Sobre</a>
-                <a href="/naovempf" class="active" style="background: #dc2626; color:#fff; border-radius:8px; padding:0.5rem 1rem;"><i class="fas fa-calculator"></i> Não Vem PF?</a>
                 <a href="/add" class="btn-add"><i class="fas fa-plus"></i> Adicionar Tarefa</a>
                 <a href="/addlembrete" class="btn-add" style="background: #3b82f6;"><i class="fas fa-bell"></i> Adicionar Lembrete</a>
             </div>
@@ -493,7 +487,6 @@
 
                 <!-- Resultado -->
                 <div class="result-card" id="resultCard">
-                    <div class="result-emoji" id="resultEmoji">🎭</div>
                     <div class="result-title" id="resultTitle">Resultado</div>
                     <div class="result-details" id="resultDetails"></div>
                     <img class="result-image" id="resultImage" src="" alt="" style="display:none;">
@@ -595,8 +588,7 @@
             document.getElementById('simuladorPainel').classList.remove('show');
             document.getElementById('simuladorPainelMedia').classList.remove('show');
             
-            stopSuspense();
-            setTimeout(playSuspense, 300);
+            // Não para a música ao trocar de modo
         }
 
         // ===== NOTAS =====
@@ -675,7 +667,6 @@
             playFah();
 
             const card = document.getElementById('resultCard');
-            const emoji = document.getElementById('resultEmoji');
             const title = document.getElementById('resultTitle');
             const details = document.getElementById('resultDetails');
             const img = document.getElementById('resultImage');
@@ -686,15 +677,14 @@
 
             if (pass) {
                 const saldo = mediaFinal - 7.5;
-                emoji.textContent = '😄';
-                title.textContent = 'PASSOU!';
+                title.textContent = 'PASSOU! 🎉';
                 card.className = 'result-card show pass';
                 img.src = '/src/mfeliz.png';
                 img.style.display = 'block';
                 playFeliz();
 
                 details.innerHTML = `
-                    <p>Você <span class="highlight-pass">PASSOU</span> sem precisar da Prova Final! 🎉</p>
+                    <p>Você <span class="highlight-pass">PASSOU</span> sem precisar da Prova Final!</p>
                     <div style="margin-top:0.5rem; padding:0.75rem; background:rgba(16,185,129,0.1); border-radius:10px;">
                         <span class="highlight-pass">✨ Você passou com saldo de ${saldo.toFixed(2)} pontos!</span>
                         <br><br>
@@ -710,8 +700,7 @@
                 `;
             } else {
                 const diferenca = 7.5 - mediaFinal;
-                emoji.textContent = '😢';
-                title.textContent = 'NÃO PASSOU!';
+                title.textContent = 'NÃO PASSOU! 😢';
                 card.className = 'result-card show fail';
                 img.src = '/src/mtriste.png';
                 img.style.display = 'block';
@@ -888,6 +877,7 @@
             const label = document.querySelector('.note-entry .form-group:first-child label');
             if (label) label.textContent = 'Nota 1';
             
+            // Reinicia a música de suspense
             stopSuspense();
             setTimeout(playSuspense, 300);
         }
@@ -895,7 +885,8 @@
         // ===== INICIAR =====
         document.addEventListener('DOMContentLoaded', function() {
             preloadAudios();
-            setTimeout(playSuspense, 500);
+            // Toca a música imediatamente ao carregar a página
+            setTimeout(playSuspense, 100);
         });
     </script>
 </body>
