@@ -211,6 +211,60 @@
             display: none;
         }
 
+        /* Botão "Falta uma prova?" */
+        .falta-prova-btn {
+            padding: 0.75rem 1rem;
+            background: rgba(105, 120, 37, 0.08);
+            border: 2px dashed var(--primary-green);
+            border-radius: 12px;
+            color: var(--primary-green);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            font-size: 0.85rem;
+            font-family: 'Inter', sans-serif;
+            margin-top: 0.5rem;
+        }
+
+        .falta-prova-btn:hover {
+            background: rgba(105, 120, 37, 0.15);
+            border-color: var(--primary-green-light);
+            transform: scale(1.01);
+        }
+
+        /* Painel do Simulador de Próxima Prova */
+        .simulador-painel {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--bg-elevated);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            animation: slideIn 0.3s ease;
+        }
+
+        .simulador-painel.show {
+            display: block;
+        }
+
+        .simulador-painel label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .simulador-painel .form-row {
+            align-items: flex-end;
+        }
+
+        .simulador-resultado {
+            margin-top: 0.75rem;
+            font-size: 0.9rem;
+        }
+
         /* Result */
         .result-card {
             display: none;
@@ -280,30 +334,6 @@
             margin: 1rem auto;
             border-radius: 12px;
             display: block;
-        }
-
-        .calcular-prox-btn {
-            margin-top: 0.5rem;
-            padding: 0.4rem 1rem;
-            background: var(--bg-elevated);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            color: var(--text-secondary);
-            font-size: 0.75rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .calcular-prox-btn:hover {
-            border-color: var(--primary-green);
-            color: var(--primary-green);
-        }
-
-        .prox-resultado {
-            margin-top: 0.5rem;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
         }
 
         @keyframes slideIn {
@@ -403,9 +433,29 @@
                     <button class="add-note-btn" onclick="addNote()">
                         <i class="fas fa-plus"></i> Adicionar outra nota
                     </button>
+                    
+                    <!-- Botão "Falta uma prova?" -->
+                    <button class="falta-prova-btn" onclick="toggleSimulador()">
+                        <i class="fas fa-question-circle"></i> Falta uma prova? Adicione só o peso e saiba quanto você precisa tirar nela
+                    </button>
+                    
+                    <!-- Painel do Simulador de Próxima Prova -->
+                    <div class="simulador-painel" id="simuladorPainel">
+                        <label><i class="fas fa-bullseye"></i> Qual o peso da prova que falta?</label>
+                        <div class="form-row">
+                            <div class="form-group" style="flex:1;">
+                                <input type="number" id="pesoProvaFaltante" class="form-control" step="0.1" min="0.1" max="10" placeholder="Ex: 2" value="1">
+                            </div>
+                            <button class="btn btn-primary" onclick="calcularNotaFaltante()">
+                                <i class="fas fa-calculator"></i> Calcular
+                            </button>
+                        </div>
+                        <div id="resultadoNotaFaltante" class="simulador-resultado"></div>
+                    </div>
+                    
                     <div style="margin-top:0.75rem;">
                         <button class="btn btn-primary btn-block" onclick="calculateComplete()">
-                            <i class="fas fa-calculator"></i> Calcular
+                            <i class="fas fa-calculator"></i> Calcular Média
                         </button>
                     </div>
                 </div>
@@ -416,7 +466,27 @@
                         <label>Média Final (nota que você tem hoje)</label>
                         <input type="number" id="mediaFinal" class="form-control" step="0.1" min="0" max="10" placeholder="0-10">
                     </div>
-                    <button class="btn btn-primary btn-block" onclick="calculateAverage()">
+                    
+                    <!-- Botão "Falta uma prova?" para modo média final -->
+                    <button class="falta-prova-btn" onclick="toggleSimuladorMedia()">
+                        <i class="fas fa-question-circle"></i> Falta uma prova? Adicione só o peso e saiba quanto você precisa tirar nela
+                    </button>
+                    
+                    <!-- Painel do Simulador para modo média final -->
+                    <div class="simulador-painel" id="simuladorPainelMedia">
+                        <label><i class="fas fa-bullseye"></i> Qual o peso da prova que falta?</label>
+                        <div class="form-row">
+                            <div class="form-group" style="flex:1;">
+                                <input type="number" id="pesoProvaFaltanteMedia" class="form-control" step="0.1" min="0.1" max="10" placeholder="Ex: 2" value="1">
+                            </div>
+                            <button class="btn btn-primary" onclick="calcularNotaFaltanteMedia()">
+                                <i class="fas fa-calculator"></i> Calcular
+                            </button>
+                        </div>
+                        <div id="resultadoNotaFaltanteMedia" class="simulador-resultado"></div>
+                    </div>
+                    
+                    <button class="btn btn-primary btn-block" onclick="calculateAverage()" style="margin-top:0.75rem;">
                         <i class="fas fa-calculator"></i> Calcular
                     </button>
                 </div>
@@ -434,31 +504,6 @@
                     <button class="btn btn-secondary btn-sm" onclick="resetAll()">
                         <i class="fas fa-redo"></i> Limpar tudo
                     </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Card: Simulador Próxima Nota (integrado) -->
-        <div class="pf-card" style="border-color: rgba(105,120,37,0.3);">
-            <div class="pf-header" style="background: linear-gradient(135deg, var(--bg-elevated) 0%, var(--bg-card) 100%); border-bottom: 2px solid var(--primary-green);">
-                <h2 style="font-size:1.2rem; color:var(--primary-green);"><i class="fas fa-bullseye"></i> Simulador: Próxima Prova</h2>
-                <p style="font-size:0.8rem; color:var(--text-secondary);">Adicione uma nota em branco com o peso da próxima prova e veja quanto precisa tirar</p>
-            </div>
-            <div class="pf-body">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Peso da próxima prova</label>
-                        <input type="number" id="proximoPeso" class="form-control" step="0.1" min="0" max="10" placeholder="Peso" value="1">
-                    </div>
-                    <div class="form-group" style="flex:0 0 auto; display:flex; align-items:flex-end;">
-                        <button class="btn btn-primary btn-sm" onclick="calcularProximaNota()" style="padding:0.6rem 1.2rem;">
-                            <i class="fas fa-bullseye"></i> Calcular
-                        </button>
-                    </div>
-                </div>
-                <div id="proximaNotaResultado" class="prox-resultado"></div>
-                <div style="margin-top:0.75rem; font-size:0.75rem; color:var(--text-tertiary);">
-                    <i class="fas fa-lightbulb"></i> Dica: adicione uma nova nota com peso, deixe o campo "Nota" em branco e clique em "Calcular" para ver quanto precisa tirar.
                 </div>
             </div>
         </div>
@@ -545,7 +590,10 @@
             document.getElementById('averageMode').style.display = mode === 'average' ? 'block' : 'none';
             
             document.getElementById('resultCard').classList.remove('show');
-            document.getElementById('proximaNotaResultado').textContent = '';
+            document.getElementById('resultadoNotaFaltante').textContent = '';
+            document.getElementById('resultadoNotaFaltanteMedia').textContent = '';
+            document.getElementById('simuladorPainel').classList.remove('show');
+            document.getElementById('simuladorPainelMedia').classList.remove('show');
             
             stopSuspense();
             setTimeout(playSuspense, 300);
@@ -587,6 +635,19 @@
             }
         }
 
+        // ===== TOGGLE SIMULADOR =====
+        function toggleSimulador() {
+            const painel = document.getElementById('simuladorPainel');
+            painel.classList.toggle('show');
+            document.getElementById('resultadoNotaFaltante').textContent = '';
+        }
+
+        function toggleSimuladorMedia() {
+            const painel = document.getElementById('simuladorPainelMedia');
+            painel.classList.toggle('show');
+            document.getElementById('resultadoNotaFaltanteMedia').textContent = '';
+        }
+
         // ===== CÁLCULOS =====
         function getMediaAtual() {
             const notas = document.querySelectorAll('.nota-input');
@@ -625,56 +686,61 @@
 
             if (pass) {
                 const saldo = mediaFinal - 7.5;
-                emoji.textContent = '🎉';
+                emoji.textContent = '😄';
                 title.textContent = 'PASSOU!';
                 card.className = 'result-card show pass';
-                img.style.display = 'none';
-                playTriste();
+                img.src = '/src/mfeliz.png';
+                img.style.display = 'block';
+                playFeliz();
 
                 details.innerHTML = `
                     <p>Você <span class="highlight-pass">PASSOU</span> sem precisar da Prova Final! 🎉</p>
                     <div style="margin-top:0.5rem; padding:0.75rem; background:rgba(16,185,129,0.1); border-radius:10px;">
                         <span class="highlight-pass">✨ Você passou com saldo de ${saldo.toFixed(2)} pontos!</span>
+                        <br><br>
+                        <strong>Sua média final: ${mediaFinal.toFixed(2)}</strong>
                         <br>
-                        Sua média final é <strong>${mediaFinal.toFixed(2)}</strong>, e você precisava de <strong>7.5</strong>.
+                        <span style="font-size:0.85rem;">Nota necessária para passar: <strong>7.5</strong></span>
                         <br>
-                        <span style="font-size:0.85rem; color:var(--text-tertiary);">Isso significa que você está ${saldo.toFixed(2)} pontos acima do necessário.</span>
+                        <span style="font-size:0.85rem; color:var(--text-tertiary);">Você está ${saldo.toFixed(2)} pontos acima do necessário ✅</span>
                     </div>
                     <p style="margin-top:0.75rem; font-size:0.85rem; color:var(--text-tertiary);">
-                        <i class="fas fa-info-circle"></i> Para passar, você precisa ter média final ≥ 7.5.
+                        <i class="fas fa-info-circle"></i> Para passar direto, você precisa ter média final ≥ 7.5
                     </p>
                 `;
             } else {
                 const diferenca = 7.5 - mediaFinal;
-                emoji.textContent = '😈';
+                emoji.textContent = '😢';
                 title.textContent = 'NÃO PASSOU!';
                 card.className = 'result-card show fail';
-                playFeliz();
-                img.src = '/src/mfeliz.png';
+                img.src = '/src/mtriste.png';
                 img.style.display = 'block';
+                playTriste();
 
                 details.innerHTML = `
-                    <p>Você <span class="highlight-fail">NÃO PASSOU</span> e precisa fazer a Prova Final! 😈</p>
+                    <p>Você <span class="highlight-fail">NÃO PASSOU</span> e precisa fazer a Prova Final</p>
                     <div style="margin-top:0.5rem; padding:0.75rem; background:rgba(220,38,38,0.1); border-radius:10px;">
-                        <span class="highlight-fail">😈 Você NÃO passou! Falta ${diferenca.toFixed(2)} pontos para 7.5.</span>
+                        <span class="highlight-fail">📉 Faltam ${diferenca.toFixed(2)} pontos para atingir 7.5</span>
+                        <br><br>
+                        <strong>Sua média final: ${mediaFinal.toFixed(2)}</strong>
                         <br>
-                        Sua média final é <strong>${mediaFinal.toFixed(2)}</strong>, e você precisava de <strong>7.5</strong>.
+                        <span style="font-size:0.85rem;">Nota necessária para passar: <strong>7.5</strong></span>
                         <br>
                         <span style="font-size:0.85rem; color:var(--text-tertiary);">
-                            Para passar sem PF você precisaria de <strong>${diferenca.toFixed(2)}</strong> pontos a mais.
+                            Para passar sem PF você precisaria de <strong>${diferenca.toFixed(2)}</strong> pontos a mais
                         </span>
                     </div>
                     <div style="margin-top:0.75rem; padding:0.75rem; background:rgba(220,38,38,0.05); border-radius:10px; border:1px solid rgba(220,38,38,0.2);">
-                        <strong style="color:#dc2626; font-size:1.1rem;">📝 Você precisa tirar ${pfArredondada.toFixed(1)} na Prova Final</strong>
+                        <strong style="font-size:1.1rem;">📝 Você precisa tirar ${pfArredondada.toFixed(1)} na Prova Final</strong>
                         <br>
                         <span style="font-size:0.85rem; color:var(--text-tertiary);">
-                            Fórmula: PF = (5 × 3) − (2 × ${mediaFinal.toFixed(2)}) = ${pfNecessaria.toFixed(2)}
+                            Cálculo: PF = (5 × 3) − (2 × ${mediaFinal.toFixed(2)}) = ${pfNecessaria.toFixed(2)}
                             <br>
-                            Arredondado para cima: ${pfArredondada.toFixed(1)}
+                            Arredondando para cima: <strong>${pfArredondada.toFixed(1)}</strong>
                         </span>
                     </div>
                     <p style="margin-top:0.75rem; font-size:0.85rem; color:var(--text-tertiary);">
-                        <i class="fas fa-info-circle"></i> Fórmula: [ (Média Final × 2) + PF ] / 3 ≥ 5
+                        <i class="fas fa-info-circle"></i> Fórmula da Prova Final: [ (Média Final × 2) + PF ] / 3 ≥ 5
                     </p>
                 `;
             }
@@ -698,75 +764,104 @@
             exibirResultado(mediaFinal);
         }
 
-        // ===== PRÓXIMA NOTA =====
-        function calcularProximaNota() {
-            const peso = parseFloat(document.getElementById('proximoPeso').value);
-            const resultado = document.getElementById('proximaNotaResultado');
+        // ===== CALCULAR NOTA FALTANTE =====
+        function calcularNotaFaltante() {
+            const peso = parseFloat(document.getElementById('pesoProvaFaltante').value);
+            const resultado = document.getElementById('resultadoNotaFaltante');
 
             if (isNaN(peso) || peso <= 0) {
-                resultado.innerHTML = '<span style="color:#dc2626;">Digite um peso válido!</span>';
+                resultado.innerHTML = '<span style="color:#dc2626;">⚠️ Digite um peso válido maior que zero!</span>';
                 return;
             }
 
-            let mediaAtual = 0;
-            let somaPesosAtual = 0;
-            let temNota = false;
-
-            if (currentMode === 'complete') {
-                const notas = document.querySelectorAll('.nota-input');
-                const pesos = document.querySelectorAll('.peso-input');
-                let somaPonderada = 0;
-                
-                notas.forEach((n, i) => {
-                    const nota = parseFloat(n.value);
-                    const pesoAtual = parseFloat(pesos[i].value);
-                    if (!isNaN(nota) && !isNaN(pesoAtual) && pesoAtual > 0) {
-                        somaPonderada += nota * pesoAtual;
-                        somaPesosAtual += pesoAtual;
-                        temNota = true;
-                    }
-                });
-                
-                if (!temNota || somaPesosAtual === 0) {
-                    resultado.innerHTML = '<span style="color:#dc2626;">Adicione suas notas primeiro!</span>';
-                    return;
-                }
-                mediaAtual = somaPonderada / somaPesosAtual;
-            } else {
-                mediaAtual = parseFloat(document.getElementById('mediaFinal').value);
-                if (isNaN(mediaAtual) || mediaAtual < 0 || mediaAtual > 10) {
-                    resultado.innerHTML = '<span style="color:#dc2626;">Digite sua média final!</span>';
-                    return;
-                }
-                somaPesosAtual = 1;
+            const dados = getMediaAtual();
+            if (!dados) {
+                resultado.innerHTML = '<span style="color:#dc2626;">⚠️ Adicione pelo menos uma nota com peso antes de calcular!</span>';
+                return;
             }
 
+            const mediaAtual = dados.media;
+            const somaPesosAtual = dados.somaPesos;
             const notaNecessaria = (7.5 * (somaPesosAtual + peso) - mediaAtual * somaPesosAtual) / peso;
             const notaNecessariaArredondada = Math.ceil(notaNecessaria * 10) / 10;
 
             if (notaNecessaria <= 0) {
                 resultado.innerHTML = `
-                    <span style="color:#10b981;">
-                        🎉 Você já está aprovado! Não precisa de nota mínima.
-                    </span>
+                    <div style="color:#10b981; padding:0.75rem; background:rgba(16,185,129,0.1); border-radius:10px;">
+                        🎉 <strong>Você já está aprovado!</strong>
+                        <br>
+                        <span style="font-size:0.85rem;">Sua média atual (${mediaAtual.toFixed(2)}) já é suficiente para passar sem PF, mesmo se tirar 0 nessa prova.</span>
+                    </div>
                 `;
             } else if (notaNecessaria > 10) {
                 resultado.innerHTML = `
-                    <span style="color:#dc2626;">
-                        😈 Mesmo tirando 10 você não passa! 
+                    <div style="color:#dc2626; padding:0.75rem; background:rgba(220,38,38,0.1); border-radius:10px;">
+                        😢 <strong>Infelizmente não é possível passar direto</strong>
                         <br>
-                        <span style="font-size:0.85rem; color:var(--text-tertiary);">Você precisaria de ${notaNecessariaArredondada.toFixed(1)}, mas a nota máxima é 10.</span>
-                    </span>
+                        <span style="font-size:0.85rem;">Você precisaria tirar <strong>${notaNecessariaArredondada.toFixed(1)}</strong> nessa prova, mas a nota máxima é 10.</span>
+                        <br>
+                        <span style="font-size:0.85rem; color:var(--text-tertiary);">Sua única chance será a Prova Final.</span>
+                    </div>
                 `;
             } else {
                 resultado.innerHTML = `
-                    <span style="color:var(--primary-green);">
-                        🎯 Você precisa tirar <strong>${notaNecessariaArredondada.toFixed(1)}</strong> na próxima prova (peso ${peso}) para passar sem PF!
+                    <div style="color:var(--primary-green); padding:0.75rem; background:rgba(105,120,37,0.1); border-radius:10px;">
+                        🎯 <strong>Você precisa tirar ${notaNecessariaArredondada.toFixed(1)}</strong> nessa prova
                         <br>
                         <span style="font-size:0.85rem; color:var(--text-tertiary);">
-                            Sua média atual é ${mediaAtual.toFixed(2)} e você precisa chegar a 7.5.
+                            Com peso ${peso}, sua média atual é <strong>${mediaAtual.toFixed(2)}</strong> e você precisa chegar a 7.5
                         </span>
-                    </span>
+                    </div>
+                `;
+            }
+        }
+
+        function calcularNotaFaltanteMedia() {
+            const mediaAtual = parseFloat(document.getElementById('mediaFinal').value);
+            const peso = parseFloat(document.getElementById('pesoProvaFaltanteMedia').value);
+            const resultado = document.getElementById('resultadoNotaFaltanteMedia');
+
+            if (isNaN(mediaAtual) || mediaAtual < 0 || mediaAtual > 10) {
+                resultado.innerHTML = '<span style="color:#dc2626;">⚠️ Digite sua média final primeiro!</span>';
+                return;
+            }
+
+            if (isNaN(peso) || peso <= 0) {
+                resultado.innerHTML = '<span style="color:#dc2626;">⚠️ Digite um peso válido maior que zero!</span>';
+                return;
+            }
+
+            // Considerando que a média atual tem peso 1 (já é a média de tudo que foi feito)
+            const notaNecessaria = (7.5 * (1 + peso) - mediaAtual * 1) / peso;
+            const notaNecessariaArredondada = Math.ceil(notaNecessaria * 10) / 10;
+
+            if (notaNecessaria <= 0) {
+                resultado.innerHTML = `
+                    <div style="color:#10b981; padding:0.75rem; background:rgba(16,185,129,0.1); border-radius:10px;">
+                        🎉 <strong>Você já está aprovado!</strong>
+                        <br>
+                        <span style="font-size:0.85rem;">Sua média atual (${mediaAtual.toFixed(2)}) já é suficiente para passar sem PF.</span>
+                    </div>
+                `;
+            } else if (notaNecessaria > 10) {
+                resultado.innerHTML = `
+                    <div style="color:#dc2626; padding:0.75rem; background:rgba(220,38,38,0.1); border-radius:10px;">
+                        😢 <strong>Infelizmente não é possível passar direto</strong>
+                        <br>
+                        <span style="font-size:0.85rem;">Você precisaria tirar <strong>${notaNecessariaArredondada.toFixed(1)}</strong> nessa prova, mas a nota máxima é 10.</span>
+                        <br>
+                        <span style="font-size:0.85rem; color:var(--text-tertiary);">Sua única chance será a Prova Final.</span>
+                    </div>
+                `;
+            } else {
+                resultado.innerHTML = `
+                    <div style="color:var(--primary-green); padding:0.75rem; background:rgba(105,120,37,0.1); border-radius:10px;">
+                        🎯 <strong>Você precisa tirar ${notaNecessariaArredondada.toFixed(1)}</strong> nessa prova
+                        <br>
+                        <span style="font-size:0.85rem; color:var(--text-tertiary);">
+                            Com peso ${peso}, sua média atual é <strong>${mediaAtual.toFixed(2)}</strong> e você precisa chegar a 7.5
+                        </span>
+                    </div>
                 `;
             }
         }
@@ -777,8 +872,13 @@
             document.querySelectorAll('.peso-input').forEach(i => i.value = '1');
             document.getElementById('mediaFinal').value = '';
             document.getElementById('resultCard').classList.remove('show');
-            document.getElementById('proximaNotaResultado').textContent = '';
             document.getElementById('resultImage').style.display = 'none';
+            document.getElementById('resultadoNotaFaltante').textContent = '';
+            document.getElementById('resultadoNotaFaltanteMedia').textContent = '';
+            document.getElementById('simuladorPainel').classList.remove('show');
+            document.getElementById('simuladorPainelMedia').classList.remove('show');
+            document.getElementById('pesoProvaFaltante').value = '1';
+            document.getElementById('pesoProvaFaltanteMedia').value = '1';
             
             const entries = document.querySelectorAll('.note-entry');
             entries.forEach((e, i) => {
