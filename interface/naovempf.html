@@ -331,6 +331,41 @@
             font-weight: 700;
         }
 
+        /* Aviso Legal */
+        .aviso-legal {
+            max-width: 800px;
+            margin: 0 auto 2rem auto;
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .aviso-legal h3 {
+            font-size: 1rem;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .aviso-legal ol {
+            padding-left: 1.5rem;
+            margin: 0;
+        }
+
+        .aviso-legal ol li {
+            margin-bottom: 0.5rem;
+        }
+
+        .aviso-legal ol li strong {
+            color: var(--text-primary);
+        }
+
         @keyframes slideIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -352,6 +387,10 @@
             }
             .result-card .result-title {
                 font-size: 1.3rem;
+            }
+            .aviso-legal {
+                margin: 0 1rem 2rem 1rem;
+                padding: 1rem;
             }
         }
     </style>
@@ -461,25 +500,6 @@
                         <input type="number" id="mediaExercicios" class="form-control" step="0.1" min="0" max="10" placeholder="0-10">
                     </div>
                     
-                    <!-- Botão "Falta uma prova?" para modo média -->
-                    <button class="falta-prova-btn" onclick="toggleSimuladorMedia()">
-                        <i class="fas fa-question-circle"></i> Falta uma prova? Adicione só o peso e saiba quanto você precisa tirar nela
-                    </button>
-                    
-                    <!-- Painel do Simulador para modo média -->
-                    <div class="simulador-painel" id="simuladorPainelMedia">
-                        <label><i class="fas fa-bullseye"></i> Qual o peso da prova que falta?</label>
-                        <div class="form-row">
-                            <div class="form-group" style="flex:1;">
-                                <input type="number" id="pesoProvaFaltanteMedia" class="form-control" step="0.1" min="0.1" max="10" placeholder="Ex: 2" value="1">
-                            </div>
-                            <button class="btn btn-primary" onclick="calcularNotaFaltanteMedia()">
-                                <i class="fas fa-calculator"></i> Calcular
-                            </button>
-                        </div>
-                        <div id="resultadoNotaFaltanteMedia" class="simulador-resultado"></div>
-                    </div>
-                    
                     <button class="btn btn-primary btn-block" onclick="calculateAverage()" style="margin-top:0.75rem;">
                         <i class="fas fa-calculator"></i> Calcular
                     </button>
@@ -500,6 +520,18 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Aviso Legal -->
+    <div class="aviso-legal">
+        <h3><i class="fas fa-exclamation-triangle"></i> Aviso Importante</h3>
+        <ol>
+            <li><strong>Calculadora sujeita a erros.</strong> Os cálculos aqui apresentados são baseados nas fórmulas oficiais da UFAM, mas podem conter imprecisões. Sempre verifique os resultados manualmente.</li>
+            <li><strong>Dispositivo auxiliar.</strong> Esta é apenas uma ferramenta de apoio para estimar notas e prever resultados de Prova Final. Os cálculos oficiais são de responsabilidade dos docentes e da coordenação do curso.</li>
+            <li><strong>Responsabilidade do usuário.</strong> A responsabilidade pelo cálculo e verificação das notas é inteiramente da pessoa que utiliza esta ferramenta. O MedTasks não se responsabiliza por decisões tomadas com base nestes resultados.</li>
+            <li><strong>Consulte fontes oficiais.</strong> Consulte o PPC do curso, os editais oficiais e/ou a coordenação acadêmica para informações precisas sobre aprovação e Prova Final.</li>
+            <li><strong>Dúvidas?</strong> Em caso de dúvidas, mande mensagem para o Isaías.</li>
+        </ol>
     </div>
 
     <footer class="footer">
@@ -584,9 +616,7 @@
             
             document.getElementById('resultCard').classList.remove('show');
             document.getElementById('resultadoNotaFaltante').textContent = '';
-            document.getElementById('resultadoNotaFaltanteMedia').textContent = '';
             document.getElementById('simuladorPainel').classList.remove('show');
-            document.getElementById('simuladorPainelMedia').classList.remove('show');
         }
 
         // ===== NOTAS =====
@@ -630,12 +660,6 @@
             const painel = document.getElementById('simuladorPainel');
             painel.classList.toggle('show');
             document.getElementById('resultadoNotaFaltante').textContent = '';
-        }
-
-        function toggleSimuladorMedia() {
-            const painel = document.getElementById('simuladorPainelMedia');
-            painel.classList.toggle('show');
-            document.getElementById('resultadoNotaFaltanteMedia').textContent = '';
         }
 
         // ===== CÁLCULOS =====
@@ -761,7 +785,7 @@
             exibirResultado(mediaExercicios);
         }
 
-        // ===== CALCULAR NOTA FALTANTE =====
+        // ===== CALCULAR NOTA FALTANTE (apenas no modo Completo) =====
         function calcularNotaFaltante() {
             const peso = parseFloat(document.getElementById('pesoProvaFaltante').value);
             const resultado = document.getElementById('resultadoNotaFaltante');
@@ -813,55 +837,6 @@
             }
         }
 
-        function calcularNotaFaltanteMedia() {
-            const mediaAtual = parseFloat(document.getElementById('mediaExercicios').value);
-            const peso = parseFloat(document.getElementById('pesoProvaFaltanteMedia').value);
-            const resultado = document.getElementById('resultadoNotaFaltanteMedia');
-
-            if (isNaN(mediaAtual) || mediaAtual < 0 || mediaAtual > 10) {
-                resultado.innerHTML = '<span style="color:#dc2626;">⚠️ Digite sua Média dos Exercícios primeiro!</span>';
-                return;
-            }
-
-            if (isNaN(peso) || peso <= 0) {
-                resultado.innerHTML = '<span style="color:#dc2626;">⚠️ Digite um peso válido maior que zero!</span>';
-                return;
-            }
-
-            const notaNecessaria = (7.5 * (1 + peso) - mediaAtual * 1) / peso;
-            const notaNecessariaArredondada = Math.ceil(notaNecessaria * 10) / 10;
-
-            if (notaNecessaria <= 0) {
-                resultado.innerHTML = `
-                    <div style="color:#10b981; padding:0.75rem; background:rgba(16,185,129,0.1); border-radius:10px;">
-                        🎉 <strong>Você já está aprovado!</strong>
-                        <br>
-                        <span style="font-size:0.85rem;">Sua Média dos Exercícios atual (${mediaAtual.toFixed(2)}) já é suficiente para passar sem PF.</span>
-                    </div>
-                `;
-            } else if (notaNecessaria > 10) {
-                resultado.innerHTML = `
-                    <div style="color:#dc2626; padding:0.75rem; background:rgba(220,38,38,0.1); border-radius:10px;">
-                        😢 <strong>Infelizmente não é possível passar direto</strong>
-                        <br>
-                        <span style="font-size:0.85rem;">Você precisaria tirar <strong>${notaNecessariaArredondada.toFixed(1)}</strong> nessa prova, mas a nota máxima é 10.</span>
-                        <br>
-                        <span style="font-size:0.85rem; color:var(--text-tertiary);">Sua única chance será a Prova Final.</span>
-                    </div>
-                `;
-            } else {
-                resultado.innerHTML = `
-                    <div style="color:var(--primary-green); padding:0.75rem; background:rgba(105,120,37,0.1); border-radius:10px;">
-                        🎯 <strong>Você precisa tirar ${notaNecessariaArredondada.toFixed(1)}</strong> nessa prova
-                        <br>
-                        <span style="font-size:0.85rem; color:var(--text-tertiary);">
-                            Com peso ${peso}, sua Média dos Exercícios atual é <strong>${mediaAtual.toFixed(2)}</strong> e você precisa chegar a 7.5
-                        </span>
-                    </div>
-                `;
-            }
-        }
-
         // ===== RESET =====
         function resetAll() {
             document.querySelectorAll('.nota-input').forEach(i => i.value = '');
@@ -870,11 +845,8 @@
             document.getElementById('resultCard').classList.remove('show');
             document.getElementById('resultImage').style.display = 'none';
             document.getElementById('resultadoNotaFaltante').textContent = '';
-            document.getElementById('resultadoNotaFaltanteMedia').textContent = '';
             document.getElementById('simuladorPainel').classList.remove('show');
-            document.getElementById('simuladorPainelMedia').classList.remove('show');
             document.getElementById('pesoProvaFaltante').value = '1';
-            document.getElementById('pesoProvaFaltanteMedia').value = '1';
             
             const entries = document.querySelectorAll('.note-entry');
             entries.forEach((e, i) => {
