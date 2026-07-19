@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <title>Feliz Aniversário 💚</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='24' font-size='24'%3E%F0%9F%92%9A%3C/text%3E%3C/svg%3E">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&family=Anton&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-base: #121212;
+      --bg-elevated: #1a1a1a;
+      --text-primary: #ffffff;
+      --text-secondary: #b3b3b3;
+      --text-subdued: #7a7a7a;
+      --spotify-green: #1ed760;
+      --progress-bg: rgba(255,255,255,0.2);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; background: #000; scroll-snap-type: y mandatory; overflow-y: scroll; height: 100vh; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: #000;
+      color: var(--text-primary);
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    .toast {
+      position: fixed; left: 50%; bottom: 30px; transform: translateX(-50%) translateY(15px);
+      background: rgba(40,40,40,0.95); backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.15); padding: 10px 24px; border-radius: 50px;
+      font-size: 0.85rem; font-weight: 500; color: #fff; opacity: 0; pointer-events: none;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); z-index: 500; white-space: nowrap;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ========== PLAYER ========== */
+    .player-screen {
+      min-height: 100vh; display: flex; flex-direction: column;
+      padding: 16px 20px 0; position: relative;
+      background: linear-gradient(180deg, var(--dynamic-color, #1a1a1a) 0%, #121212 60%);
+      transition: background 1.2s ease; scroll-snap-align: start;
+    }
+    .player-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 0 18px; color: #fff;
+    }
+    .player-header i { font-size: 1.2rem; opacity: 0.9; cursor: pointer; }
+    .player-source { display: flex; flex-direction: column; align-items: center; }
+    .player-source-label { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #b3b3b3; }
+    .player-source-playlist { font-size: 0.85rem; font-weight: 700; color: #fff; margin-top: 2px; }
+    .album-cover-container {
+      width: 100%; aspect-ratio: 1 / 1; border-radius: 8px; overflow: hidden;
+      box-shadow: 0 24px 50px -12px rgba(0,0,0,0.7); margin-bottom: 28px;
+      animation: gentle-float 6s ease-in-out infinite; background: #282828;
+    }
+    @keyframes gentle-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+    .album-cover-container img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .album-cover-placeholder {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      width: 100%; height: 100%; background: linear-gradient(135deg, #3b3b3b, #1f1f1f);
+      color: #b3b3b3; font-size: 0.8rem; gap: 8px;
+    }
+    .track-info-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .track-titles { flex: 1; min-width: 0; }
+    .track-name { font-size: 1.4rem; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .track-artist { font-size: 0.9rem; font-weight: 500; color: #b3b3b3; margin-top: 4px; }
+    .like-button { font-size: 1.6rem; color: #b3b3b3; margin-left: 16px; cursor: pointer; transition: transform 0.15s ease, color 0.2s ease; }
+    .like-button.liked { color: var(--spotify-green); }
+
+    .seek-container { margin-bottom: 4px; }
+    #seekSlider {
+      -webkit-appearance: none; appearance: none;
+      width: 100%; height: 4px; border-radius: 4px;
+      background: var(--progress-bg); outline: none; cursor: pointer;
+    }
+    #seekSlider::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%;
+      background: #fff; border: none; box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+      opacity: 0; transition: opacity 0.2s ease; transform: scale(0.9);
+    }
+    #seekSlider:hover::-webkit-slider-thumb,
+    #seekSlider:active::-webkit-slider-thumb { opacity: 1; transform: scale(1); }
+    #seekSlider::-moz-range-thumb {
+      width: 14px; height: 14px; border-radius: 50%; background: #fff; border: none; cursor: pointer;
+    }
+    .time-row {
+      display: flex; justify-content: space-between; font-size: 0.7rem;
+      font-weight: 500; color: #b3b3b3; margin-top: 6px; margin-bottom: 18px;
+    }
+    .playback-controls {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;
+    }
+    .ctrl-icon { font-size: 1.2rem; color: #b3b3b3; cursor: pointer; transition: color 0.2s; padding: 6px; }
+    .ctrl-icon.active { color: #fff; }
+    .ctrl-icon.shuffle.active, .ctrl-icon.repeat.active { color: var(--spotify-green); }
+    .skip-icon { font-size: 1.6rem; color: #fff; cursor: pointer; padding: 4px; }
+    .play-button-circle {
+      width: 58px; height: 58px; border-radius: 50%; background: #ffffff;
+      display: flex; align-items: center; justify-content: center; font-size: 1.4rem;
+      color: #000; cursor: pointer; transition: transform 0.15s ease;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+    }
+    .play-button-circle:active { transform: scale(0.95); }
+    .bottom-utility { display: flex; align-items: center; justify-content: space-between; color: #b3b3b3; font-size: 1.1rem; margin-top: 4px; }
+    .bottom-utility i { cursor: pointer; padding: 6px; }
+    .scroll-down-hint {
+      margin-top: auto; padding: 24px 0 18px; display: flex; flex-direction: column;
+      align-items: center; gap: 6px; color: #7a7a7a; font-size: 0.7rem;
+      font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+    }
+    .scroll-down-hint i { animation: bounce-down 1.8s infinite; font-size: 1rem; }
+    @keyframes bounce-down { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(7px); } }
+
+    /* ========== WRAPPED SLIDES ========== */
+    .wrapped-slide {
+      min-height: 100vh; scroll-snap-align: start; scroll-snap-stop: always;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 40px 24px 50px; position: relative; overflow: hidden;
+    }
+    .wrapped-slide .content { position: relative; z-index: 2; width: 100%; max-width: 420px; }
+    .slide-eyebrow {
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+      color: rgba(255,255,255,0.6); margin-bottom: 14px; opacity: 0; transform: translateY(18px);
+      transition: all 0.65s ease;
+    }
+    .display-heading {
+      font-family: 'Anton', sans-serif; font-weight: 400; text-transform: uppercase;
+      font-size: clamp(2.4rem, 11vw, 4.2rem); line-height: 0.94; color: #fff;
+      opacity: 0; transform: translateY(28px); transition: all 0.75s cubic-bezier(0.2, 0.9, 0.3, 1) 0.1s;
+    }
+    .slide-subtitle {
+      margin-top: 18px; font-size: 0.95rem; color: rgba(255,255,255,0.7); line-height: 1.6;
+      opacity: 0; transform: translateY(22px); transition: all 0.8s ease 0.2s;
+    }
+    .wrapped-slide.visible .slide-eyebrow,
+    .wrapped-slide.visible .display-heading,
+    .wrapped-slide.visible .slide-subtitle { opacity: 1; transform: translateY(0); }
+
+    .slide-intro { background: radial-gradient(circle at 30% 30%, #1b3a1b, #0a1a0a); }
+    .slide-date { background: radial-gradient(circle at 70% 20%, #3e1f47, #150a1a); }
+    .slide-age { background: radial-gradient(circle at 20% 80%, #5c1a1a, #1a0505); }
+    .slide-polaroid { background: radial-gradient(circle at 50% 50%, #2d2d1f, #1a1a0a); }
+    .slide-timeline { background: radial-gradient(circle at 40% 30%, #1e2a4a, #080c1c); }
+    .slide-memories { background: radial-gradient(circle at 60% 40%, #4a2a1e, #1c0a05); }
+    .slide-stats { background: radial-gradient(circle at 50% 60%, #0a3b2a, #020f0a); }
+    .slide-powers { background: radial-gradient(circle at 30% 40%, #4a1e3a, #1c0512); }
+    .slide-letter { background: radial-gradient(circle at 50% 30%, #2a1a3a, #0a0515); }
+    .slide-playlist { background: radial-gradient(circle at 70% 50%, #1a3a2a, #051008); }
+    .slide-album { background: radial-gradient(circle at 40% 60%, #3a2a1a, #150d05); }
+    .slide-final { background: radial-gradient(circle at 50% 30%, #2a3a1a, #060a02); }
+
+    .particles { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+    .particle {
+      position: absolute; font-size: 1.2rem; opacity: 0;
+      animation: float-up var(--dur) linear infinite;
+      animation-delay: var(--delay);
+      left: var(--x);
+    }
+    @keyframes float-up {
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+    }
+
+    .polaroid-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;
+      margin-top: 24px; width: 100%;
+    }
+    .polaroid {
+      background: #fff; padding: 8px 8px 20px; border-radius: 4px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4); transform: rotate(var(--rot, 0deg));
+      transition: transform 0.3s ease;
+    }
+    .polaroid img { width: 100%; aspect-ratio: 1/1; object-fit: cover; display: block; border-radius: 2px; }
+    .polaroid-placeholder {
+      width: 100%; aspect-ratio: 1/1; background: #eee; display: flex; align-items: center;
+      justify-content: center; font-size: 2rem; border-radius: 2px;
+    }
+    .polaroid .caption { font-size: 0.6rem; color: #555; margin-top: 6px; text-align: center; font-weight: 600; font-family: 'Dancing Script', cursive; font-size: 0.75rem; }
+
+    .timeline { margin-top: 24px; display: flex; flex-direction: column; gap: 20px; }
+    .timeline-item { display: flex; align-items: center; gap: 14px; opacity: 0; transform: translateX(-20px); transition: all 0.5s ease; }
+    .wrapped-slide.visible .timeline-item { opacity: 1; transform: translateX(0); }
+    .timeline-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--spotify-green); flex-shrink: 0; }
+    .timeline-year { font-weight: 800; font-size: 0.9rem; color: #fff; }
+    .timeline-text { font-size: 0.8rem; color: #b3b3b3; }
+
+    .memory-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 20px;
+    }
+    .memory-tile {
+      aspect-ratio: 1/1; border-radius: 8px; overflow: hidden;
+      border: 3px solid var(--border-color, #fff); box-shadow: 0 6px 14px rgba(0,0,0,0.4);
+    }
+    .memory-tile img { width: 100%; height: 100%; object-fit: cover; }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 20px; }
+    .stat-card {
+      background: rgba(255,255,255,0.08); border-radius: 14px; padding: 20px 14px;
+      text-align: center; border: 1px solid rgba(255,255,255,0.1);
+      opacity: 0; transform: scale(0.9); transition: all 0.5s ease;
+    }
+    .wrapped-slide.visible .stat-card { opacity: 1; transform: scale(1); }
+    .stat-card i { font-size: 1.6rem; margin-bottom: 8px; }
+    .stat-card .num { font-family: 'Anton', sans-serif; font-size: 2rem; color: #fff; }
+    .stat-card .lbl { font-size: 0.65rem; color: #b3b3b3; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; }
+
+    .power-list { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
+    .power-chip {
+      display: flex; align-items: center; gap: 12px;
+      background: var(--chip-bg, rgba(255,255,255,0.08));
+      border: 1px solid rgba(255,255,255,0.14); border-radius: 14px;
+      padding: 14px 16px; opacity: 0; transform: translateX(-20px);
+      transition: all 0.5s cubic-bezier(0.2, 0.9, 0.3, 1);
+    }
+    .wrapped-slide.visible .power-chip { opacity: 1; transform: translateX(0); }
+    .power-chip i { font-size: 1.1rem; }
+    .power-chip span { font-size: 0.9rem; font-weight: 500; text-align: left; }
+
+    .letter-paper {
+      background: rgba(255,255,255,0.06); border-radius: 18px; padding: 28px 22px;
+      margin-top: 20px; text-align: left; line-height: 1.8; font-size: 0.9rem;
+      border: 1px solid rgba(255,255,255,0.1); position: relative;
+    }
+    .letter-paper::before { content: '💚'; position: absolute; top: -16px; left: 50%; transform: translateX(-50%); font-size: 1.4rem; }
+
+    .playlist-list { margin-top: 20px; display: flex; flex-direction: column; gap: 8px; }
+    .playlist-item {
+      display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.06);
+      border-radius: 10px; padding: 12px; text-align: left;
+    }
+    .playlist-item .track-num { font-weight: 800; color: var(--spotify-green); font-size: 0.9rem; width: 20px; }
+    .playlist-item .track-info { flex: 1; }
+    .playlist-item .track-title { font-weight: 600; font-size: 0.85rem; }
+    .playlist-item .track-desc { font-size: 0.7rem; color: #b3b3b3; }
+
+    .album-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 20px; }
+    .album-tile { aspect-ratio: 1/1; border-radius: 6px; overflow: hidden; position: relative; }
+    .album-tile img { width: 100%; height: 100%; object-fit: cover; }
+    .album-tile .overlay {
+      position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+    }
+
+    .replay-button {
+      margin-top: 28px; background: transparent; border: 1.5px solid rgba(255,255,255,0.5);
+      color: #fff; padding: 14px 32px; border-radius: 30px; font-weight: 700;
+      font-size: 0.9rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+      transition: all 0.3s ease; animation: glow-pulse 2s infinite;
+    }
+    @keyframes glow-pulse { 0%, 100% { box-shadow: 0 0 20px rgba(255,255,255,0.1); } 50% { box-shadow: 0 0 35px rgba(255,255,255,0.25); } }
+    .replay-button:hover { background: rgba(255,255,255,0.1); }
+
+    @media (max-width: 400px) {
+      .polaroid-grid { gap: 10px; }
+      .stats-grid { gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+<audio id="audioPlayer" preload="metadata"></audio>
+
+<!-- ==================== PLAYER ==================== -->
+<section class="player-screen" id="playerScreen">
+  <div class="player-header">
+    <i class="fas fa-chevron-down"></i>
+    <div class="player-source">
+      <span class="player-source-label">Tocando da playlist</span>
+      <span class="player-source-playlist" id="playlistDisplay">nossa playlist</span>
+    </div>
+    <i class="fas fa-ellipsis-h"></i>
+  </div>
+  <div class="album-cover-container" id="coverContainer">
+    <img id="coverImage" alt="Capa" style="display:none;">
+    <div class="album-cover-placeholder" id="coverPlaceholder">
+      <i class="fas fa-record-vinyl" style="font-size:2.4rem;"></i>
+      <span id="coverErrorMsg"></span>
+    </div>
+  </div>
+  <div class="track-info-row">
+    <div class="track-titles">
+      <div class="track-name" id="trackTitleDisplay">Título</div>
+      <div class="track-artist" id="trackArtistDisplay">Artista</div>
+    </div>
+    <i class="far fa-heart like-button" id="likeButton"></i>
+  </div>
+  <div class="seek-container">
+    <input type="range" id="seekSlider" min="0" max="100" value="0" step="0.1">
+    <div class="time-row">
+      <span id="currentTime">0:00</span>
+      <span id="totalTime">0:00</span>
+    </div>
+  </div>
+  <div class="playback-controls">
+    <i class="fas fa-random ctrl-icon shuffle" id="shuffleButton"></i>
+    <i class="fas fa-step-backward skip-icon" id="prevButton"></i>
+    <div class="play-button-circle" id="playPauseButton"><i class="fas fa-play" id="playPauseIcon"></i></div>
+    <i class="fas fa-step-forward skip-icon" id="nextButton"></i>
+    <i class="fas fa-redo ctrl-icon repeat" id="repeatButton"></i>
+  </div>
+  <div class="bottom-utility">
+    <i class="fas fa-tv"></i><i class="fas fa-list-ul"></i>
+  </div>
+  <div class="scroll-down-hint">
+    <span>deslize para ver sua retrospectiva</span>
+    <i class="fas fa-chevron-down"></i>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 1: INTRO ==================== -->
+<section class="wrapped-slide slide-intro" data-slide>
+  <div class="particles" id="particlesIntro"></div>
+  <div class="content">
+    <div class="slide-eyebrow">Wrapped · Edição Especial 2026</div>
+    <div class="display-heading">Hoje é<br>o seu dia!</div>
+    <div class="slide-subtitle" id="introName">Esse presente foi feito com todo amor do mundo pra você, MEU AMOR.</div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 2: DATA DE NASCIMENTO ==================== -->
+<section class="wrapped-slide slide-date" data-slide>
+  <div class="content">
+    <div class="slide-eyebrow">Tudo começou em</div>
+    <div style="border: 3px solid rgba(255,255,255,0.3); border-radius: 20px; padding: 30px 20px; display: inline-block; margin: 20px 0;">
+      <div class="display-heading" id="birthDayDisplay" style="font-size: 4rem;">19</div>
+      <div style="font-size: 1.2rem; font-weight: 600; color: #fff;">Julho</div>
+      <div class="slide-subtitle" id="birthYearDisplay" style="margin-top: 8px;">2007</div>
+    </div>
+    <div class="slide-subtitle" style="opacity:1; transform:none; margin-top: 0;">Deus escolheu esse dia pra nos dar você de presente.</div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 3: IDADE ==================== -->
+<section class="wrapped-slide slide-age" data-slide>
+  <div class="content">
+    <div class="slide-eyebrow" id="ageEyebrow">Hoje você completa</div>
+    <div class="display-heading" id="ageNumber" style="font-size: 9rem;">0</div>
+    <div class="slide-subtitle" style="opacity:1; transform:none;">anos de vida que eu amo agora compartilhar com você.</div>
+    <div id="birthdayBadge" style="display:none; background: rgba(255,255,255,0.15); padding: 8px 24px; border-radius: 30px; margin-top: 16px; font-weight: 700;">🎂 É HOJE! 🎂</div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 4: POLAROID ==================== -->
+<section class="wrapped-slide slide-polaroid" data-slide>
+  <div class="content">
+    <div class="slide-eyebrow">Momentos</div>
+    <div class="display-heading" style="font-size: 2rem;">Sua<br>Jornada comigo</div>
+    <div class="slide-subtitle" style="opacity:1; transform:none; margin-bottom: 8px;">Sou grato a Deus por compartilhar a vida ao seu lado, meu amorzinho da minha vida!</div>
+    <div class="polaroid-grid" id="polaroidGrid"></div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 6: TOP MEMÓRIAS ==================== -->
+<section class="wrapped-slide slide-memories" data-slide>
+  <div class="content">
+    <div class="slide-eyebrow">Sou feliz por</div>
+    <div class="display-heading" style="font-size: 2rem;">Ter você<br>na minha vida</div>
+    <div class="slide-subtitle" style="opacity:1; transform:none; margin-bottom: 4px;">Ter você é um presente lindo que quero ter por todos os dias da minha vida.</div>
+    <div class="memory-grid" id="memoryGrid"></div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 7: ESTATÍSTICAS ==================== -->
+<section class="wrapped-slide slide-stats" data-slide>
+  <div class="content">
+    <div class="slide-eyebrow">Em números</div>
+    <div class="display-heading" style="font-size: 2.2rem;">18 anos<br>de vida</div>
+    <div class="slide-subtitle" style="opacity:1; transform:none; margin-bottom: 8px;">Até aqui te ajudou o Senhor! E ajudará continuamente!</div>
+    <div class="stats-grid" id="statsGrid"></div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 8: QUALIDADES ==================== -->
+<section class="wrapped-slide slide-powers" data-slide>
+  <div class="content">
+    <div class="slide-eyebrow">Você é incrível,</div>
+    <div class="display-heading" style="font-size: 2rem;">MEU<br>AMOR</div>
+    <div class="slide-subtitle" style="opacity:1; transform:none; margin-bottom: 8px;">E sou completamente apaixonado por você.</div>
+    <div class="power-list" id="powerList"></div>
+  </div>
+</section>
+
+<section class="wrapped-slide slide-playlist" data-slide>
+  <div class="content">
+    <div class="slide-eyebrow">Trilha sonora</div>
+    <div class="display-heading" style="font-size: 2rem;">Nossa<br>Playlist</div>
+    <div class="slide-subtitle" style="opacity:1; transform:none; margin-bottom: 8px;">Os momentos que viraram música na minha cabeça.</div>
+    <div class="playlist-list" id="playlistList"></div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 9: CARTA ==================== -->
+<section class="wrapped-slide slide-letter" data-slide>
+  <div class="particles" id="particlesLetter"></div>
+  <div class="content">
+    <div class="slide-eyebrow">Só pra você</div>
+    <div class="display-heading" style="font-size: 2rem;">Uma<br>cartinha</div>
+    <div class="letter-paper" id="letterContent"></div>
+    <p style="margin-top: 16px; color: #b3b3b3; font-style: italic; font-family: 'Dancing Script', cursive; font-size: 1.1rem;" id="signatureText"></p>
+  </div>
+</section>
+
+
+<!-- ==================== SLIDE 11: ÁLBUM DE FOTOS ==================== -->
+<section class="wrapped-slide slide-album" data-slide>
+  <div class="content">
+    <div class="slide-eyebrow">Galeria</div>
+    <div class="display-heading" style="font-size: 2rem;">Nossas<br>Fotos</div>
+    <div class="slide-subtitle" style="opacity:1; transform:none; margin-bottom: 8px;">Cada foto guarda um pedaço do que a gente construiu.</div>
+    <div class="album-grid" id="albumGrid"></div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 12: FINAL ==================== -->
+<section class="wrapped-slide slide-final" data-slide>
+  <div class="particles" id="particlesFinal"></div>
+  <div class="content">
+    <div class="slide-eyebrow">Com todo amor do mundo</div>
+    <div class="display-heading" style="font-size: 3rem; color: #1ed760;">Feliz<br>Aniver-<br>sário!</div>
+    <div class="slide-subtitle" style="opacity:1; transform:none; margin-top: 16px;">Te amo, minha PRINCESA! 💚</div>
+    <button class="replay-button" id="replayButton"><i class="fas fa-undo-alt"></i> Reviver tudo de novo</button>
+  </div>
+</section>
+
+<script>
+(function() {
+  const BASE = 'https://medufam116.vercel.app/src/';
+
+  const CONFIG = {
+    herName: "Suzana",
+    fromName: "Seu amor 💚",
+    birthDate: "2007-07-19",
+    song: {
+      title: "Suzana Linda",
+      artist: "Especial pra você",
+      playlist: "nossa trilha sonora",
+      cover: BASE + "11.jpg",
+      audio: BASE + "suzanalinda.mp3"
+    },
+    // 4 fotos para o Polaroid (sortidas)
+    polaroidPhotos: [
+      { src: BASE + "3.JPG",  caption: "cheiro de mar 🌊" },
+      { src: BASE + "6.jpg",  caption: "nossa padaria 🍞" },
+      { src: BASE + "9.jpg",  caption: "igreja ✨" },
+      { src: BASE + "1.jpg",  caption: "ano novo com você 💚" }
+    ],
+    // 6 fotos para Top Memórias
+    memoryPhotos: [
+      { src: BASE + "2.png",  border: "#ff6b6b" },
+      { src: BASE + "4.jpg",  border: "#ffd93d" },
+      { src: BASE + "5.jpg",  border: "#6bcb77" },
+      { src: BASE + "7.jpg",  border: "#4d96ff" },
+      { src: BASE + "8.jpg",  border: "#ff922b" },
+      { src: BASE + "10.jpg", border: "#cc5de8" }
+    ],
+    // 9 fotos para o Álbum (todas misturadas)
+    albumPhotos: [
+      BASE + "WhatsApp Image 2025-08-12 at 19.39.37_f9ab8d00.jpg",
+      BASE + "1.jpg",
+      BASE + "2.png",
+      BASE + "3.JPG",
+      BASE + "4.jpg",
+      BASE + "5.jpg",
+      BASE + "6.jpg",
+      BASE + "7.jpg",
+      BASE + "8.jpg"
+    ],
+    timeline: [
+      { year: "2007", text: "O mundo ficou mais bonito no dia 19 de julho 🌟" },
+      { year: "2010", text: "Primeiros passos, primeiras bagunças" },
+      { year: "2015", text: "Descobrindo que era incrível, mesmo sem saber ainda" },
+      { year: "2020", text: "Virando a pessoa forte e bonita que você é hoje" },
+      { year: "2025", text: "18 anos. O mundo inteiro pela frente. 💚" }
+    ],
+    superpowers: [
+        "Sua beleza por dentro e fora",
+      "Seu sorriso pelo qual sou apaixonado",
+      "Seus BOM DIA que alegram meu dia",
+      "Seus olhinhos que amo TANTO!",
+      "Suas orações por mim",
+      "Seu carinho, seu amor, sua confiança"
+    ],
+    letter: "Meu amorzinho! Hoje você completa 19 anos e só tenho a agradecer a Deus por ter você em minha vida. Quero que lembre sempre o quanto você é especial na minha vida e o quanto eu te amo. Obrigado por ser essa mulher incrível que você é não só pra mim, mas para todos que têm o privilégio de estar com você, my love. Obrigado por ser tão amorosa, carinhosa, por acreditar em nós, por me amar tanto e me fazer sentir amado como nunca antes, por me mostrar que a vida é linda quando tenho Deus e você ao meu lado. EU TE AMO, MEU AMOR. E quero viver todos os nossos próximos aniversários ao seu lado, minha princesa. Deus te abençoe sempre, te dê muitos anos de vida, felicidade e sucesso, meu amor! Estarei sempre torcendo por você! 💚",
+    playlist: [
+      { title: "A primeira vez que te vi",      desc: "Trabalhos na escola" },
+      { title: "Quando olhei pra você",             desc: "Admirei tanto essa princesa linda!" },
+      { title: "Quando apertei sua mão",   desc: "Aquela AGO no Canaã" },
+      { title: "Quando passamos e você ficou tão feliz!",          desc: "Deus realizando nossos sonhos!" }
+    ]
+  };
+
+  // ============ APLICAR CONFIG ============
+  document.getElementById('playlistDisplay').textContent = CONFIG.song.playlist;
+  document.getElementById('trackTitleDisplay').textContent = CONFIG.song.title;
+  document.getElementById('trackArtistDisplay').textContent = CONFIG.song.artist;
+  document.getElementById('letterContent').textContent = CONFIG.letter;
+  document.getElementById('signatureText').textContent = `Com todo amor, ${CONFIG.fromName}`;
+
+  const birth = new Date(CONFIG.birthDate + 'T00:00:00');
+  const now = new Date();
+  let years = now.getFullYear() - birth.getFullYear();
+  const hadBirthday = (now.getMonth() > birth.getMonth()) || (now.getMonth() === birth.getMonth() && now.getDate() >= birth.getDate());
+  if (!hadBirthday) years--;
+
+  document.getElementById('birthDayDisplay').textContent = String(birth.getDate()).padStart(2,'0');
+  document.getElementById('birthYearDisplay').textContent = birth.getFullYear();
+  document.getElementById('ageNumber').textContent = years;
+  if (hadBirthday && now.getMonth() === birth.getMonth() && now.getDate() === birth.getDate()) {
+    document.getElementById('birthdayBadge').style.display = 'inline-block';
+    document.getElementById('ageEyebrow').textContent = 'HOJE você completa';
+  }
+
+  // ============ ÁUDIO ============
+  const audio = document.getElementById('audioPlayer');
+  audio.src = CONFIG.song.audio;
+  audio.onerror = () => showToast('🎵 Conectando ao servidor...');
+
+  const playPauseIcon = document.getElementById('playPauseIcon');
+  document.getElementById('playPauseButton').addEventListener('click', () => {
+    if (audio.paused) audio.play().catch(() => showToast('Toque em play para começar 💚'));
+    else audio.pause();
+  });
+  audio.addEventListener('play', () => playPauseIcon.className = 'fas fa-pause');
+  audio.addEventListener('pause', () => playPauseIcon.className = 'fas fa-play');
+
+  const seekSlider = document.getElementById('seekSlider');
+  const currentTimeEl = document.getElementById('currentTime');
+  const totalTimeEl = document.getElementById('totalTime');
+  function fmt(s) { if (!isFinite(s)) return '0:00'; const m = Math.floor(s/60); const sec = Math.floor(s%60); return `${m}:${String(sec).padStart(2,'0')}`; }
+  audio.addEventListener('loadedmetadata', () => { totalTimeEl.textContent = fmt(audio.duration); });
+  audio.addEventListener('timeupdate', () => {
+    if (!audio.duration) return;
+    const pct = (audio.currentTime / audio.duration) * 100;
+    seekSlider.value = pct;
+    seekSlider.style.background = `linear-gradient(to right, #fff ${pct}%, rgba(255,255,255,0.2) ${pct}%)`;
+    currentTimeEl.textContent = fmt(audio.currentTime);
+  });
+  seekSlider.addEventListener('input', () => { if (audio.duration) audio.currentTime = (seekSlider.value/100)*audio.duration; });
+
+  document.getElementById('prevButton').addEventListener('click', () => { audio.currentTime = 0; if (audio.paused) audio.play().catch(()=>{}); });
+  document.getElementById('nextButton').addEventListener('click', () => showToast('Só uma música — a mais especial 💚'));
+  document.getElementById('likeButton').addEventListener('click', function() { this.classList.toggle('liked'); this.className = this.classList.contains('liked') ? 'fas fa-heart like-button liked' : 'far fa-heart like-button'; });
+  document.getElementById('shuffleButton').addEventListener('click', function() { this.classList.toggle('active'); });
+  document.getElementById('repeatButton').addEventListener('click', function() { this.classList.toggle('active'); });
+
+  // Capa
+  const coverImg = document.getElementById('coverImage');
+  coverImg.src = CONFIG.song.cover;
+  coverImg.onload = () => { coverImg.style.display='block'; document.getElementById('coverPlaceholder').style.display='none'; extractColor(); };
+  coverImg.onerror = () => { document.getElementById('coverErrorMsg').textContent = 'Carregando...'; };
+  function extractColor() {
+    try {
+      const c = document.createElement('canvas'); c.width=8; c.height=8; const ctx=c.getContext('2d');
+      ctx.drawImage(coverImg,0,0,8,8); const d=ctx.getImageData(0,0,8,8).data;
+      let r=0,g=0,b=0,n=0; for(let i=0;i<d.length;i+=4){r+=d[i];g+=d[i+1];b+=d[i+2];n++;}
+      document.getElementById('playerScreen').style.setProperty('--dynamic-color',`rgb(${Math.round(r/n)},${Math.round(g/n)},${Math.round(b/n)})`);
+    }catch(e){}
+  }
+
+  function showToast(msg) {
+    const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+    clearTimeout(window._tt); window._tt=setTimeout(()=>t.classList.remove('show'),2500);
+  }
+
+  // ============ POPULAR SLIDES ============
+
+  // Polaroid
+  const polaroidGrid = document.getElementById('polaroidGrid');
+  CONFIG.polaroidPhotos.forEach((p,i) => {
+    const div = document.createElement('div'); div.className='polaroid';
+    div.style.setProperty('--rot', (i%2===0?-3:3)+'deg');
+    const img = document.createElement('img');
+    img.src = p.src; img.alt = p.caption;
+    img.onerror = function() {
+      const ph = document.createElement('div'); ph.className='polaroid-placeholder'; ph.textContent='📷';
+      this.parentElement.replaceChild(ph, this);
+    };
+    const cap = document.createElement('div'); cap.className='caption'; cap.textContent = p.caption;
+    div.appendChild(img); div.appendChild(cap);
+    polaroidGrid.appendChild(div);
+  });
+
+
+  // Memórias
+  const memoryGrid = document.getElementById('memoryGrid');
+  CONFIG.memoryPhotos.forEach((m,i) => {
+    const div = document.createElement('div'); div.className='memory-tile';
+    div.style.setProperty('--border-color', m.border);
+    const img = document.createElement('img'); img.src=m.src; img.alt=`Memória ${i+1}`;
+    img.onerror = function() { this.style.background='#333'; };
+    div.appendChild(img);
+    memoryGrid.appendChild(div);
+  });
+
+  // Estatísticas
+  const totalDays = Math.floor((now - birth) / 86400000);
+  const totalWeeks = Math.floor(totalDays / 7);
+  const totalHours = totalDays * 24;
+  const heartbeats = Math.round(totalHours * 60 * 75);
+  const statsGrid = document.getElementById('statsGrid');
+  const statsData = [
+    { icon: 'fa-calendar-days', num: totalDays.toLocaleString('pt-BR'), label: 'dias vividos', color: '#ff6b6b' },
+    { icon: 'fa-clock', num: totalWeeks.toLocaleString('pt-BR'), label: 'semanas', color: '#ffd93d' },
+    { icon: 'fa-hourglass', num: totalHours.toLocaleString('pt-BR'), label: 'horas', color: '#6bcb77' },
+    { icon: 'fa-heart-pulse', num: heartbeats.toLocaleString('pt-BR'), label: 'batimentos ~', color: '#ff922b' }
+  ];
+  statsData.forEach((s,i) => {
+    const div = document.createElement('div'); div.className='stat-card';
+    div.style.transitionDelay = `${i*0.1}s`;
+    div.innerHTML = `<i class="fas ${s.icon}" style="color:${s.color}"></i><div class="num">${s.num}</div><div class="lbl">${s.label}</div>`;
+    statsGrid.appendChild(div);
+  });
+
+  // Poderes
+  const powerList = document.getElementById('powerList');
+  const chipColors = ['#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#ff922b','#cc5de8'];
+  const powerIcons = ['fa-sun','fa-smile','fa-heart','fa-eye','fa-music','fa-home'];
+  CONFIG.superpowers.forEach((txt,i) => {
+    const div = document.createElement('div'); div.className='power-chip';
+    div.style.transitionDelay = `${i*0.08}s`;
+    div.style.setProperty('--chip-bg', chipColors[i] + '22');
+    div.innerHTML = `<i class="fas ${powerIcons[i]}" style="color:${chipColors[i]}"></i><span>${txt}</span>`;
+    powerList.appendChild(div);
+  });
+
+  // Playlist
+  const playlistList = document.getElementById('playlistList');
+  CONFIG.playlist.forEach((p,i) => {
+    const div = document.createElement('div'); div.className='playlist-item';
+    div.innerHTML = `<div class="track-num">${String(i+1).padStart(2,'0')}</div><div class="track-info"><div class="track-title">${p.title}</div><div class="track-desc">${p.desc}</div></div>`;
+    playlistList.appendChild(div);
+  });
+
+  // Álbum
+  const albumGrid = document.getElementById('albumGrid');
+  CONFIG.albumPhotos.forEach(src => {
+    const div = document.createElement('div'); div.className='album-tile';
+    const img = document.createElement('img'); img.src=src; img.alt='Foto';
+    img.onerror = function() { this.style.background='#333'; };
+    const overlay = document.createElement('div'); overlay.className='overlay';
+    div.appendChild(img); div.appendChild(overlay);
+    albumGrid.appendChild(div);
+  });
+
+  // Partículas
+  function createParticles(containerId, emojis) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    for (let i = 0; i < 15; i++) {
+      const p = document.createElement('span'); p.className='particle';
+      p.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+      p.style.setProperty('--x', Math.random()*100+'%');
+      p.style.setProperty('--dur', (Math.random()*4+4)+'s');
+      p.style.setProperty('--delay', Math.random()*5+'s');
+      container.appendChild(p);
+    }
+  }
+  createParticles('particlesIntro', ['💚','✨','🎂','🎉','💫','🌟']);
+  createParticles('particlesLetter', ['💚','💕','💗','💖','💝','🥰']);
+  createParticles('particlesFinal', ['💚','🎉','✨','🎊','⭐','🌟']);
+
+  // ============ SCROLL SNAP OBSERVER ============
+  const slides = document.querySelectorAll('[data-slide]');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.5 });
+  slides.forEach(s => observer.observe(s));
+
+  // Replay
+  document.getElementById('replayButton').addEventListener('click', () => {
+    audio.currentTime = 0; audio.play().catch(()=>{});
+    document.getElementById('playerScreen').scrollIntoView({ behavior: 'smooth' });
+  });
+})();
+</script>
+</body>
+</html>
