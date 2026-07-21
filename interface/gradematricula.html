@@ -1,682 +1,1077 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-  <title>Grade Matrícula • MedTasks</title>
-  <link rel="icon" type="image/png" href="https://i.ibb.co/nqmZ9nGr/Logo-IG-Med-Ufam116-3x.png">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Grade Matrícula - MedTasks</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co/nqmZ9nGr/Logo-IG-Med-Ufam116-3x.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ========== SEU CSS ORIGINAL COMPLETO (inalterado) ========== */
+        :root {
+            --primary-green: #697825;
+            --primary-green-dark: #4a551a;
+            --primary-green-light: #8a9e3a;
+            --bg-dark: #0a0a0a;
+            --bg-card: #141414;
+            --bg-elevated: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --border-color: #2a2a2a;
+            --danger: #dc2626;
+            --warning: #f59e0b;
+            --success: #10b981;
+            --info: #3b82f6;
+        }
 
-    :root {
-      --bg: #f6f8fc;
-      --bg-card: #ffffff;
-      --bg-elevated: #f1f4f9;
-      --border-color: #e2e8f0;
-      --text-primary: #0f172a;
-      --text-secondary: #475569;
-      --primary-green: #2b7a4b;
-      --primary-blue: #3b82f6;
-      --warning: #f59e0b;
-      --danger: #dc2626;
-      --purple: #8b5cf6;
-      --fm-gold: #b45309;
-      --shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-      --radius-lg: 20px;
-      --radius-md: 14px;
-      --radius-sm: 10px;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--bg);
-      color: var(--text-primary);
-      padding-bottom: 2rem;
-      line-height: 1.5;
-    }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
 
-    /* Navbar enxuta */
-    .navbar {
-      background: var(--bg-card);
-      border-bottom: 1px solid var(--border-color);
-      padding: 0.75rem 1.25rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      box-shadow: var(--shadow);
-    }
+        /* Navbar */
+        .navbar {
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 1rem 0;
+        }
 
-    .nav-logo {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-    .nav-logo img {
-      height: 28px;
-    }
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
 
-    .logo-text {
-      font-weight: 700;
-      font-size: 1.2rem;
-    }
+        .ufam-logo {
+            height: 45px;
+            width: auto;
+        }
 
-    .med-text {
-      color: var(--primary-green);
-    }
+        .turma-logo-container {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
 
-    .tasks-text {
-      color: var(--text-primary);
-    }
+        .turma-logo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-    }
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
 
-    .btn-nav {
-      background: var(--bg-elevated);
-      border: 1px solid var(--border-color);
-      border-radius: 2rem;
-      padding: 0.45rem 1rem;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-      text-decoration: none;
-      transition: all 0.2s;
-      white-space: nowrap;
-    }
+        .med-text {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
 
-    .btn-nav i {
-      font-size: 0.85rem;
-    }
+        .tasks-text {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-green);
+        }
 
-    .btn-add {
-      background: var(--primary-green);
-      border-color: var(--primary-green);
-      color: white;
-    }
+        .turma-badge {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-top: -0.2rem;
+        }
 
-    .btn-lembrete {
-      background: var(--primary-blue);
-      border-color: var(--primary-blue);
-      color: white;
-    }
+        .menu-icon {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-primary);
+        }
 
-    .btn-nav:active {
-      transform: scale(0.96);
-    }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
 
-    .gm-container {
-      max-width: 1300px;
-      margin: 0 auto;
-      padding: 1rem 1.25rem;
-    }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
 
-    .header-title {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      margin: 0.5rem 0 1.25rem;
-    }
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary-green);
+        }
 
-    .header-title h1 {
-      font-size: 1.8rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
+        .btn-add {
+            background: var(--primary-green);
+            padding: 0.5rem 1.2rem;
+            border-radius: 8px;
+            color: white !important;
+        }
 
-    .status-badge {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      padding: 0.4rem 1rem;
-      border-radius: 2rem;
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: var(--text-secondary);
-    }
+        .btn-add:hover {
+            background: var(--primary-green-light);
+            transform: translateY(-2px);
+        }
 
-    /* Grade com linhas por hora */
-    .grade-wrapper {
-      background: var(--bg-card);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border-color);
-      overflow: hidden;
-      margin-bottom: 1.8rem;
-    }
+        /* Footer */
+        .footer {
+            background: var(--bg-card);
+            border-top: 1px solid var(--border-color);
+            padding: 2rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
 
-    .grade-header {
-      padding: 0.9rem 1.2rem;
-      background: var(--bg-elevated);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-    }
+        .footer-content p {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
 
-    .btn-util {
-      background: transparent;
-      border: 1px solid var(--border-color);
-      border-radius: 2rem;
-      padding: 0.4rem 1rem;
-      font-size: 0.75rem;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      cursor: pointer;
-      background: white;
-    }
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 1rem;
+            }
+            
+            .menu-icon {
+                display: block;
+            }
+            
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--bg-dark);
+                padding: 1rem;
+                gap: 1rem;
+                border-bottom: 1px solid var(--border-color);
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .nav-logo {
+                gap: 0.5rem;
+            }
+            
+            .ufam-logo, .turma-logo-container {
+                height: 35px;
+                width: auto;
+            }
+            
+            .turma-logo-container {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .med-text, .tasks-text {
+                font-size: 1.2rem;
+            }
+        }
 
-    .grade-table-wrap {
-      overflow-x: auto;
-      padding: 0.25rem;
-    }
+        /* ========== REGRAS ADICIONAIS PARA GRADE MATRÍCULA ========== */
+        .gm-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+        }
 
-    .grade-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.75rem;
-      min-width: 520px;
-    }
+        .gm-header {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
 
-    .grade-table th {
-      background: var(--bg-elevated);
-      padding: 0.5rem 0.2rem;
-      font-weight: 600;
-      color: var(--text-secondary);
-      text-align: center;
-    }
+        .gm-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            color: var(--text-primary);
+        }
 
-    .grade-table td {
-      border-bottom: 1px solid var(--border-color);
-      padding: 0.25rem 0.2rem;
-      text-align: center;
-      height: 36px;
-    }
+        .gm-header p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
 
-    .hour-cell {
-      font-weight: 600;
-      color: var(--text-secondary);
-      background: #f8fafc;
-      width: 80px;
-    }
+        /* Grade wrapper */
+        .grade-wrapper {
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
 
-    .slot {
-      border-radius: 6px;
-      padding: 0.2rem 0.25rem;
-      font-size: 0.65rem;
-      font-weight: 600;
-      display: block;
-      margin: 1px;
-      white-space: normal;
-      word-break: break-word;
-    }
+        .grade-header {
+            background: var(--bg-elevated);
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
 
-    .slot-op1 {
-      background: #dbeafe;
-      color: #1e40af;
-      border-left: 3px solid #3b82f6;
-    }
+        .grade-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
 
-    .slot-op2 {
-      background: #fef3c7;
-      color: #92400e;
-      border-left: 3px solid #f59e0b;
-    }
+        .grade-table-wrap {
+            overflow-x: auto;
+            padding: 0.5rem;
+        }
 
-    .slot-conflito {
-      background: #fee2e2;
-      color: #991b1b;
-      border-left: 3px solid #dc2626;
-    }
+        .grade-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.75rem;
+            min-width: 520px;
+        }
 
-    .disciplinas-container {
-      display: flex;
-      flex-direction: column;
-      gap: 0.8rem;
-    }
+        .grade-table th {
+            background: var(--bg-elevated);
+            padding: 0.5rem 0.3rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.7rem;
+            border-bottom: 2px solid var(--border-color);
+        }
 
-    .disciplina-card {
-      background: var(--bg-card);
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border-color);
-      overflow: hidden;
-    }
+        .grade-table td {
+            padding: 0.2rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            height: 36px;
+            vertical-align: middle;
+        }
 
-    .disciplina-header {
-      padding: 0.8rem 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: var(--bg-elevated);
-      cursor: pointer;
-    }
+        .grade-table .hora-cell {
+            color: var(--text-secondary);
+            font-size: 0.7rem;
+            font-weight: 600;
+            background: rgba(26, 26, 26, 0.5);
+            width: 80px;
+        }
 
-    .turma-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 0.5rem;
-      padding: 0.8rem;
-    }
+        .grade-table .slot {
+            border-radius: 6px;
+            padding: 0.2rem 0.3rem;
+            font-size: 0.65rem;
+            font-weight: 600;
+            display: block;
+            margin: 1px;
+            line-height: 1.3;
+            word-break: break-word;
+        }
 
-    .turma-card {
-      background: #f9fafb;
-      border: 2px solid var(--border-color);
-      border-radius: var(--radius-sm);
-      padding: 0.7rem;
-      cursor: pointer;
-      transition: 0.2s;
-      position: relative;
-    }
+        .slot-op1 {
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            border-left: 3px solid #3b82f6;
+        }
 
-    .turma-card.selected-op1 {
-      border-color: #3b82f6;
-      background: #eff6ff;
-    }
+        .slot-op2 {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+            border-left: 3px solid #f59e0b;
+        }
 
-    .turma-card.selected-op2 {
-      border-color: #f59e0b;
-      background: #fffbeb;
-    }
+        .slot-conflito {
+            background: rgba(220, 38, 38, 0.15);
+            color: #f87171;
+            border-left: 3px solid #dc2626;
+        }
 
-    .opção-badge {
-      font-size: 0.65rem;
-      padding: 0.15rem 0.5rem;
-      border-radius: 12px;
-      font-weight: 700;
-    }
+        /* Disciplinas */
+        .disciplinas-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-top: 1.5rem;
+        }
 
-    .mobile-op-selector {
-      display: flex;
-      gap: 0.25rem;
-      margin-top: 0.5rem;
-    }
+        .disciplina-card {
+            background: var(--bg-card);
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
 
-    .op-btn {
-      font-size: 0.65rem;
-      padding: 0.2rem 0.5rem;
-      border-radius: 14px;
-      border: 1px solid var(--border-color);
-      background: white;
-      cursor: pointer;
-      font-weight: 600;
-    }
+        .disciplina-card.fm {
+            border-left: 4px solid #f59e0b;
+        }
 
-    .op-btn.active-op1 {
-      background: #3b82f6;
-      color: white;
-      border-color: #3b82f6;
-    }
+        .disciplina-card.campus {
+            border-left: 4px solid var(--primary-green);
+        }
 
-    .op-btn.active-op2 {
-      background: #f59e0b;
-      color: black;
-      border-color: #f59e0b;
-    }
+        .disciplina-card.optativa {
+            border-left: 4px solid #8b5cf6;
+        }
 
-    @media (max-width: 600px) {
-      .turma-grid {
-        grid-template-columns: 1fr;
-      }
-      .nav-actions {
-        gap: 0.3rem;
-      }
-    }
-  </style>
+        .disciplina-header {
+            background: var(--bg-elevated);
+            padding: 0.8rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.3s;
+            user-select: none;
+        }
+
+        .disciplina-header:hover {
+            background: rgba(42, 42, 42, 0.8);
+        }
+
+        .disciplina-header h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .disciplina-header .local-badge {
+            font-size: 0.6rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .local-fm { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .local-campus { background: rgba(105, 120, 37, 0.2); color: var(--primary-green); }
+        .local-optativa { background: rgba(139, 92, 246, 0.2); color: #8b5cf6; }
+
+        .disciplina-header .header-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .disciplina-header .toggle-icon {
+            transition: transform 0.3s;
+            color: var(--text-secondary);
+        }
+
+        .disciplina-header .toggle-icon.rotated {
+            transform: rotate(180deg);
+        }
+
+        .disciplina-body {
+            padding: 1rem;
+            display: none;
+        }
+
+        .disciplina-body.open {
+            display: block;
+        }
+
+        .turmas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 0.6rem;
+        }
+
+        .turma-item {
+            background: var(--bg-elevated);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .turma-item:hover {
+            border-color: rgba(105, 120, 37, 0.5);
+        }
+
+        .turma-item.selected-op1 {
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.08);
+        }
+
+        .turma-item.selected-op2 {
+            border-color: #f59e0b;
+            background: rgba(245, 158, 11, 0.08);
+        }
+
+        .turma-item .turma-numero {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--primary-green);
+        }
+
+        .turma-item .vagas {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-top: 0.15rem;
+        }
+
+        .turma-item .horarios-list {
+            font-size: 0.68rem;
+            color: var(--text-secondary);
+            margin-top: 0.3rem;
+            line-height: 1.4;
+        }
+
+        .turma-item .check-icon {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            display: none;
+            font-size: 1.1rem;
+        }
+
+        .turma-item.selected-op1 .check-icon.op1-check {
+            display: block;
+            color: #3b82f6;
+        }
+
+        .turma-item.selected-op2 .check-icon.op2-check {
+            display: block;
+            color: #f59e0b;
+        }
+
+        .selecionado-badge {
+            display: inline-block;
+            padding: 0.1rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            margin-left: 0.3rem;
+        }
+
+        .selecionado-op1 { background: #3b82f6; color: #fff; }
+        .selecionado-op2 { background: #f59e0b; color: #000; }
+
+        .btn-util {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.4rem 1rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .btn-util:hover {
+            border-color: var(--primary-green);
+            color: var(--primary-green);
+        }
+
+        .btn-limpar:hover {
+            border-color: #dc2626;
+            color: #dc2626;
+        }
+
+        .status-msg {
+            text-align: center;
+            padding: 0.75rem;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            background: var(--bg-card);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-top: 1rem;
+        }
+
+        /* Legenda */
+        .legenda {
+            background: var(--bg-card);
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+            padding: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .legenda h3 {
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .legenda-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .legenda-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+        }
+
+        .legenda-cor {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .legenda-cor.op1 { background: rgba(59, 130, 246, 0.3); border: 2px solid #3b82f6; }
+        .legenda-cor.op2 { background: rgba(245, 158, 11, 0.3); border: 2px solid #f59e0b; }
+        .legenda-cor.conflito { background: rgba(220, 38, 38, 0.3); border: 2px solid #dc2626; }
+
+        @media (max-width: 768px) {
+            .gm-container { padding: 0.8rem; }
+            .turmas-grid { grid-template-columns: 1fr; }
+            .grade-table { font-size: 0.7rem; min-width: 400px; }
+            .disciplina-header h3 { font-size: 0.85rem; }
+        }
+
+        @media print {
+            .navbar, .footer, .btn-util, .gm-header p, .status-msg, .legenda { display: none !important; }
+            .gm-container { padding: 0; }
+            .grade-wrapper { border: 1px solid #333; }
+            .slot-op1 { background: #dbeafe !important; color: #1e40af !important; }
+            .slot-op2 { background: #fef3c7 !important; color: #92400e !important; }
+            .slot-conflito { background: #fee2e2 !important; color: #991b1b !important; }
+        }
+    </style>
 </head>
 <body>
-  <!-- Navbar simplificada conforme pedido -->
-  <nav class="navbar">
-    <div class="nav-logo">
-      <img src="https://i.ibb.co/5XVmGm7h/marca-ufam-vetor-positivo.png" alt="UFAM">
-      <span class="logo-text"><span class="med-text">Med</span><span class="tasks-text">Tasks</span></span>
-    </div>
-    <div class="nav-actions">
-      <a href="/add" class="btn-nav btn-add"><i class="fas fa-plus"></i> Adicionar Tarefa</a>
-      <a href="/addlembrete" class="btn-nav btn-lembrete"><i class="fas fa-bell"></i> Lembrete</a>
-    </div>
-  </nav>
-
-  <div class="gm-container">
-    <div class="header-title">
-      <h1><i class="fas fa-table"></i> Grade Matrícula</h1>
-      <div class="status-badge" id="statusMsg">⏳ Selecione as turmas</div>
-    </div>
-
-    <!-- Grade interativa -->
-    <div class="grade-wrapper">
-      <div class="grade-header">
-        <h3 style="font-size:1rem;">📅 Horários</h3>
-        <div style="display:flex; gap:0.5rem;">
-          <button class="btn-util" onclick="limparTudo()"><i class="fas fa-undo-alt"></i> Limpar</button>
-          <button class="btn-util" onclick="window.print()"><i class="fas fa-print"></i> Espelho</button>
-        </div>
-      </div>
-      <div class="grade-table-wrap">
-        <table class="grade-table" id="tabelaGrade">
-          <thead id="gradeHead"></thead>
-          <tbody id="gradeBody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <h2 style="margin:1rem 0 0.5rem;"><i class="fas fa-book-open"></i> Disciplinas</h2>
-    <div class="disciplinas-container" id="disciplinasContainer"></div>
-    <div style="margin-top:1rem; font-size:0.7rem; color:var(--text-secondary);">🔵 1ª opção (prioritária) 🟠 2ª opção (fallback)</div>
-  </div>
-
-  <script>
-    (function() {
-      // ----- DADOS REAIS (corrigidos) -----
-      const disciplinasData = [
-        {
-          nome: "Política, planejamento e Gestão em Saúde (PPGS)",
-          sigla: "PPGS",
-          nomeCurto: "PPGS",
-          local: "fm",
-          turmas: [
-            { numero: 1, vagas: 10, horarios: [{ dia: "Terça", inicio: "13:00", fim: "14:00" }, { dia: "Sexta", inicio: "08:00", fim: "12:00" }] },
-            { numero: 2, vagas: 10, horarios: [{ dia: "Terça", inicio: "13:00", fim: "14:00" }, { dia: "Sexta", inicio: "08:00", fim: "12:00" }] },
-            { numero: 3, vagas: 10, horarios: [{ dia: "Terça", inicio: "13:00", fim: "14:00" }, { dia: "Sexta", inicio: "08:00", fim: "12:00" }] },
-            { numero: 4, vagas: 10, horarios: [{ dia: "Terça", inicio: "14:00", fim: "18:00" }] },
-            { numero: 5, vagas: 10, horarios: [{ dia: "Terça", inicio: "14:00", fim: "18:00" }] },
-            { numero: 6, vagas: 10, horarios: [{ dia: "Terça", inicio: "14:00", fim: "18:00" }] }
-          ]
-        },
-        {
-          nome: "Histologia", sigla: "HIS", nomeCurto: "Histologia", local: "campus",
-          turmas: [
-            { numero: 1, vagas: 10, horarios: [{ dia: "Segunda", inicio: "10:00", fim: "12:00" }, { dia: "Terça", inicio: "14:00", fim: "16:00" }] },
-            { numero: 2, vagas: 10, horarios: [{ dia: "Segunda", inicio: "10:00", fim: "12:00" }, { dia: "Terça", inicio: "14:00", fim: "16:00" }] },
-            { numero: 3, vagas: 10, horarios: [{ dia: "Segunda", inicio: "10:00", fim: "12:00" }, { dia: "Terça", inicio: "14:00", fim: "16:00" }] },
-            { numero: 4, vagas: 10, horarios: [{ dia: "Segunda", inicio: "10:00", fim: "12:00" }, { dia: "Terça", inicio: "10:00", fim: "12:00" }] },
-            { numero: 5, vagas: 10, horarios: [{ dia: "Segunda", inicio: "10:00", fim: "12:00" }, { dia: "Terça", inicio: "10:00", fim: "12:00" }] },
-            { numero: 6, vagas: 10, horarios: [{ dia: "Segunda", inicio: "10:00", fim: "12:00" }, { dia: "Terça", inicio: "10:00", fim: "12:00" }] }
-          ]
-        },
-        {
-          nome: "Anatomia Humana II", sigla: "AH II", nomeCurto: "Anato II", local: "campus",
-          turmas: [
-            { numero: 1, vagas: 10, horarios: [{ dia: "Segunda", inicio: "08:00", fim: "10:00" }, { dia: "Terça", inicio: "10:00", fim: "12:00" }, { dia: "Quarta", inicio: "10:00", fim: "12:00" }, { dia: "Quinta", inicio: "10:00", fim: "12:00" }] },
-            { numero: 2, vagas: 10, horarios: [{ dia: "Segunda", inicio: "08:00", fim: "10:00" }, { dia: "Terça", inicio: "10:00", fim: "12:00" }, { dia: "Quarta", inicio: "10:00", fim: "12:00" }, { dia: "Quinta", inicio: "10:00", fim: "12:00" }] },
-            { numero: 3, vagas: 10, horarios: [{ dia: "Segunda", inicio: "08:00", fim: "10:00" }, { dia: "Terça", inicio: "10:00", fim: "12:00" }, { dia: "Quarta", inicio: "10:00", fim: "12:00" }, { dia: "Quinta", inicio: "10:00", fim: "12:00" }] },
-            { numero: 4, vagas: 10, horarios: [{ dia: "Segunda", inicio: "08:00", fim: "10:00" }, { dia: "Terça", inicio: "08:00", fim: "10:00" }, { dia: "Quarta", inicio: "10:00", fim: "12:00" }, { dia: "Quinta", inicio: "08:00", fim: "10:00" }] },
-            { numero: 5, vagas: 10, horarios: [{ dia: "Segunda", inicio: "08:00", fim: "10:00" }, { dia: "Terça", inicio: "08:00", fim: "10:00" }, { dia: "Quarta", inicio: "10:00", fim: "12:00" }, { dia: "Quinta", inicio: "08:00", fim: "10:00" }] },
-            { numero: 6, vagas: 10, horarios: [{ dia: "Segunda", inicio: "08:00", fim: "10:00" }, { dia: "Terça", inicio: "08:00", fim: "10:00" }, { dia: "Quarta", inicio: "10:00", fim: "12:00" }, { dia: "Quinta", inicio: "08:00", fim: "10:00" }] }
-          ]
-        },
-        {
-          nome: "Genética", sigla: "GEN", nomeCurto: "Genética", local: "campus",
-          turmas: [
-            { numero: 1, vagas: 20, horarios: [{ dia: "Segunda", inicio: "16:00", fim: "18:00" }, { dia: "Quinta", inicio: "08:00", fim: "10:00" }] },
-            { numero: 3, vagas: 20, horarios: [{ dia: "Segunda", inicio: "16:00", fim: "18:00" }, { dia: "Quinta", inicio: "14:00", fim: "16:00" }] },
-            { numero: 6, vagas: 20, horarios: [{ dia: "Segunda", inicio: "16:00", fim: "18:00" }, { dia: "Quinta", inicio: "10:00", fim: "12:00" }] }
-          ]
-        },
-        {
-          nome: "Bioquímica Celular e Metabólica", sigla: "BIOQ", nomeCurto: "Bioquímica", local: "campus",
-          turmas: [
-            { numero: 1, vagas: 10, horarios: [{ dia: "Segunda", inicio: "14:00", fim: "16:00" }, { dia: "Quarta", inicio: "14:00", fim: "16:00" }, { dia: "Sexta", inicio: "16:00", fim: "18:00" }] },
-            { numero: 2, vagas: 10, horarios: [{ dia: "Segunda", inicio: "14:00", fim: "16:00" }, { dia: "Quarta", inicio: "14:00", fim: "16:00" }, { dia: "Sexta", inicio: "16:00", fim: "18:00" }] },
-            { numero: 3, vagas: 10, horarios: [{ dia: "Segunda", inicio: "14:00", fim: "16:00" }, { dia: "Quarta", inicio: "16:00", fim: "18:00" }, { dia: "Sexta", inicio: "16:00", fim: "18:00" }] },
-            { numero: 4, vagas: 10, horarios: [{ dia: "Segunda", inicio: "14:00", fim: "16:00" }, { dia: "Quarta", inicio: "16:00", fim: "18:00" }, { dia: "Sexta", inicio: "16:00", fim: "18:00" }] },
-            { numero: 5, vagas: 10, horarios: [{ dia: "Segunda", inicio: "14:00", fim: "16:00" }, { dia: "Sexta", inicio: "16:00", fim: "18:00" }, { dia: "Sexta", inicio: "14:00", fim: "16:00" }] },
-            { numero: 6, vagas: 10, horarios: [{ dia: "Segunda", inicio: "14:00", fim: "16:00" }, { dia: "Sexta", inicio: "16:00", fim: "18:00" }, { dia: "Sexta", inicio: "14:00", fim: "16:00" }] }
-          ]
-        },
-        {
-          nome: "Fundamentos do Ensino da Dor", sigla: "DOR", nomeCurto: "Dor", local: "optativa",
-          turmas: [{ numero: 1, vagas: 40, horarios: [{ dia: "Terça", inicio: "18:00", fim: "20:00" }, { dia: "Quinta", inicio: "18:00", fim: "19:00" }] }]
-        },
-        {
-          nome: "Fundamentos de Bioética", sigla: "BIOET", nomeCurto: "Bioética", local: "optativa",
-          turmas: [{ numero: 1, vagas: 30, horarios: [{ dia: "Quarta", inicio: "14:00", fim: "16:00" }, { dia: "Quinta", inicio: "07:00", fim: "09:00" }] }]
-        },
-        {
-          nome: "Psicossomática", sigla: "PSICO", nomeCurto: "Psicossomática", local: "optativa",
-          turmas: [{ numero: 1, vagas: 40, horarios: [{ dia: "Quarta", inicio: "11:00", fim: "13:00" }, { dia: "Sexta", inicio: "08:00", fim: "10:00" }] }]
-        }
-      ];
-
-      // Horários contínuos das 07h às 20h (linha por hora)
-      const horasGrade = [];
-      for (let h = 7; h <= 20; h++) {
-        const inicio = `${String(h).padStart(2,'0')}:00`;
-        const fim = `${String(h+1).padStart(2,'0')}:00`;
-        horasGrade.push(`${inicio}-${fim}`);
-      }
-
-      const diasSemana = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'];
-
-      // Estado: op1 = primeira opção, op2 = fallback
-      let selecoes = {
-        op1: {}, // { nomeDisciplina: numeroTurma }
-        op2: {}
-      };
-
-      // Elementos DOM
-      const gradeHead = document.getElementById('gradeHead');
-      const gradeBody = document.getElementById('gradeBody');
-      const containerDisc = document.getElementById('disciplinasContainer');
-      const statusMsg = document.getElementById('statusMsg');
-
-      // Função para saber se dois intervalos de tempo se sobrepõem
-      function horariosColidem(inicio1, fim1, inicio2, fim2) {
-        return inicio1 < fim2 && inicio2 < fim1;
-      }
-
-      // Converte "HH:MM" para minutos desde meia-noite
-      function paraMinutos(hhmm) {
-        const [h, m] = hhmm.split(':').map(Number);
-        return h * 60 + m;
-      }
-
-      // Detecta conflito apenas entre disciplinas DIFERENTES
-      function existeConflitoEntreDisciplinasDiferentes(horariosSet, novaDiscNome) {
-        const novaChaves = Object.keys(horariosSet).filter(k => k.startsWith(novaDiscNome + '|'));
-        for (let [key, infos] of Object.entries(horariosSet)) {
-          const [discNome] = key.split('|');
-          if (discNome === novaDiscNome) continue; // mesma disciplina não conta como conflito
-          for (let novaChave of novaChaves) {
-            const [_, diaN, inicioN, fimN] = novaChave.split('|');
-            const [__, diaE, inicioE, fimE] = key.split('|');
-            if (diaN === diaE && horariosColidem(inicioN, fimN, inicioE, fimE)) {
-              return true; // conflito com disciplina diferente
-            }
-          }
-        }
-        return false;
-      }
-
-      // Constroi mapa de horários para todas as seleções ativas
-      function construirMapaHorarios() {
-        const mapa = {}; // chave: "discNome|dia|inicio|fim" -> { tipo: 'op1'/'op2', disciplina, turma }
-        Object.entries(selecoes.op1).forEach(([discNome, turmaNum]) => {
-          const disc = disciplinasData.find(d => d.nome === discNome);
-          if (!disc) return;
-          const turma = disc.turmas.find(t => t.numero === turmaNum);
-          if (!turma) return;
-          turma.horarios.forEach(h => {
-            const key = `${discNome}|${h.dia}|${h.inicio}|${h.fim}`;
-            mapa[key] = { tipo: 'op1', disciplina: disc.nomeCurto, turma: turmaNum, nomeCompleto: disc.nome };
-          });
-        });
-        Object.entries(selecoes.op2).forEach(([discNome, turmaNum]) => {
-          const disc = disciplinasData.find(d => d.nome === discNome);
-          if (!disc) return;
-          const turma = disc.turmas.find(t => t.numero === turmaNum);
-          if (!turma) return;
-          turma.horarios.forEach(h => {
-            const key = `${discNome}|${h.dia}|${h.inicio}|${h.fim}`;
-            if (!mapa[key]) {
-              mapa[key] = { tipo: 'op2', disciplina: disc.nomeCurto, turma: turmaNum, nomeCompleto: disc.nome };
-            }
-          });
-        });
-        return mapa;
-      }
-
-      function atualizarGrade() {
-        const mapaHorarios = construirMapaHorarios();
-        // Cabeçalho
-        gradeHead.innerHTML = `<tr><th>Horário</th>${diasSemana.map(d => `<th>${d}</th>`).join('')}</tr>`;
-        
-        let html = '';
-        horasGrade.forEach(faixa => {
-          const [inicioFaixa, fimFaixa] = faixa.split('-');
-          html += `<tr><td class="hour-cell">${faixa}</td>`;
-          
-          diasSemana.forEach(dia => {
-            let celulaConteudo = '';
-            const slots = [];
-            
-            Object.entries(mapaHorarios).forEach(([key, info]) => {
-              const [discNome, hDia, hInicio, hFim] = key.split('|');
-              if (hDia !== dia) return;
-              const iniMin = paraMinutos(hInicio);
-              const fimMin = paraMinutos(hFim);
-              const faixaIni = paraMinutos(inicioFaixa);
-              const faixaFim = paraMinutos(fimFaixa);
-              
-              if (horariosColidem(faixaIni, faixaFim, iniMin, fimMin)) {
-                slots.push(info);
-              }
-            });
-
-            if (slots.length === 0) {
-              celulaConteudo = '<span style="color:#cbd5e1;">-</span>';
-            } else {
-              const op1Slots = slots.filter(s => s.tipo === 'op1');
-              const op2Slots = slots.filter(s => s.tipo === 'op2');
-              
-              if (op1Slots.length && op2Slots.length) {
-                celulaConteudo = `<span class="slot slot-conflito">⚠️ ${op1Slots[0].disciplina} / ${op2Slots[0].disciplina}</span>`;
-              } else if (op1Slots.length) {
-                celulaConteudo = `<span class="slot slot-op1">${op1Slots[0].disciplina} (T${op1Slots[0].turma})</span>`;
-              } else if (op2Slots.length) {
-                celulaConteudo = `<span class="slot slot-op2">${op2Slots[0].disciplina} (T${op2Slots[0].turma})</span>`;
-              }
-            }
-            html += `<td>${celulaConteudo}</td>`;
-          });
-          html += '</tr>';
-        });
-        gradeBody.innerHTML = html;
-      }
-
-      function selecionarTurma(discNome, turmaNum, tipo) {
-        const key = discNome;
-        if (tipo === 'op1') {
-          if (selecoes.op1[key] === turmaNum) {
-            delete selecoes.op1[key];
-          } else {
-            selecoes.op1[key] = turmaNum;
-            // Se mesma turma está na op2, remove da op2
-            if (selecoes.op2[key] === turmaNum) delete selecoes.op2[key];
-          }
-        } else if (tipo === 'op2') {
-          if (selecoes.op2[key] === turmaNum) {
-            delete selecoes.op2[key];
-          } else {
-            // Não permite op2 igual à op1
-            if (selecoes.op1[key] === turmaNum) {
-              alert('Esta turma já é sua 1ª opção.');
-              return;
-            }
-            selecoes.op2[key] = turmaNum;
-          }
-        }
-        renderizarDisciplinas();
-        atualizarGrade();
-        atualizarStatus();
-      }
-
-      function removerSelecao(discNome, tipo) {
-        if (tipo === 'op1') delete selecoes.op1[discNome];
-        else delete selecoes.op2[discNome];
-        renderizarDisciplinas();
-        atualizarGrade();
-        atualizarStatus();
-      }
-
-      function renderizarDisciplinas() {
-        containerDisc.innerHTML = disciplinasData.map((disc, idx) => {
-          const op1Selecionada = selecoes.op1[disc.nome] || null;
-          const op2Selecionada = selecoes.op2[disc.nome] || null;
-          return `
-            <div class="disciplina-card">
-              <div class="disciplina-header" onclick="this.nextElementSibling.classList.toggle('open'); this.querySelector('i').classList.toggle('fa-chevron-down'); this.querySelector('i').classList.toggle('fa-chevron-up')">
-                <strong>${disc.nome}</strong>
-                <div style="display:flex; gap:0.5rem; align-items:center;">
-                  ${op1Selecionada ? `<span class="opção-badge" style="background:#3b82f6;color:white;">1ª T${op1Selecionada}</span>` : ''}
-                  ${op2Selecionada ? `<span class="opção-badge" style="background:#f59e0b;color:black;">2ª T${op2Selecionada}</span>` : ''}
-                  <i class="fas fa-chevron-down"></i>
+    <!-- Navbar: apenas botões de Adicionar Tarefa e Lembrete -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="https://i.ibb.co/5XVmGm7h/marca-ufam-vetor-positivo.png" alt="UFAM Logo" class="ufam-logo">
+                <div class="turma-logo-container">
+                    <img src="https://i.ibb.co/nqmZ9nGr/Logo-IG-Med-Ufam116-3x.png" alt="Turma 116" class="turma-logo">
                 </div>
-              </div>
-              <div class="turma-grid" style="display:none;">
-                ${disc.turmas.map(t => {
-                  const isOp1 = op1Selecionada === t.numero;
-                  const isOp2 = op2Selecionada === t.numero;
-                  return `
-                    <div class="turma-card ${isOp1 ? 'selected-op1' : ''} ${isOp2 ? 'selected-op2' : ''}">
-                      <div><strong>Turma ${t.numero}</strong> <span style="font-size:0.7rem;">(${t.vagas} vagas)</span></div>
-                      <div style="font-size:0.7rem;">${t.horarios.map(h => `${h.dia} ${h.inicio}-${h.fim}`).join(' · ')}</div>
-                      <div class="mobile-op-selector">
-                        <button class="op-btn ${isOp1 ? 'active-op1' : ''}" onclick="event.stopPropagation(); selecionarTurma('${disc.nome}', ${t.numero}, 'op1')">1ª Opção</button>
-                        <button class="op-btn ${isOp2 ? 'active-op2' : ''}" onclick="event.stopPropagation(); selecionarTurma('${disc.nome}', ${t.numero}, 'op2')">2ª Opção</button>
-                        ${(isOp1 || isOp2) ? `<button class="op-btn" style="background:#eee;" onclick="event.stopPropagation(); removerSelecao('${disc.nome}', '${isOp1 ? 'op1' : 'op2'}')">✕</button>` : ''}
-                      </div>
-                    </div>`;
-                }).join('')}
-              </div>
+                <div class="logo-text">
+                    <span class="med-text">Med</span><span class="tasks-text">Tasks</span>
+                    <span class="turma-badge">MED UFAM 116</span>
+                </div>
             </div>
-          `;
-        }).join('');
-      }
+            <div class="menu-icon" id="menuIcon">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="/"><i class="fas fa-home"></i> Início</a>
+                <a href="/horarios"><i class="fas fa-calendar-alt"></i> Horários</a>
+                <a href="/calendar"><i class="fas fa-calendar-week"></i> Calendário</a>
+                <a href="/ppc"><i class="fas fa-book-open"></i> PPC</a>
+                <a href="/sobre"><i class="fas fa-info-circle"></i> Sobre</a>
+                <a href="/gradematricula" class="active" style="background: var(--primary-green); color:#fff; border-radius:8px; padding:0.5rem 1rem;"><i class="fas fa-table"></i> Grade Matrícula</a>
+                <a href="/add" class="btn-add"><i class="fas fa-plus"></i> Adicionar Tarefa</a>
+                <a href="/addlembrete" class="btn-add" style="background: #3b82f6;"><i class="fas fa-bell"></i> Adicionar Lembrete</a>
+            </div>
+        </div>
+    </nav>
 
-      function atualizarStatus() {
-        const total1 = Object.keys(selecoes.op1).length;
-        const total2 = Object.keys(selecoes.op2).length;
-        statusMsg.innerHTML = total1 || total2 ? `✅ 1ª: ${total1} | 2ª: ${total2}` : '⏳ Nenhuma turma';
-      }
+    <div class="gm-container">
+        <div class="gm-header">
+            <h1><i class="fas fa-table"></i> Grade Matrícula</h1>
+            <p>Selecione a 1ª opção (prioritária) e a 2ª opção (fallback) para cada disciplina</p>
+        </div>
 
-      window.limparTudo = function() {
-        selecoes = { op1: {}, op2: {} };
-        renderizarDisciplinas();
-        atualizarGrade();
-        atualizarStatus();
-      };
+        <!-- Grade de Horários -->
+        <div class="grade-wrapper">
+            <div class="grade-header">
+                <h3>📅 Grade de Horários</h3>
+                <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                    <button class="btn-util btn-limpar" onclick="limparTudo()"><i class="fas fa-trash-alt"></i> Limpar</button>
+                    <button class="btn-util" onclick="window.print()"><i class="fas fa-print"></i> Imprimir Espelho</button>
+                </div>
+            </div>
+            <div class="grade-table-wrap">
+                <table class="grade-table" id="tabelaGrade">
+                    <thead>
+                        <tr>
+                            <th>Horário</th>
+                            <th>Segunda</th>
+                            <th>Terça</th>
+                            <th>Quarta</th>
+                            <th>Quinta</th>
+                            <th>Sexta</th>
+                        </tr>
+                    </thead>
+                    <tbody id="gradeBody"></tbody>
+                </table>
+            </div>
+        </div>
 
-      // Torna funções acessíveis globalmente
-      window.selecionarTurma = selecionarTurma;
-      window.removerSelecao = removerSelecao;
+        <!-- Disciplinas -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin:1.5rem 0 0.5rem;">
+            <h2 style="font-size:1.2rem; color: var(--text-primary);"><i class="fas fa-book"></i> Disciplinas Disponíveis</h2>
+            <span style="font-size:0.7rem; color:var(--text-secondary);">🔵 1ª opção &nbsp;|&nbsp; 🟠 2ª opção</span>
+        </div>
+        <div class="disciplinas-container" id="disciplinasContainer"></div>
 
-      // Inicialização
-      renderizarDisciplinas();
-      atualizarGrade();
-      atualizarStatus();
-    })();
-  </script>
+        <div class="status-msg" id="statusMsg">⏳ Selecione as turmas para montar seu horário</div>
+
+        <!-- Legenda -->
+        <div class="legenda">
+            <h3><i class="fas fa-info-circle"></i> Legenda</h3>
+            <div class="legenda-grid">
+                <div class="legenda-item"><div class="legenda-cor op1"></div> 1ª Opção (prioritária)</div>
+                <div class="legenda-item"><div class="legenda-cor op2"></div> 2ª Opção (fallback)</div>
+                <div class="legenda-item"><div class="legenda-cor conflito"></div> Conflito entre disciplinas diferentes</div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p><i class="far fa-copyright"></i> 2026 MedTasks - MED UFAM 116 - Faculdade de Medicina UFAM</p>
+        </div>
+    </footer>
+
+    <script>
+        // ===== DADOS CORRIGIDOS =====
+        const diasSemana = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'];
+        
+        // Horários de 07:00 às 20:00 (uma linha por hora)
+        const horariosGrade = [];
+        for (let h = 7; h <= 20; h++) {
+            const inicio = String(h).padStart(2, '0') + ':00';
+            const fim = String(h + 1).padStart(2, '0') + ':00';
+            horariosGrade.push(inicio + '-' + fim);
+        }
+
+        const disciplinasData = [
+            {
+                nome: "Política, Planejamento e Gestão em Saúde (PPGS)",
+                sigla: "PPGS",
+                nomeCurto: "PPGS",
+                local: "fm",
+                turmas: [
+                    { numero: 1, vagas: 10, horarios: [{ dia: "Terça", inicio: "13:00", fim: "14:00" }, { dia: "Sexta", inicio: "08:00", fim: "12:00" }] },
+                    { numero: 2, vagas: 10, horarios: [{ dia: "Terça", inicio: "13:00", fim: "14:00" }, { dia: "Sexta", inicio: "08:00", fim: "12:00" }] },
+                    { numero: 3, vagas: 10, horarios: [{ dia: "Terça", inicio: "13:00", fim: "14:00" }, { dia: "Sexta", inicio: "08:00", fim: "12:00" }] },
+                    { numero: 4, vagas: 10, horarios: [{ dia: "Terça", inicio: "14:00", fim: "18:00" }] },
+                    { numero: 5, vagas: 10, horarios: [{ dia: "Terça", inicio: "14:00", fim: "18:00" }] },
+                    { numero: 6, vagas: 10, horarios: [{ dia: "Terça", inicio: "14:00", fim: "18:00" }] }
+                ]
+            },
+            {
+                nome: "Histologia",
+                sigla: "HIS",
+                nomeCurto: "Histologia",
+                local: "campus",
+                turmas: [
+                    { numero: 1, vagas: 10, horarios: [{ dia: "Segunda", inicio: "10:00", fim: "12:00" }, { dia: "Terça", inicio: "14:00", fim: "16:00" }] },
+                    { numero: 2, vagas: 10, horarios: [{ dia: "Segunda", inicio: "10:00", fim: "12:00" }, { dia: "Terça", inicio: "14:00", fim: "16:00" }] },
+                    { numero: 3, vagas: 10, horarios: [{ dia: "Segunda", inicio: "10:00", fim: "12:00" }, { dia: "Terça", inicio: "14:00", fim: "16:00" }] },
+                    { numero: 4, vagas: 10, horarios: [{ dia: "Segunda", inicio: "10:00", fim: "12:00" }, { dia: "Terça", inicio: "10:00", fim: "12:00" }] },
+                    { numero: 5, vagas: 10, horarios: [{ dia: "Segunda", inicio: "10:00", fim: "12:00" }, { dia: "Terça", inicio: "10:00", fim: "12:00" }] },
+                    { numero: 6, vagas: 10, horarios: [{ dia: "Segunda", inicio: "10:00", fim: "12:00" }, { dia: "Terça", inicio: "10:00", fim: "12:00" }] }
+                ]
+            },
+            {
+                nome: "Anatomia Humana II",
+                sigla: "AH II",
+                nomeCurto: "Anato II",
+                local: "campus",
+                turmas: [
+                    { numero: 1, vagas: 10, horarios: [{ dia: "Segunda", inicio: "08:00", fim: "10:00" }, { dia: "Terça", inicio: "10:00", fim: "12:00" }, { dia: "Quarta", inicio: "10:00", fim: "12:00" }, { dia: "Quinta", inicio: "10:00", fim: "12:00" }] },
+                    { numero: 2, vagas: 10, horarios: [{ dia: "Segunda", inicio: "08:00", fim: "10:00" }, { dia: "Terça", inicio: "10:00", fim: "12:00" }, { dia: "Quarta", inicio: "10:00", fim: "12:00" }, { dia: "Quinta", inicio: "10:00", fim: "12:00" }] },
+                    { numero: 3, vagas: 10, horarios: [{ dia: "Segunda", inicio: "08:00", fim: "10:00" }, { dia: "Terça", inicio: "10:00", fim: "12:00" }, { dia: "Quarta", inicio: "10:00", fim: "12:00" }, { dia: "Quinta", inicio: "10:00", fim: "12:00" }] },
+                    { numero: 4, vagas: 10, horarios: [{ dia: "Segunda", inicio: "08:00", fim: "10:00" }, { dia: "Terça", inicio: "08:00", fim: "10:00" }, { dia: "Quarta", inicio: "10:00", fim: "12:00" }, { dia: "Quinta", inicio: "08:00", fim: "10:00" }] },
+                    { numero: 5, vagas: 10, horarios: [{ dia: "Segunda", inicio: "08:00", fim: "10:00" }, { dia: "Terça", inicio: "08:00", fim: "10:00" }, { dia: "Quarta", inicio: "10:00", fim: "12:00" }, { dia: "Quinta", inicio: "08:00", fim: "10:00" }] },
+                    { numero: 6, vagas: 10, horarios: [{ dia: "Segunda", inicio: "08:00", fim: "10:00" }, { dia: "Terça", inicio: "08:00", fim: "10:00" }, { dia: "Quarta", inicio: "10:00", fim: "12:00" }, { dia: "Quinta", inicio: "08:00", fim: "10:00" }] }
+                ]
+            },
+            {
+                nome: "Genética",
+                sigla: "GEN",
+                nomeCurto: "Genética",
+                local: "campus",
+                turmas: [
+                    { numero: 1, vagas: 20, horarios: [{ dia: "Segunda", inicio: "16:00", fim: "18:00" }, { dia: "Quinta", inicio: "08:00", fim: "10:00" }] },
+                    { numero: 3, vagas: 20, horarios: [{ dia: "Segunda", inicio: "16:00", fim: "18:00" }, { dia: "Quinta", inicio: "14:00", fim: "16:00" }] },
+                    { numero: 6, vagas: 20, horarios: [{ dia: "Segunda", inicio: "16:00", fim: "18:00" }, { dia: "Quinta", inicio: "10:00", fim: "12:00" }] }
+                ]
+            },
+            {
+                nome: "Bioquímica Celular e Metabólica",
+                sigla: "BIOQ",
+                nomeCurto: "Bioquímica",
+                local: "campus",
+                turmas: [
+                    { numero: 1, vagas: 10, horarios: [{ dia: "Segunda", inicio: "14:00", fim: "16:00" }, { dia: "Quarta", inicio: "14:00", fim: "16:00" }, { dia: "Sexta", inicio: "16:00", fim: "18:00" }] },
+                    { numero: 2, vagas: 10, horarios: [{ dia: "Segunda", inicio: "14:00", fim: "16:00" }, { dia: "Quarta", inicio: "14:00", fim: "16:00" }, { dia: "Sexta", inicio: "16:00", fim: "18:00" }] },
+                    { numero: 3, vagas: 10, horarios: [{ dia: "Segunda", inicio: "14:00", fim: "16:00" }, { dia: "Quarta", inicio: "16:00", fim: "18:00" }, { dia: "Sexta", inicio: "16:00", fim: "18:00" }] },
+                    { numero: 4, vagas: 10, horarios: [{ dia: "Segunda", inicio: "14:00", fim: "16:00" }, { dia: "Quarta", inicio: "16:00", fim: "18:00" }, { dia: "Sexta", inicio: "16:00", fim: "18:00" }] },
+                    { numero: 5, vagas: 10, horarios: [{ dia: "Segunda", inicio: "14:00", fim: "16:00" }, { dia: "Sexta", inicio: "16:00", fim: "18:00" }, { dia: "Sexta", inicio: "14:00", fim: "16:00" }] },
+                    { numero: 6, vagas: 10, horarios: [{ dia: "Segunda", inicio: "14:00", fim: "16:00" }, { dia: "Sexta", inicio: "16:00", fim: "18:00" }, { dia: "Sexta", inicio: "14:00", fim: "16:00" }] }
+                ]
+            },
+            {
+                nome: "Fundamentos do Ensino da Dor",
+                sigla: "DOR",
+                nomeCurto: "Dor",
+                local: "optativa",
+                turmas: [
+                    { numero: 1, vagas: 40, horarios: [{ dia: "Terça", inicio: "18:00", fim: "20:00" }, { dia: "Quinta", inicio: "18:00", fim: "19:00" }] }
+                ]
+            },
+            {
+                nome: "Fundamentos de Bioética",
+                sigla: "BIOET",
+                nomeCurto: "Bioética",
+                local: "optativa",
+                turmas: [
+                    { numero: 1, vagas: 30, horarios: [{ dia: "Quarta", inicio: "14:00", fim: "16:00" }, { dia: "Quinta", inicio: "07:00", fim: "09:00" }] }
+                ]
+            },
+            {
+                nome: "Psicossomática",
+                sigla: "PSICO",
+                nomeCurto: "Psicossomática",
+                local: "optativa",
+                turmas: [
+                    { numero: 1, vagas: 40, horarios: [{ dia: "Quarta", inicio: "11:00", fim: "13:00" }, { dia: "Sexta", inicio: "08:00", fim: "10:00" }] }
+                ]
+            }
+        ];
+
+        // ===== ESTADO =====
+        let selecoes = {
+            op1: {}, // { nomeDisciplina: numeroTurma }
+            op2: {}  // { nomeDisciplina: numeroTurma }
+        };
+
+        // ===== FUNÇÕES AUXILIARES =====
+        function paraMinutos(hhmm) {
+            const [h, m] = hhmm.split(':').map(Number);
+            return h * 60 + m;
+        }
+
+        function horariosSeSobrepoem(inicio1, fim1, inicio2, fim2) {
+            const i1 = paraMinutos(inicio1);
+            const f1 = paraMinutos(fim1);
+            const i2 = paraMinutos(inicio2);
+            const f2 = paraMinutos(fim2);
+            return i1 < f2 && i2 < f1;
+        }
+
+        // Verifica conflito APENAS entre disciplinas DIFERENTES
+        function temConflitoComOutrasDisciplinas(discNome, horariosNovos) {
+            const todasSelecoes = { ...selecoes.op1, ...selecoes.op2 };
+            
+            for (const [outraDisc, turmaNum] of Object.entries(todasSelecoes)) {
+                if (outraDisc === discNome) continue; // mesma disciplina = sem conflito
+                
+                const disc = disciplinasData.find(d => d.nome === outraDisc);
+                if (!disc) continue;
+                const turma = disc.turmas.find(t => t.numero === turmaNum);
+                if (!turma) continue;
+                
+                for (const hNovo of horariosNovos) {
+                    for (const hExistente of turma.horarios) {
+                        if (hNovo.dia === hExistente.dia && 
+                            horariosSeSobrepoem(hNovo.inicio, hNovo.fim, hExistente.inicio, hExistente.fim)) {
+                            return true; // conflito entre disciplinas diferentes
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        // ===== TOGGLE DA DISCIPLINA (abre/fecha corpo) =====
+        function toggleDisciplina(id) {
+            const body = document.getElementById('body-' + id);
+            const icon = document.getElementById('icon-' + id);
+            if (!body || !icon) return;
+            body.classList.toggle('open');
+            icon.classList.toggle('rotated');
+        }
+
+        // ===== SELEÇÃO DE TURMA =====
+        function toggleTurma(disciplinaNome, turmaNumero) {
+            const key = disciplinaNome;
+            const disc = disciplinasData.find(d => d.nome === key);
+            if (!disc) return;
+            
+            const turma = disc.turmas.find(t => t.numero === turmaNumero);
+            if (!turma) return;
+            
+            const op1Atual = selecoes.op1[key];
+            const op2Atual = selecoes.op2[key];
+            
+            // Se já é a 1ª opção, remove da 1ª
+            if (op1Atual === turmaNumero) {
+                delete selecoes.op1[key];
+            }
+            // Se já é a 2ª opção, remove da 2ª
+            else if (op2Atual === turmaNumero) {
+                delete selecoes.op2[key];
+            }
+            // Se não está selecionado em nenhuma
+            else {
+                // Verifica conflitos com outras disciplinas (apenas se diferente)
+                if (temConflitoComOutrasDisciplinas(key, turma.horarios)) {
+                    if (!confirm('⚠️ Esta turma tem conflito de horário com outra disciplina já selecionada. Deseja continuar?')) {
+                        return;
+                    }
+                }
+                
+                // Se não tem 1ª opção, coloca como 1ª
+                if (!op1Atual) {
+                    selecoes.op1[key] = turmaNumero;
+                }
+                // Se já tem 1ª mas não tem 2ª, coloca como 2ª
+                else if (!op2Atual) {
+                    // Não permite mesma turma em 1ª e 2ª
+                    if (op1Atual === turmaNumero) {
+                        alert('Esta turma já é sua 1ª opção.');
+                        return;
+                    }
+                    selecoes.op2[key] = turmaNumero;
+                }
+                // Se já tem ambas, substitui a 1ª e move a antiga 1ª para 2ª
+                else {
+                    if (op1Atual === turmaNumero) return;
+                    selecoes.op2[key] = op1Atual;
+                    selecoes.op1[key] = turmaNumero;
+                }
+            }
+            
+            renderDisciplinas();
+            renderGrade();
+            updateStatus();
+        }
+
+        // ===== RENDER GRADE =====
+        function renderGrade() {
+            const body = document.getElementById('gradeBody');
+            
+            // Constrói mapa de slots ocupados
+            const slotsPorHoraDia = {};
+            
+            // Inicializa
+            horariosGrade.forEach(h => {
+                slotsPorHoraDia[h] = {};
+                diasSemana.forEach(d => {
+                    slotsPorHoraDia[h][d] = { op1: [], op2: [] };
+                });
+            });
+            
+            // Preenche com seleções
+            function preencherSlots(tipo) {
+                const obj = tipo === 'op1' ? selecoes.op1 : selecoes.op2;
+                for (const [discNome, turmaNum] of Object.entries(obj)) {
+                    const disc = disciplinasData.find(d => d.nome === discNome);
+                    if (!disc) continue;
+                    const turma = disc.turmas.find(t => t.numero === turmaNum);
+                    if (!turma) continue;
+                    
+                    turma.horarios.forEach(h => {
+                        const iniMin = paraMinutos(h.inicio);
+                        const fimMin = paraMinutos(h.fim);
+                        
+                        horariosGrade.forEach(faixa => {
+                            const [fIni, fFim] = faixa.split('-');
+                            const fIniMin = paraMinutos(fIni);
+                            const fFimMin = paraMinutos(fFim);
+                            
+                            if (horariosSeSobrepoem(h.inicio, h.fim, fIni, fFim)) {
+                                if (slotsPorHoraDia[faixa] && slotsPorHoraDia[faixa][h.dia]) {
+                                    slotsPorHoraDia[faixa][h.dia][tipo].push({
+                                        nome: disc.nomeCurto,
+                                        turma: turmaNum,
+                                        disciplina: disc.nome
+                                    });
+                                }
+                            }
+                        });
+                    });
+                }
+            }
+            
+            preencherSlots('op1');
+            preencherSlots('op2');
+            
+            let html = '';
+            horariosGrade.forEach(faixa => {
+                html += '<tr>';
+                html += `<td class="hora-cell">${faixa}</td>`;
+                
+                diasSemana.forEach(dia => {
+                    const slot = slotsPorHoraDia[faixa][dia];
+                    const op1Items = slot.op1;
+                    const op2Items = slot.op2;
+                    
+                    if (op1Items.length === 0 && op2Items.length === 0) {
+                        html += '<td><span style="color:#444;">-</span></td>';
+                    } else if (op1Items.length > 0 && op2Items.length > 0) {
+                        // Conflito: mostra ambos
+                        const op1Texto = op1Items.map(s => `${s.nome} T${s.turma}`).join(', ');
+                        const op2Texto = op2Items.map(s => `${s.nome} T${s.turma}`).join(', ');
+                        html += `<td><span class="slot slot-conflito" title="Conflito: ${op1Texto} vs ${op2Texto}">⚠️ ${op1Texto}<br>${op2Texto}</span></td>`;
+                    } else if (op1Items.length > 0) {
+                        const texto = op1Items.map(s => `${s.nome} T${s.turma}`).join(', ');
+                        html += `<td><span class="slot slot-op1">${texto}</span></td>`;
+                    } else {
+                        const texto = op2Items.map(s => `${s.nome} T${s.turma}`).join(', ');
+                        html += `<td><span class="slot slot-op2">${texto}</span></td>`;
+                    }
+                });
+                
+                html += '</tr>';
+            });
+            
+            body.innerHTML = html;
+        }
+
+        // ===== RENDER DISCIPLINAS =====
+        function renderDisciplinas() {
+            const container = document.getElementById('disciplinasContainer');
+            let html = '';
+            
+            disciplinasData.forEach((disc, idx) => {
+                const id = 'disc-' + idx;
+                const op1Sel = selecoes.op1[disc.nome] || null;
+                const op2Sel = selecoes.op2[disc.nome] || null;
+                const localClass = disc.local === 'fm' ? 'fm' : (disc.local === 'optativa' ? 'optativa' : 'campus');
+                const localLabel = disc.local === 'fm' ? 'FM' : (disc.local === 'optativa' ? 'Optativa' : 'Campus');
+                const localBadgeClass = disc.local === 'fm' ? 'local-fm' : (disc.local === 'optativa' ? 'local-optativa' : 'local-campus');
+                
+                html += `
+                    <div class="disciplina-card ${localClass}">
+                        <div class="disciplina-header" onclick="toggleDisciplina('${id}')">
+                            <h3>
+                                ${disc.nome}
+                                <span class="local-badge ${localBadgeClass}">${localLabel}</span>
+                            </h3>
+                            <div class="header-info">
+                                ${op1Sel ? `<span class="selecionado-badge selecionado-op1">1ª T${op1Sel}</span>` : ''}
+                                ${op2Sel ? `<span class="selecionado-badge selecionado-op2">2ª T${op2Sel}</span>` : ''}
+                                <i class="fas fa-chevron-down toggle-icon" id="icon-${id}"></i>
+                            </div>
+                        </div>
+                        <div class="disciplina-body" id="body-${id}">
+                            <div class="turmas-grid">
+                                ${disc.turmas.map(t => {
+                                    const isOp1 = op1Sel === t.numero;
+                                    const isOp2 = op2Sel === t.numero;
+                                    const selectedClass = isOp1 ? 'selected-op1' : (isOp2 ? 'selected-op2' : '');
+                                    
+                                    return `
+                                        <div class="turma-item ${selectedClass}" onclick="toggleTurma('${disc.nome.replace(/'/g, "\\'")}', ${t.numero})">
+                                            <div class="check-icon op1-check"><i class="fas fa-check-circle"></i></div>
+                                            <div class="check-icon op2-check"><i class="fas fa-check-circle"></i></div>
+                                            <div>
+                                                <span class="turma-numero">Turma ${t.numero}</span>
+                                                ${isOp1 ? '<span class="selecionado-badge selecionado-op1">1ª</span>' : ''}
+                                                ${isOp2 ? '<span class="selecionado-badge selecionado-op2">2ª</span>' : ''}
+                                            </div>
+                                            <div class="vagas">Vagas: ${t.vagas}</div>
+                                            <div class="horarios-list">
+                                                ${t.horarios.map(h => `${h.dia} ${h.inicio}-${h.fim}`).join(' • ')}
+                                            </div>
+                                            <div style="margin-top:0.4rem; display:flex; gap:0.3rem; font-size:0.6rem; color:var(--text-secondary);">
+                                                <small>Clique: 1ª seleção → 2ª → substitui</small>
+                                            </div>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        function updateStatus() {
+            const msg = document.getElementById('statusMsg');
+            const total1 = Object.keys(selecoes.op1).length;
+            const total2 = Object.keys(selecoes.op2).length;
+            
+            if (total1 === 0 && total2 === 0) {
+                msg.innerHTML = '⏳ Selecione as turmas para montar seu horário';
+            } else {
+                let texto = '';
+                if (total1 > 0) texto += `🔵 1ª opção: ${total1} disciplina${total1 !== 1 ? 's' : ''}`;
+                if (total2 > 0) texto += (texto ? ' &nbsp;|&nbsp; ' : '') + `🟠 2ª opção: ${total2} disciplina${total2 !== 1 ? 's' : ''}`;
+                msg.innerHTML = `✅ ${texto}`;
+            }
+        }
+
+        function limparTudo() {
+            if (confirm('Tem certeza que deseja limpar todas as seleções?')) {
+                selecoes = { op1: {}, op2: {} };
+                renderDisciplinas();
+                renderGrade();
+                updateStatus();
+            }
+        }
+
+        // ===== NAVBAR MOBILE =====
+        document.getElementById('menuIcon').addEventListener('click', function() {
+            document.getElementById('navLinks').classList.toggle('active');
+        });
+
+        // ===== INICIAR =====
+        renderDisciplinas();
+        renderGrade();
+        updateStatus();
+    </script>
 </body>
 </html>
