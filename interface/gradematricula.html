@@ -38,81 +38,32 @@
             font-size: 0.9rem;
         }
 
-        /* Seletor de Opções */
-        .opcoes-container {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-        }
-
-        .opcao-card {
-            flex: 1;
-            min-width: 200px;
-            background: var(--bg-card);
-            border: 2px solid var(--border-color);
-            border-radius: 16px;
-            padding: 1rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-        }
-
-        .opcao-card:hover {
-            border-color: var(--primary-green);
-        }
-
-        .opcao-card.active {
-            border-color: var(--primary-green);
-            background: rgba(105, 120, 37, 0.05);
-        }
-
-        .opcao-card .numero {
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--primary-green);
-        }
-
-        .opcao-card .label {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-        }
-
         /* Grade */
         .grade-wrapper {
-            display: none;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .grade-wrapper.active {
-            display: flex;
-        }
-
-        .grade-card {
-            flex: 1;
-            min-width: 300px;
             background: var(--bg-card);
             border-radius: 16px;
             border: 1px solid var(--border-color);
             overflow: hidden;
+            margin-bottom: 1.5rem;
         }
 
-        .grade-card-header {
+        .grade-header {
             background: var(--bg-elevated);
             padding: 0.75rem 1rem;
             border-bottom: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
         }
 
-        .grade-card-header h3 {
+        .grade-header h3 {
             font-size: 1rem;
             font-weight: 600;
         }
 
-        .grade-card-header .badge {
+        .grade-header .badge {
             font-size: 0.7rem;
             padding: 0.2rem 0.6rem;
             border-radius: 20px;
@@ -129,6 +80,7 @@
             width: 100%;
             border-collapse: collapse;
             font-size: 0.8rem;
+            min-width: 500px;
         }
 
         .grade-table th {
@@ -153,18 +105,30 @@
         }
 
         .grade-table .ocupado {
-            background: rgba(105, 120, 37, 0.15);
             border-radius: 4px;
             padding: 0.15rem 0.3rem;
-            font-size: 0.65rem;
-            color: var(--primary-green);
+            font-size: 0.6rem;
             display: inline-block;
             width: 100%;
+            font-weight: 600;
         }
 
-        .grade-table .ocupado-destaque {
-            background: rgba(220, 38, 38, 0.15);
+        .grade-table .ocupado-op1 {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+            border-left: 3px solid #3b82f6;
+        }
+
+        .grade-table .ocupado-op2 {
+            background: rgba(245, 166, 35, 0.2);
+            color: #f5a623;
+            border-left: 3px solid #f5a623;
+        }
+
+        .grade-table .ocupado-conflito {
+            background: rgba(220, 38, 38, 0.2);
             color: #dc2626;
+            border-left: 3px solid #dc2626;
         }
 
         /* Disciplinas */
@@ -180,6 +144,18 @@
             border-radius: 16px;
             border: 1px solid var(--border-color);
             overflow: hidden;
+        }
+
+        .disciplina-card.fm {
+            border-left: 4px solid #f5a623;
+        }
+
+        .disciplina-card.campus {
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .disciplina-card.optativa {
+            border-left: 4px solid #8b5cf6;
         }
 
         .disciplina-header {
@@ -199,6 +175,31 @@
         .disciplina-header h3 {
             font-size: 1rem;
             font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .disciplina-header .local-badge {
+            font-size: 0.6rem;
+            padding: 0.1rem 0.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .local-fm {
+            background: rgba(245, 166, 35, 0.2);
+            color: #f5a623;
+        }
+
+        .local-campus {
+            background: rgba(105, 120, 37, 0.2);
+            color: var(--primary-green);
+        }
+
+        .local-optativa {
+            background: rgba(139, 92, 246, 0.2);
+            color: #8b5cf6;
         }
 
         .disciplina-header .toggle-icon {
@@ -238,9 +239,14 @@
             border-color: var(--primary-green);
         }
 
-        .turma-item.selected {
-            border-color: var(--primary-green);
-            background: rgba(105, 120, 37, 0.05);
+        .turma-item.selected-op1 {
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .turma-item.selected-op2 {
+            border-color: #f5a623;
+            background: rgba(245, 166, 35, 0.05);
         }
 
         .turma-item .turma-numero {
@@ -264,12 +270,17 @@
             position: absolute;
             top: 0.5rem;
             right: 0.5rem;
-            color: var(--primary-green);
             display: none;
         }
 
-        .turma-item.selected .check {
+        .turma-item.selected-op1 .check {
             display: block;
+            color: #3b82f6;
+        }
+
+        .turma-item.selected-op2 .check {
+            display: block;
+            color: #f5a623;
         }
 
         .turma-item .info-row {
@@ -281,42 +292,38 @@
             margin-top: 0.3rem;
         }
 
-        /* Badge de seleção */
         .selecionado-badge {
             display: inline-block;
-            background: var(--primary-green);
-            color: #000;
             padding: 0.1rem 0.5rem;
             border-radius: 12px;
             font-size: 0.6rem;
             font-weight: 700;
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .gm-container {
-                padding: 0.5rem;
-            }
-            .turmas-grid {
-                grid-template-columns: 1fr;
-            }
-            .grade-wrapper {
-                flex-direction: column;
-            }
-            .opcao-card .numero {
-                font-size: 1.5rem;
-            }
-            .disciplina-header h3 {
-                font-size: 0.85rem;
-            }
+        .selecionado-op1 {
+            background: #3b82f6;
+            color: #fff;
         }
 
-        /* Status */
-        .status-msg {
-            text-align: center;
-            padding: 1rem;
+        .selecionado-op2 {
+            background: #f5a623;
+            color: #000;
+        }
+
+        .btn-imprimir {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
             color: var(--text-secondary);
-            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-imprimir:hover {
+            border-color: var(--primary-green);
+            color: var(--primary-green);
         }
 
         .btn-limpar {
@@ -333,6 +340,68 @@
         .btn-limpar:hover {
             border-color: #dc2626;
             color: #dc2626;
+        }
+
+        .status-msg {
+            text-align: center;
+            padding: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        /* Legenda */
+        .legenda {
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            padding: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .legenda h3 {
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .legenda-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .legenda-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .legenda-cor {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+
+        .legenda-cor.fm { background: rgba(245, 166, 35, 0.3); border: 2px solid #f5a623; }
+        .legenda-cor.campus { background: rgba(105, 120, 37, 0.3); border: 2px solid var(--primary-green); }
+        .legenda-cor.optativa { background: rgba(139, 92, 246, 0.3); border: 2px solid #8b5cf6; }
+        .legenda-cor.op1 { background: rgba(59, 130, 246, 0.3); border: 2px solid #3b82f6; }
+        .legenda-cor.op2 { background: rgba(245, 166, 35, 0.3); border: 2px solid #f5a623; }
+        .legenda-cor.conflito { background: rgba(220, 38, 38, 0.3); border: 2px solid #dc2626; }
+
+        @media (max-width: 768px) {
+            .gm-container { padding: 0.5rem; }
+            .turmas-grid { grid-template-columns: 1fr; }
+            .grade-table { font-size: 0.7rem; min-width: 400px; }
+        }
+
+        @media print {
+            .navbar, .footer, .btn-imprimir, .btn-limpar, .gm-header p, .status-msg, .legenda { display: none !important; }
+            .gm-container { padding: 0; }
+            .grade-wrapper { border: 1px solid #333; }
+            .grade-table .ocupado-op1 { background: #dbeafe; color: #1e40af; }
+            .grade-table .ocupado-op2 { background: #fef3c7; color: #92400e; }
+            .grade-table .ocupado-conflito { background: #fee2e2; color: #991b1b; }
         }
     </style>
 </head>
@@ -368,79 +437,56 @@
     <div class="gm-container">
         <div class="gm-header">
             <h1><i class="fas fa-table"></i> Grade Matrícula</h1>
-            <p>Selecione as disciplinas e turmas para montar seu horário</p>
+            <p>Selecione as turmas da 1ª e 2ª opção para montar seu horário</p>
         </div>
 
-        <!-- Opções de Grade -->
-        <div class="opcoes-container">
-            <div class="opcao-card active" data-opcao="1" onclick="switchOpcao('1')">
-                <div class="numero">1ª</div>
-                <div class="label">Opção de Matrícula</div>
-            </div>
-            <div class="opcao-card" data-opcao="2" onclick="switchOpcao('2')">
-                <div class="numero">2ª</div>
-                <div class="label">Opção de Matrícula</div>
-            </div>
-        </div>
-
-        <!-- Grades -->
-        <div class="grade-wrapper active" id="grade1">
-            <div class="grade-card">
-                <div class="grade-card-header">
-                    <h3>📅 1ª Opção</h3>
-                    <span class="badge" id="count1">0 disciplinas</span>
-                </div>
-                <div class="grade-table-wrap">
-                    <table class="grade-table" id="tabelaGrade1">
-                        <thead>
-                            <tr>
-                                <th>Horário</th>
-                                <th>Segunda</th>
-                                <th>Terça</th>
-                                <th>Quarta</th>
-                                <th>Quinta</th>
-                                <th>Sexta</th>
-                            </tr>
-                        </thead>
-                        <tbody id="gradeBody1"></tbody>
-                    </table>
+        <!-- Grade -->
+        <div class="grade-wrapper">
+            <div class="grade-header">
+                <h3>📅 Grade de Horários</h3>
+                <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                    <button class="btn-limpar" onclick="limparTudo()"><i class="fas fa-trash-alt"></i> Limpar</button>
+                    <button class="btn-imprimir" onclick="window.print()"><i class="fas fa-print"></i> Imprimir Espelho</button>
                 </div>
             </div>
-        </div>
-
-        <div class="grade-wrapper" id="grade2">
-            <div class="grade-card">
-                <div class="grade-card-header">
-                    <h3>📅 2ª Opção</h3>
-                    <span class="badge" id="count2">0 disciplinas</span>
-                </div>
-                <div class="grade-table-wrap">
-                    <table class="grade-table" id="tabelaGrade2">
-                        <thead>
-                            <tr>
-                                <th>Horário</th>
-                                <th>Segunda</th>
-                                <th>Terça</th>
-                                <th>Quarta</th>
-                                <th>Quinta</th>
-                                <th>Sexta</th>
-                            </tr>
-                        </thead>
-                        <tbody id="gradeBody2"></tbody>
-                    </table>
-                </div>
+            <div class="grade-table-wrap">
+                <table class="grade-table" id="tabelaGrade">
+                    <thead>
+                        <tr>
+                            <th>Horário</th>
+                            <th>Segunda</th>
+                            <th>Terça</th>
+                            <th>Quarta</th>
+                            <th>Quinta</th>
+                            <th>Sexta</th>
+                        </tr>
+                    </thead>
+                    <tbody id="gradeBody"></tbody>
+                </table>
             </div>
         </div>
 
         <!-- Disciplinas -->
         <div style="display:flex; justify-content:space-between; align-items:center; margin:1.5rem 0 0.5rem;">
             <h2 style="font-size:1.2rem;"><i class="fas fa-book"></i> Disciplinas Disponíveis</h2>
-            <button class="btn-limpar" onclick="limparTudo()"><i class="fas fa-trash-alt"></i> Limpar tudo</button>
+            <span style="font-size:0.7rem; color:var(--text-secondary);">Clique para selecionar</span>
         </div>
         <div class="disciplinas-container" id="disciplinasContainer"></div>
 
-        <!-- Status -->
         <div class="status-msg" id="statusMsg">Selecione as turmas para montar seu horário</div>
+
+        <!-- Legenda -->
+        <div class="legenda">
+            <h3><i class="fas fa-info-circle"></i> Legenda</h3>
+            <div class="legenda-grid">
+                <div class="legenda-item"><div class="legenda-cor fm"></div> Faculdade de Medicina (FM)</div>
+                <div class="legenda-item"><div class="legenda-cor campus"></div> Campus Universitário</div>
+                <div class="legenda-item"><div class="legenda-cor optativa"></div> Optativa</div>
+                <div class="legenda-item"><div class="legenda-cor op1"></div> 1ª Opção</div>
+                <div class="legenda-item"><div class="legenda-cor op2"></div> 2ª Opção</div>
+                <div class="legenda-item"><div class="legenda-cor conflito"></div> Conflito de Horário</div>
+            </div>
+        </div>
     </div>
 
     <footer class="footer">
@@ -454,107 +500,112 @@
         const diasSemana = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'];
         const horarios = ['08:00-10:00', '10:00-12:00', '13:00-14:00', '14:00-16:00', '16:00-18:00'];
 
+        // local: 'fm', 'campus', 'optativa'
+        // nomeCurto: nome que aparece na grade
         const disciplinasData = [
             {
                 nome: "Política, Planejamento e Gestão em Saúde (PPGS)",
                 sigla: "PPGS",
+                nomeCurto: "PPGS",
+                local: "fm",
                 turmas: [
-                    { numero: 1, vagas: 10, solicitacoes: 8, horarios: [{ dia: "Terça", inicio: "13:00", fim: "14:00" }, { dia: "Sexta", inicio: "08:00", fim: "12:00" }] },
-                    { numero: 2, vagas: 10, solicitacoes: 9, horarios: [{ dia: "Terça", inicio: "13:00", fim: "14:00" }, { dia: "Sexta", inicio: "08:00", fim: "12:00" }] },
-                    { numero: 3, vagas: 10, solicitacoes: 6, horarios: [{ dia: "Terça", inicio: "13:00", fim: "14:00" }, { dia: "Sexta", inicio: "08:00", fim: "12:00" }] },
-                    { numero: 4, vagas: 10, solicitacoes: 27, horarios: [{ dia: "Terça", inicio: "14:00", fim: "18:00" }, { dia: "Terça", inicio: "13:00", fim: "14:00" }] },
-                    { numero: 5, vagas: 10, solicitacoes: 26, horarios: [{ dia: "Terça", inicio: "14:00", fim: "18:00" }, { dia: "Terça", inicio: "13:00", fim: "14:00" }] },
-                    { numero: 6, vagas: 10, solicitacoes: 26, horarios: [{ dia: "Terça", inicio: "14:00", fim: "18:00" }, { dia: "Terça", inicio: "13:00", fim: "14:00" }] }
+                    { numero: 1, vagas: 10, horarios: [{ dia: "Terça", inicio: "13:00", fim: "14:00" }, { dia: "Sexta", inicio: "08:00", fim: "12:00" }] },
+                    { numero: 2, vagas: 10, horarios: [{ dia: "Terça", inicio: "13:00", fim: "14:00" }, { dia: "Sexta", inicio: "08:00", fim: "12:00" }] },
+                    { numero: 3, vagas: 10, horarios: [{ dia: "Terça", inicio: "13:00", fim: "14:00" }, { dia: "Sexta", inicio: "08:00", fim: "12:00" }] },
+                    { numero: 4, vagas: 10, horarios: [{ dia: "Terça", inicio: "14:00", fim: "18:00" }, { dia: "Terça", inicio: "13:00", fim: "14:00" }] },
+                    { numero: 5, vagas: 10, horarios: [{ dia: "Terça", inicio: "14:00", fim: "18:00" }, { dia: "Terça", inicio: "13:00", fim: "14:00" }] },
+                    { numero: 6, vagas: 10, horarios: [{ dia: "Terça", inicio: "14:00", fim: "18:00" }, { dia: "Terça", inicio: "13:00", fim: "14:00" }] }
                 ]
             },
             {
                 nome: "Histologia",
                 sigla: "HIS",
+                nomeCurto: "Histologia",
+                local: "campus",
                 turmas: [
-                    { numero: 1, vagas: 10, solicitacoes: 5, horarios: [{ dia: "Segunda", inicio: "10:00", fim: "12:00" }, { dia: "Terça", inicio: "14:00", fim: "16:00" }] },
-                    { numero: 2, vagas: 10, solicitacoes: 3, horarios: [{ dia: "Segunda", inicio: "10:00", fim: "12:00" }, { dia: "Terça", inicio: "14:00", fim: "16:00" }] },
-                    { numero: 3, vagas: 10, solicitacoes: 1, horarios: [{ dia: "Segunda", inicio: "10:00", fim: "12:00" }, { dia: "Terça", inicio: "14:00", fim: "16:00" }] },
-                    { numero: 4, vagas: 10, solicitacoes: 30, horarios: [{ dia: "Segunda", inicio: "10:00", fim: "12:00" }, { dia: "Terça", inicio: "10:00", fim: "12:00" }] },
-                    { numero: 5, vagas: 10, solicitacoes: 31, horarios: [{ dia: "Segunda", inicio: "10:00", fim: "12:00" }, { dia: "Terça", inicio: "10:00", fim: "12:00" }] },
-                    { numero: 6, vagas: 10, solicitacoes: 32, horarios: [{ dia: "Segunda", inicio: "10:00", fim: "12:00" }, { dia: "Terça", inicio: "10:00", fim: "12:00" }] }
+                    { numero: 1, vagas: 10, horarios: [{ dia: "Segunda", inicio: "10:00", fim: "12:00" }, { dia: "Terça", inicio: "14:00", fim: "16:00" }] },
+                    { numero: 2, vagas: 10, horarios: [{ dia: "Segunda", inicio: "10:00", fim: "12:00" }, { dia: "Terça", inicio: "14:00", fim: "16:00" }] },
+                    { numero: 3, vagas: 10, horarios: [{ dia: "Segunda", inicio: "10:00", fim: "12:00" }, { dia: "Terça", inicio: "14:00", fim: "16:00" }] },
+                    { numero: 4, vagas: 10, horarios: [{ dia: "Segunda", inicio: "10:00", fim: "12:00" }, { dia: "Terça", inicio: "10:00", fim: "12:00" }] },
+                    { numero: 5, vagas: 10, horarios: [{ dia: "Segunda", inicio: "10:00", fim: "12:00" }, { dia: "Terça", inicio: "10:00", fim: "12:00" }] },
+                    { numero: 6, vagas: 10, horarios: [{ dia: "Segunda", inicio: "10:00", fim: "12:00" }, { dia: "Terça", inicio: "10:00", fim: "12:00" }] }
                 ]
             },
             {
                 nome: "Anatomia Humana II",
                 sigla: "AH II",
+                nomeCurto: "Anato II",
+                local: "campus",
                 turmas: [
-                    { numero: 1, vagas: 10, solicitacoes: 4, horarios: [{ dia: "Segunda", inicio: "08:00", fim: "10:00" }, { dia: "Terça", inicio: "10:00", fim: "12:00" }, { dia: "Quarta", inicio: "10:00", fim: "12:00" }, { dia: "Quinta", inicio: "10:00", fim: "12:00" }] },
-                    { numero: 2, vagas: 10, solicitacoes: 4, horarios: [{ dia: "Segunda", inicio: "08:00", fim: "10:00" }, { dia: "Terça", inicio: "10:00", fim: "12:00" }, { dia: "Quarta", inicio: "10:00", fim: "12:00" }, { dia: "Quinta", inicio: "10:00", fim: "12:00" }] },
-                    { numero: 3, vagas: 10, solicitacoes: 3, horarios: [{ dia: "Segunda", inicio: "08:00", fim: "10:00" }, { dia: "Terça", inicio: "10:00", fim: "12:00" }, { dia: "Quarta", inicio: "10:00", fim: "12:00" }, { dia: "Quinta", inicio: "10:00", fim: "12:00" }] },
-                    { numero: 4, vagas: 10, solicitacoes: 33, horarios: [{ dia: "Segunda", inicio: "08:00", fim: "10:00" }, { dia: "Terça", inicio: "08:00", fim: "10:00" }, { dia: "Quarta", inicio: "10:00", fim: "12:00" }, { dia: "Quinta", inicio: "08:00", fim: "10:00" }] },
-                    { numero: 5, vagas: 10, solicitacoes: 33, horarios: [{ dia: "Segunda", inicio: "08:00", fim: "10:00" }, { dia: "Terça", inicio: "08:00", fim: "10:00" }, { dia: "Quarta", inicio: "10:00", fim: "12:00" }, { dia: "Quinta", inicio: "08:00", fim: "10:00" }] },
-                    { numero: 6, vagas: 10, solicitacoes: 31, horarios: [{ dia: "Segunda", inicio: "08:00", fim: "10:00" }, { dia: "Terça", inicio: "08:00", fim: "10:00" }, { dia: "Quarta", inicio: "10:00", fim: "12:00" }, { dia: "Quinta", inicio: "08:00", fim: "10:00" }] }
+                    { numero: 1, vagas: 10, horarios: [{ dia: "Segunda", inicio: "08:00", fim: "10:00" }, { dia: "Terça", inicio: "10:00", fim: "12:00" }, { dia: "Quarta", inicio: "10:00", fim: "12:00" }, { dia: "Quinta", inicio: "10:00", fim: "12:00" }] },
+                    { numero: 2, vagas: 10, horarios: [{ dia: "Segunda", inicio: "08:00", fim: "10:00" }, { dia: "Terça", inicio: "10:00", fim: "12:00" }, { dia: "Quarta", inicio: "10:00", fim: "12:00" }, { dia: "Quinta", inicio: "10:00", fim: "12:00" }] },
+                    { numero: 3, vagas: 10, horarios: [{ dia: "Segunda", inicio: "08:00", fim: "10:00" }, { dia: "Terça", inicio: "10:00", fim: "12:00" }, { dia: "Quarta", inicio: "10:00", fim: "12:00" }, { dia: "Quinta", inicio: "10:00", fim: "12:00" }] },
+                    { numero: 4, vagas: 10, horarios: [{ dia: "Segunda", inicio: "08:00", fim: "10:00" }, { dia: "Terça", inicio: "08:00", fim: "10:00" }, { dia: "Quarta", inicio: "10:00", fim: "12:00" }, { dia: "Quinta", inicio: "08:00", fim: "10:00" }] },
+                    { numero: 5, vagas: 10, horarios: [{ dia: "Segunda", inicio: "08:00", fim: "10:00" }, { dia: "Terça", inicio: "08:00", fim: "10:00" }, { dia: "Quarta", inicio: "10:00", fim: "12:00" }, { dia: "Quinta", inicio: "08:00", fim: "10:00" }] },
+                    { numero: 6, vagas: 10, horarios: [{ dia: "Segunda", inicio: "08:00", fim: "10:00" }, { dia: "Terça", inicio: "08:00", fim: "10:00" }, { dia: "Quarta", inicio: "10:00", fim: "12:00" }, { dia: "Quinta", inicio: "08:00", fim: "10:00" }] }
                 ]
             },
             {
                 nome: "Genética",
                 sigla: "GEN",
+                nomeCurto: "Genética",
+                local: "campus",
                 turmas: [
-                    { numero: 1, vagas: 20, solicitacoes: 3, horarios: [{ dia: "Segunda", inicio: "16:00", fim: "18:00" }, { dia: "Quinta", inicio: "08:00", fim: "10:00" }] },
-                    { numero: 3, vagas: 20, solicitacoes: 12, horarios: [{ dia: "Segunda", inicio: "16:00", fim: "18:00" }, { dia: "Quinta", inicio: "14:00", fim: "16:00" }] },
-                    { numero: 6, vagas: 20, solicitacoes: 32, horarios: [{ dia: "Segunda", inicio: "16:00", fim: "18:00" }, { dia: "Quinta", inicio: "10:00", fim: "12:00" }] }
+                    { numero: 1, vagas: 20, horarios: [{ dia: "Segunda", inicio: "16:00", fim: "18:00" }, { dia: "Quinta", inicio: "08:00", fim: "10:00" }] },
+                    { numero: 3, vagas: 20, horarios: [{ dia: "Segunda", inicio: "16:00", fim: "18:00" }, { dia: "Quinta", inicio: "14:00", fim: "16:00" }] },
+                    { numero: 6, vagas: 20, horarios: [{ dia: "Segunda", inicio: "16:00", fim: "18:00" }, { dia: "Quinta", inicio: "10:00", fim: "12:00" }] }
                 ]
             },
             {
                 nome: "Bioquímica Celular e Metabólica",
                 sigla: "BIOQ",
+                nomeCurto: "Bioquímica",
+                local: "campus",
                 turmas: [
-                    { numero: 1, vagas: 10, solicitacoes: 18, horarios: [{ dia: "Segunda", inicio: "14:00", fim: "16:00" }, { dia: "Quarta", inicio: "14:00", fim: "16:00" }, { dia: "Sexta", inicio: "16:00", fim: "18:00" }] },
-                    { numero: 2, vagas: 10, solicitacoes: 20, horarios: [{ dia: "Segunda", inicio: "14:00", fim: "16:00" }, { dia: "Quarta", inicio: "14:00", fim: "16:00" }, { dia: "Sexta", inicio: "16:00", fim: "18:00" }] },
-                    { numero: 3, vagas: 10, solicitacoes: 4, horarios: [{ dia: "Segunda", inicio: "14:00", fim: "16:00" }, { dia: "Quarta", inicio: "16:00", fim: "18:00" }, { dia: "Sexta", inicio: "16:00", fim: "18:00" }] },
-                    { numero: 4, vagas: 10, solicitacoes: 5, horarios: [{ dia: "Segunda", inicio: "14:00", fim: "16:00" }, { dia: "Quarta", inicio: "16:00", fim: "18:00" }, { dia: "Sexta", inicio: "16:00", fim: "18:00" }] },
-                    { numero: 5, vagas: 10, solicitacoes: 17, horarios: [{ dia: "Segunda", inicio: "14:00", fim: "16:00" }, { dia: "Sexta", inicio: "16:00", fim: "18:00" }, { dia: "Sexta", inicio: "14:00", fim: "16:00" }] },
-                    { numero: 6, vagas: 10, solicitacoes: 19, horarios: [{ dia: "Segunda", inicio: "14:00", fim: "16:00" }, { dia: "Sexta", inicio: "16:00", fim: "18:00" }, { dia: "Sexta", inicio: "14:00", fim: "16:00" }] }
+                    { numero: 1, vagas: 10, horarios: [{ dia: "Segunda", inicio: "14:00", fim: "16:00" }, { dia: "Quarta", inicio: "14:00", fim: "16:00" }, { dia: "Sexta", inicio: "16:00", fim: "18:00" }] },
+                    { numero: 2, vagas: 10, horarios: [{ dia: "Segunda", inicio: "14:00", fim: "16:00" }, { dia: "Quarta", inicio: "14:00", fim: "16:00" }, { dia: "Sexta", inicio: "16:00", fim: "18:00" }] },
+                    { numero: 3, vagas: 10, horarios: [{ dia: "Segunda", inicio: "14:00", fim: "16:00" }, { dia: "Quarta", inicio: "16:00", fim: "18:00" }, { dia: "Sexta", inicio: "16:00", fim: "18:00" }] },
+                    { numero: 4, vagas: 10, horarios: [{ dia: "Segunda", inicio: "14:00", fim: "16:00" }, { dia: "Quarta", inicio: "16:00", fim: "18:00" }, { dia: "Sexta", inicio: "16:00", fim: "18:00" }] },
+                    { numero: 5, vagas: 10, horarios: [{ dia: "Segunda", inicio: "14:00", fim: "16:00" }, { dia: "Sexta", inicio: "16:00", fim: "18:00" }, { dia: "Sexta", inicio: "14:00", fim: "16:00" }] },
+                    { numero: 6, vagas: 10, horarios: [{ dia: "Segunda", inicio: "14:00", fim: "16:00" }, { dia: "Sexta", inicio: "16:00", fim: "18:00" }, { dia: "Sexta", inicio: "14:00", fim: "16:00" }] }
                 ]
             },
             {
                 nome: "Fundamentos do Ensino da Dor (Optativa)",
                 sigla: "DOR",
+                nomeCurto: "Dor",
+                local: "optativa",
                 turmas: [
-                    { numero: 1, vagas: 40, solicitacoes: 10, horarios: [{ dia: "Terça", inicio: "18:00", fim: "20:00" }, { dia: "Quinta", inicio: "18:00", fim: "19:00" }] }
+                    { numero: 1, vagas: 40, horarios: [{ dia: "Terça", inicio: "18:00", fim: "20:00" }, { dia: "Quinta", inicio: "18:00", fim: "19:00" }] }
                 ]
             },
             {
                 nome: "Fundamentos de Bioética (Optativa)",
                 sigla: "BIOET",
+                nomeCurto: "Bioética",
+                local: "optativa",
                 turmas: [
-                    { numero: 1, vagas: 30, solicitacoes: 7, horarios: [{ dia: "Quarta", inicio: "14:00", fim: "16:00" }, { dia: "Quinta", inicio: "07:00", fim: "09:00" }] }
+                    { numero: 1, vagas: 30, horarios: [{ dia: "Quarta", inicio: "14:00", fim: "16:00" }, { dia: "Quinta", inicio: "07:00", fim: "09:00" }] }
                 ]
             },
             {
                 nome: "Psicossomática (Optativa)",
                 sigla: "PSICO",
+                nomeCurto: "Psicossomática",
+                local: "optativa",
                 turmas: [
-                    { numero: 1, vagas: 40, solicitacoes: 5, horarios: [{ dia: "Quarta", inicio: "11:00", fim: "13:00" }, { dia: "Sexta", inicio: "08:00", fim: "10:00" }] }
+                    { numero: 1, vagas: 40, horarios: [{ dia: "Quarta", inicio: "11:00", fim: "13:00" }, { dia: "Sexta", inicio: "08:00", fim: "10:00" }] }
                 ]
             }
         ];
 
         // ===== ESTADO =====
         let selecoes = {
-            1: {}, // opcao -> { disciplina: turmaNumero }
-            2: {}
+            op1: {}, // disciplinaNome -> turmaNumero
+            op2: {}
         };
 
-        let opcaoAtual = '1';
-
         // ===== FUNÇÕES =====
-        function switchOpcao(opcao) {
-            opcaoAtual = opcao;
-            document.querySelectorAll('.opcao-card').forEach(el => {
-                el.classList.toggle('active', el.dataset.opcao === opcao);
-            });
-            document.querySelectorAll('.grade-wrapper').forEach(el => {
-                el.classList.toggle('active', el.id === 'grade' + opcao);
-            });
-            renderGrades();
-        }
-
         function toggleDisciplina(id) {
             const body = document.getElementById('body-' + id);
             const icon = document.getElementById('icon-' + id);
@@ -562,31 +613,50 @@
             icon.classList.toggle('rotated');
         }
 
-        function toggleTurma(disciplinaNome, turmaNumero, opcao) {
+        function toggleTurma(disciplinaNome, turmaNumero) {
             const key = disciplinaNome;
-            const op = opcao || opcaoAtual;
+            const op1Atual = selecoes.op1[key];
+            const op2Atual = selecoes.op2[key];
             
-            if (selecoes[op][key] === turmaNumero) {
-                delete selecoes[op][key];
-            } else {
-                selecoes[op][key] = turmaNumero;
+            // Se já está selecionado na op1, mover para op2
+            if (op1Atual === turmaNumero) {
+                delete selecoes.op1[key];
+                // Se já tem algo na op2, não faz nada
+                if (!selecoes.op2[key]) {
+                    selecoes.op2[key] = turmaNumero;
+                }
+            }
+            // Se já está selecionado na op2, remover
+            else if (op2Atual === turmaNumero) {
+                delete selecoes.op2[key];
+            }
+            // Se não está selecionado, colocar na op1
+            else {
+                // Se já tem op1, move op1 para op2 e coloca novo na op1
+                if (op1Atual) {
+                    selecoes.op2[key] = op1Atual;
+                }
+                selecoes.op1[key] = turmaNumero;
             }
             
             renderDisciplinas();
-            renderGrades();
+            renderGrade();
             updateStatus();
         }
 
-        function getTurmaSelecionada(disciplinaNome, opcao) {
-            return selecoes[opcao]?.[disciplinaNome] || null;
+        function getTurmaSelecionada(disciplinaNome) {
+            return {
+                op1: selecoes.op1[disciplinaNome] || null,
+                op2: selecoes.op2[disciplinaNome] || null
+            };
         }
 
-        function getHorariosSelecionados(opcao) {
+        function getHorariosSelecionados() {
             const horariosSet = {};
-            const selected = selecoes[opcao] || {};
             
-            Object.keys(selected).forEach(disciplinaNome => {
-                const turmaNum = selected[disciplinaNome];
+            // Processar op1
+            Object.keys(selecoes.op1).forEach(disciplinaNome => {
+                const turmaNum = selecoes.op1[disciplinaNome];
                 const disc = disciplinasData.find(d => d.nome === disciplinaNome);
                 if (!disc) return;
                 const turma = disc.turmas.find(t => t.numero === turmaNum);
@@ -595,56 +665,77 @@
                 turma.horarios.forEach(h => {
                     const key = `${h.dia}_${h.inicio}_${h.fim}`;
                     if (!horariosSet[key]) {
-                        horariosSet[key] = [];
+                        horariosSet[key] = { op1: [], op2: [] };
                     }
-                    horariosSet[key].push(disciplinaNome);
+                    horariosSet[key].op1.push({ nome: disc.nomeCurto, turma: turmaNum, disciplina: disc.nome });
+                });
+            });
+            
+            // Processar op2
+            Object.keys(selecoes.op2).forEach(disciplinaNome => {
+                const turmaNum = selecoes.op2[disciplinaNome];
+                const disc = disciplinasData.find(d => d.nome === disciplinaNome);
+                if (!disc) return;
+                const turma = disc.turmas.find(t => t.numero === turmaNum);
+                if (!turma) return;
+                
+                turma.horarios.forEach(h => {
+                    const key = `${h.dia}_${h.inicio}_${h.fim}`;
+                    if (!horariosSet[key]) {
+                        horariosSet[key] = { op1: [], op2: [] };
+                    }
+                    horariosSet[key].op2.push({ nome: disc.nomeCurto, turma: turmaNum, disciplina: disc.nome });
                 });
             });
             
             return horariosSet;
         }
 
-        function renderGrades() {
-            ['1', '2'].forEach(op => {
-                const body = document.getElementById('gradeBody' + op);
-                const count = document.getElementById('count' + op);
-                const selected = selecoes[op] || {};
-                const total = Object.keys(selected).length;
-                count.textContent = total + ' disciplina' + (total !== 1 ? 's' : '');
-                
-                const horariosSet = getHorariosSelecionados(op);
-                
-                let html = '';
-                horarios.forEach(horario => {
-                    html += `<tr><td class="horario">${horario}</td>`;
-                    diasSemana.forEach(dia => {
-                        const key = `${dia}_${horario.replace('-', '_')}`;
-                        let encontrado = false;
-                        let nomes = [];
-                        
-                        // Verifica se algum horário cai neste slot
-                        Object.keys(horariosSet).forEach(hKey => {
-                            const [hDia, hInicio, hFim] = hKey.split('_');
-                            const hRange = `${hInicio}-${hFim}`;
-                            if (hDia === dia && hRange === horario) {
-                                encontrado = true;
-                                nomes = horariosSet[hKey];
+        function renderGrade() {
+            const body = document.getElementById('gradeBody');
+            const horariosSet = getHorariosSelecionados();
+            
+            let html = '';
+            horarios.forEach(horario => {
+                html += `<tr><td class="horario">${horario}</td>`;
+                diasSemana.forEach(dia => {
+                    let encontrado = false;
+                    let op1Text = '';
+                    let op2Text = '';
+                    let conflito = false;
+                    
+                    Object.keys(horariosSet).forEach(hKey => {
+                        const [hDia, hInicio, hFim] = hKey.split('_');
+                        const hRange = `${hInicio}-${hFim}`;
+                        if (hDia === dia && hRange === horario) {
+                            const info = horariosSet[hKey];
+                            if (info.op1.length > 0) {
+                                op1Text = info.op1.map(d => `${d.nome}(T${d.turma})`).join('/');
                             }
-                        });
-                        
-                        if (encontrado) {
-                            const isConflito = nomes.length > 1;
-                            const nomeExibicao = nomes.length === 1 ? nomes[0] : nomes.join(' / ');
-                            html += `<td><span class="ocupado ${isConflito ? 'ocupado-destaque' : ''}">${isConflito ? '⚠️ ' : ''}${nomeExibicao}</span></td>`;
-                        } else {
-                            html += `<td>-</td>`;
+                            if (info.op2.length > 0) {
+                                op2Text = info.op2.map(d => `${d.nome}(T${d.turma})`).join('/');
+                            }
+                            if (info.op1.length > 0 && info.op2.length > 0) {
+                                conflito = true;
+                            }
+                            encontrado = true;
                         }
                     });
-                    html += '</tr>';
+                    
+                    if (encontrado && op1Text && op2Text) {
+                        html += `<td><span class="ocupado ocupado-conflito">⚠️ ${op1Text}<br>${op2Text}</span></td>`;
+                    } else if (encontrado && op1Text) {
+                        html += `<td><span class="ocupado ocupado-op1">${op1Text}</span></td>`;
+                    } else if (encontrado && op2Text) {
+                        html += `<td><span class="ocupado ocupado-op2">${op2Text}</span></td>`;
+                    } else {
+                        html += `<td>-</td>`;
+                    }
                 });
-                
-                body.innerHTML = html || '<tr><td colspan="6" style="text-align:center;color:var(--text-secondary);padding:1rem;">Nenhuma disciplina selecionada</td></tr>';
+                html += '</tr>';
             });
+            
+            body.innerHTML = html || '<tr><td colspan="6" style="text-align:center;color:var(--text-secondary);padding:1rem;">Nenhuma disciplina selecionada</td></tr>';
         }
 
         function renderDisciplinas() {
@@ -653,37 +744,40 @@
             
             disciplinasData.forEach((disc, idx) => {
                 const id = 'disc-' + idx;
-                const hasSelected1 = getTurmaSelecionada(disc.nome, '1');
-                const hasSelected2 = getTurmaSelecionada(disc.nome, '2');
+                const sel = getTurmaSelecionada(disc.nome);
+                const localClass = disc.local === 'fm' ? 'fm' : (disc.local === 'optativa' ? 'optativa' : 'campus');
+                const localLabel = disc.local === 'fm' ? 'FM' : (disc.local === 'optativa' ? 'Optativa' : 'Campus');
+                const localBadgeClass = disc.local === 'fm' ? 'local-fm' : (disc.local === 'optativa' ? 'local-optativa' : 'local-campus');
                 
                 html += `
-                    <div class="disciplina-card">
+                    <div class="disciplina-card ${localClass}">
                         <div class="disciplina-header" onclick="toggleDisciplina('${id}')">
-                            <h3>${disc.nome}</h3>
+                            <h3>
+                                ${disc.nome}
+                                <span class="local-badge ${localBadgeClass}">${localLabel}</span>
+                            </h3>
                             <div>
-                                ${hasSelected1 ? `<span class="selecionado-badge" style="margin-right:4px;">1ª</span>` : ''}
-                                ${hasSelected2 ? `<span class="selecionado-badge">2ª</span>` : ''}
+                                ${sel.op1 ? `<span class="selecionado-badge selecionado-op1">1ª</span>` : ''}
+                                ${sel.op2 ? `<span class="selecionado-badge selecionado-op2">2ª</span>` : ''}
                                 <i class="fas fa-chevron-down toggle-icon" id="icon-${id}"></i>
                             </div>
                         </div>
                         <div class="disciplina-body" id="body-${id}">
                             <div class="turmas-grid">
                                 ${disc.turmas.map(t => {
-                                    const sel1 = getTurmaSelecionada(disc.nome, '1');
-                                    const sel2 = getTurmaSelecionada(disc.nome, '2');
-                                    const isSelected1 = sel1 === t.numero;
-                                    const isSelected2 = sel2 === t.numero;
+                                    const isOp1 = sel.op1 === t.numero;
+                                    const isOp2 = sel.op2 === t.numero;
+                                    const selectedClass = isOp1 ? 'selected-op1' : (isOp2 ? 'selected-op2' : '');
                                     
                                     return `
-                                        <div class="turma-item ${isSelected1 || isSelected2 ? 'selected' : ''}" 
-                                             onclick="toggleTurma('${disc.nome}', ${t.numero})">
+                                        <div class="turma-item ${selectedClass}" onclick="toggleTurma('${disc.nome}', ${t.numero})">
                                             <div class="check"><i class="fas fa-check-circle"></i></div>
                                             <div>
                                                 <span class="turma-numero">Turma ${t.numero}</span>
-                                                ${isSelected1 ? '<span class="selecionado-badge" style="margin-left:4px;">1ª</span>' : ''}
-                                                ${isSelected2 ? '<span class="selecionado-badge" style="margin-left:4px;">2ª</span>' : ''}
+                                                ${isOp1 ? '<span class="selecionado-badge selecionado-op1" style="margin-left:4px;">1ª</span>' : ''}
+                                                ${isOp2 ? '<span class="selecionado-badge selecionado-op2" style="margin-left:4px;">2ª</span>' : ''}
                                             </div>
-                                            <div class="vagas">Vagas: ${t.vagas} | Solicitações: ${t.solicitacoes}</div>
+                                            <div class="vagas">Vagas: ${t.vagas}</div>
                                             <div class="horarios">
                                                 ${t.horarios.map(h => `${h.dia} ${h.inicio}-${h.fim}`).join(' • ')}
                                             </div>
@@ -709,8 +803,8 @@
 
         function updateStatus() {
             const msg = document.getElementById('statusMsg');
-            const total1 = Object.keys(selecoes['1'] || {}).length;
-            const total2 = Object.keys(selecoes['2'] || {}).length;
+            const total1 = Object.keys(selecoes.op1).length;
+            const total2 = Object.keys(selecoes.op2).length;
             
             if (total1 === 0 && total2 === 0) {
                 msg.innerHTML = 'Selecione as turmas para montar seu horário';
@@ -724,9 +818,9 @@
 
         function limparTudo() {
             if (confirm('Tem certeza que deseja limpar todas as seleções?')) {
-                selecoes = { 1: {}, 2: {} };
+                selecoes = { op1: {}, op2: {} };
                 renderDisciplinas();
-                renderGrades();
+                renderGrade();
                 updateStatus();
             }
         }
@@ -738,7 +832,7 @@
 
         // ===== INICIAR =====
         renderDisciplinas();
-        renderGrades();
+        renderGrade();
         updateStatus();
     </script>
 </body>
