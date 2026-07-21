@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Grade Matrícula - MedTasks</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/nqmZ9nGr/Logo-IG-Med-Ufam116-3x.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gm-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .gm-header {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .gm-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .gm-header p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Seletor de Opções */
+        .opcoes-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .opcao-card {
+            flex: 1;
+            min-width: 200px;
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .opcao-card:hover {
+            border-color: var(--primary-green);
+        }
+
+        .opcao-card.active {
+            border-color: var(--primary-green);
+            background: rgba(105, 120, 37, 0.05);
+        }
+
+        .opcao-card .numero {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary-green);
+        }
+
+        .opcao-card .label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Grade */
+        .grade-wrapper {
+            display: none;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .grade-wrapper.active {
+            display: flex;
+        }
+
+        .grade-card {
+            flex: 1;
+            min-width: 300px;
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .grade-card-header {
+            background: var(--bg-elevated);
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .grade-card-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .grade-card-header .badge {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            background: var(--primary-green);
+            color: #fff;
+        }
+
+        .grade-table-wrap {
+            overflow-x: auto;
+            padding: 0.5rem;
+        }
+
+        .grade-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+
+        .grade-table th {
+            background: var(--bg-elevated);
+            padding: 0.4rem 0.3rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.7rem;
+        }
+
+        .grade-table td {
+            padding: 0.3rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            min-height: 30px;
+        }
+
+        .grade-table .horario {
+            color: var(--text-secondary);
+            font-size: 0.7rem;
+        }
+
+        .grade-table .ocupado {
+            background: rgba(105, 120, 37, 0.15);
+            border-radius: 4px;
+            padding: 0.15rem 0.3rem;
+            font-size: 0.65rem;
+            color: var(--primary-green);
+            display: inline-block;
+            width: 100%;
+        }
+
+        .grade-table .ocupado-destaque {
+            background: rgba(220, 38, 38, 0.15);
+            color: #dc2626;
+        }
+
+        /* Disciplinas */
+        .disciplinas-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .disciplina-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .disciplina-header {
+            background: var(--bg-elevated);
+            padding: 0.75rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .disciplina-header:hover {
+            background: var(--border-color);
+        }
+
+        .disciplina-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .disciplina-header .toggle-icon {
+            transition: transform 0.3s;
+        }
+
+        .disciplina-header .toggle-icon.rotated {
+            transform: rotate(180deg);
+        }
+
+        .disciplina-body {
+            padding: 1rem;
+            display: none;
+        }
+
+        .disciplina-body.open {
+            display: block;
+        }
+
+        .turmas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .turma-item {
+            background: var(--bg-elevated);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .turma-item:hover {
+            border-color: var(--primary-green);
+        }
+
+        .turma-item.selected {
+            border-color: var(--primary-green);
+            background: rgba(105, 120, 37, 0.05);
+        }
+
+        .turma-item .turma-numero {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--primary-green);
+        }
+
+        .turma-item .vagas {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .turma-item .horarios {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-top: 0.3rem;
+        }
+
+        .turma-item .check {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            color: var(--primary-green);
+            display: none;
+        }
+
+        .turma-item.selected .check {
+            display: block;
+        }
+
+        .turma-item .info-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem 0.8rem;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-top: 0.3rem;
+        }
+
+        /* Badge de seleção */
+        .selecionado-badge {
+            display: inline-block;
+            background: var(--primary-green);
+            color: #000;
+            padding: 0.1rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.6rem;
+            font-weight: 700;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .gm-container {
+                padding: 0.5rem;
+            }
+            .turmas-grid {
+                grid-template-columns: 1fr;
+            }
+            .grade-wrapper {
+                flex-direction: column;
+            }
+            .opcao-card .numero {
+                font-size: 1.5rem;
+            }
+            .disciplina-header h3 {
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Status */
+        .status-msg {
+            text-align: center;
+            padding: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .btn-limpar {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-limpar:hover {
+            border-color: #dc2626;
+            color: #dc2626;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="https://i.ibb.co/5XVmGm7h/marca-ufam-vetor-positivo.png" alt="UFAM Logo" class="ufam-logo">
+                <div class="turma-logo-container">
+                    <img src="https://i.ibb.co/nqmZ9nGr/Logo-IG-Med-Ufam116-3x.png" alt="Turma 116" class="turma-logo">
+                </div>
+                <div class="logo-text">
+                    <span class="med-text">Med</span><span class="tasks-text">Tasks</span>
+                    <span class="turma-badge">MED UFAM 116</span>
+                </div>
+            </div>
+            <div class="menu-icon" id="menuIcon">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="/"><i class="fas fa-home"></i> Início</a>
+                <a href="/horarios"><i class="fas fa-calendar-alt"></i> Horários</a>
+                <a href="/calendar"><i class="fas fa-calendar-week"></i> Calendário</a>
+                <a href="/ppc"><i class="fas fa-book-open"></i> PPC</a>
+                <a href="/sobre"><i class="fas fa-info-circle"></i> Sobre</a>
+                <a href="/gradematricula" class="active" style="background: var(--primary-green); color:#fff; border-radius:8px; padding:0.5rem 1rem;"><i class="fas fa-table"></i> Grade Matrícula</a>
+                <a href="/add" class="btn-add"><i class="fas fa-plus"></i> Adicionar Tarefa</a>
+                <a href="/addlembrete" class="btn-add" style="background: #3b82f6;"><i class="fas fa-bell"></i> Adicionar Lembrete</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="gm-container">
+        <div class="gm-header">
+            <h1><i class="fas fa-table"></i> Grade Matrícula</h1>
+            <p>Selecione as disciplinas e turmas para montar seu horário</p>
+        </div>
+
+        <!-- Opções de Grade -->
+        <div class="opcoes-container">
+            <div class="opcao-card active" data-opcao="1" onclick="switchOpcao('1')">
+                <div class="numero">1ª</div>
+                <div class="label">Opção de Matrícula</div>
+            </div>
+            <div class="opcao-card" data-opcao="2" onclick="switchOpcao('2')">
+                <div class="numero">2ª</div>
+                <div class="label">Opção de Matrícula</div>
+            </div>
+        </div>
+
+        <!-- Grades -->
+        <div class="grade-wrapper active" id="grade1">
+            <div class="grade-card">
+                <div class="grade-card-header">
+                    <h3>📅 1ª Opção</h3>
+                    <span class="badge" id="count1">0 disciplinas</span>
+                </div>
+                <div class="grade-table-wrap">
+                    <table class="grade-table" id="tabelaGrade1">
+                        <thead>
+                            <tr>
+                                <th>Horário</th>
+                                <th>Segunda</th>
+                                <th>Terça</th>
+                                <th>Quarta</th>
+                                <th>Quinta</th>
+                                <th>Sexta</th>
+                            </tr>
+                        </thead>
+                        <tbody id="gradeBody1"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="grade-wrapper" id="grade2">
+            <div class="grade-card">
+                <div class="grade-card-header">
+                    <h3>📅 2ª Opção</h3>
+                    <span class="badge" id="count2">0 disciplinas</span>
+                </div>
+                <div class="grade-table-wrap">
+                    <table class="grade-table" id="tabelaGrade2">
+                        <thead>
+                            <tr>
+                                <th>Horário</th>
+                                <th>Segunda</th>
+                                <th>Terça</th>
+                                <th>Quarta</th>
+                                <th>Quinta</th>
+                                <th>Sexta</th>
+                            </tr>
+                        </thead>
+                        <tbody id="gradeBody2"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Disciplinas -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin:1.5rem 0 0.5rem;">
+            <h2 style="font-size:1.2rem;"><i class="fas fa-book"></i> Disciplinas Disponíveis</h2>
+            <button class="btn-limpar" onclick="limparTudo()"><i class="fas fa-trash-alt"></i> Limpar tudo</button>
+        </div>
+        <div class="disciplinas-container" id="disciplinasContainer"></div>
+
+        <!-- Status -->
+        <div class="status-msg" id="statusMsg">Selecione as turmas para montar seu horário</div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p><i class="far fa-copyright"></i> 2026 MedTasks - MED UFAM 116 - Faculdade de Medicina UFAM</p>
+        </div>
+    </footer>
+
+    <script>
+        // ===== DADOS =====
+        const diasSemana = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'];
+        const horarios = ['08:00-10:00', '10:00-12:00', '13:00-14:00', '14:00-16:00', '16:00-18:00'];
+
+        const disciplinasData = [
+            {
+                nome: "Política, Planejamento e Gestão em Saúde (PPGS)",
+                sigla: "PPGS",
+                turmas: [
+                    { numero: 1, vagas: 10, solicitacoes: 8, horarios: [{ dia: "Terça", inicio: "13:00", fim: "14:00" }, { dia: "Sexta", inicio: "08:00", fim: "12:00" }] },
+                    { numero: 2, vagas: 10, solicitacoes: 9, horarios: [{ dia: "Terça", inicio: "13:00", fim: "14:00" }, { dia: "Sexta", inicio: "08:00", fim: "12:00" }] },
+                    { numero: 3, vagas: 10, solicitacoes: 6, horarios: [{ dia: "Terça", inicio: "13:00", fim: "14:00" }, { dia: "Sexta", inicio: "08:00", fim: "12:00" }] },
+                    { numero: 4, vagas: 10, solicitacoes: 27, horarios: [{ dia: "Terça", inicio: "14:00", fim: "18:00" }, { dia: "Terça", inicio: "13:00", fim: "14:00" }] },
+                    { numero: 5, vagas: 10, solicitacoes: 26, horarios: [{ dia: "Terça", inicio: "14:00", fim: "18:00" }, { dia: "Terça", inicio: "13:00", fim: "14:00" }] },
+                    { numero: 6, vagas: 10, solicitacoes: 26, horarios: [{ dia: "Terça", inicio: "14:00", fim: "18:00" }, { dia: "Terça", inicio: "13:00", fim: "14:00" }] }
+                ]
+            },
+            {
+                nome: "Histologia",
+                sigla: "HIS",
+                turmas: [
+                    { numero: 1, vagas: 10, solicitacoes: 5, horarios: [{ dia: "Segunda", inicio: "10:00", fim: "12:00" }, { dia: "Terça", inicio: "14:00", fim: "16:00" }] },
+                    { numero: 2, vagas: 10, solicitacoes: 3, horarios: [{ dia: "Segunda", inicio: "10:00", fim: "12:00" }, { dia: "Terça", inicio: "14:00", fim: "16:00" }] },
+                    { numero: 3, vagas: 10, solicitacoes: 1, horarios: [{ dia: "Segunda", inicio: "10:00", fim: "12:00" }, { dia: "Terça", inicio: "14:00", fim: "16:00" }] },
+                    { numero: 4, vagas: 10, solicitacoes: 30, horarios: [{ dia: "Segunda", inicio: "10:00", fim: "12:00" }, { dia: "Terça", inicio: "10:00", fim: "12:00" }] },
+                    { numero: 5, vagas: 10, solicitacoes: 31, horarios: [{ dia: "Segunda", inicio: "10:00", fim: "12:00" }, { dia: "Terça", inicio: "10:00", fim: "12:00" }] },
+                    { numero: 6, vagas: 10, solicitacoes: 32, horarios: [{ dia: "Segunda", inicio: "10:00", fim: "12:00" }, { dia: "Terça", inicio: "10:00", fim: "12:00" }] }
+                ]
+            },
+            {
+                nome: "Anatomia Humana II",
+                sigla: "AH II",
+                turmas: [
+                    { numero: 1, vagas: 10, solicitacoes: 4, horarios: [{ dia: "Segunda", inicio: "08:00", fim: "10:00" }, { dia: "Terça", inicio: "10:00", fim: "12:00" }, { dia: "Quarta", inicio: "10:00", fim: "12:00" }, { dia: "Quinta", inicio: "10:00", fim: "12:00" }] },
+                    { numero: 2, vagas: 10, solicitacoes: 4, horarios: [{ dia: "Segunda", inicio: "08:00", fim: "10:00" }, { dia: "Terça", inicio: "10:00", fim: "12:00" }, { dia: "Quarta", inicio: "10:00", fim: "12:00" }, { dia: "Quinta", inicio: "10:00", fim: "12:00" }] },
+                    { numero: 3, vagas: 10, solicitacoes: 3, horarios: [{ dia: "Segunda", inicio: "08:00", fim: "10:00" }, { dia: "Terça", inicio: "10:00", fim: "12:00" }, { dia: "Quarta", inicio: "10:00", fim: "12:00" }, { dia: "Quinta", inicio: "10:00", fim: "12:00" }] },
+                    { numero: 4, vagas: 10, solicitacoes: 33, horarios: [{ dia: "Segunda", inicio: "08:00", fim: "10:00" }, { dia: "Terça", inicio: "08:00", fim: "10:00" }, { dia: "Quarta", inicio: "10:00", fim: "12:00" }, { dia: "Quinta", inicio: "08:00", fim: "10:00" }] },
+                    { numero: 5, vagas: 10, solicitacoes: 33, horarios: [{ dia: "Segunda", inicio: "08:00", fim: "10:00" }, { dia: "Terça", inicio: "08:00", fim: "10:00" }, { dia: "Quarta", inicio: "10:00", fim: "12:00" }, { dia: "Quinta", inicio: "08:00", fim: "10:00" }] },
+                    { numero: 6, vagas: 10, solicitacoes: 31, horarios: [{ dia: "Segunda", inicio: "08:00", fim: "10:00" }, { dia: "Terça", inicio: "08:00", fim: "10:00" }, { dia: "Quarta", inicio: "10:00", fim: "12:00" }, { dia: "Quinta", inicio: "08:00", fim: "10:00" }] }
+                ]
+            },
+            {
+                nome: "Genética",
+                sigla: "GEN",
+                turmas: [
+                    { numero: 1, vagas: 20, solicitacoes: 3, horarios: [{ dia: "Segunda", inicio: "16:00", fim: "18:00" }, { dia: "Quinta", inicio: "08:00", fim: "10:00" }] },
+                    { numero: 3, vagas: 20, solicitacoes: 12, horarios: [{ dia: "Segunda", inicio: "16:00", fim: "18:00" }, { dia: "Quinta", inicio: "14:00", fim: "16:00" }] },
+                    { numero: 6, vagas: 20, solicitacoes: 32, horarios: [{ dia: "Segunda", inicio: "16:00", fim: "18:00" }, { dia: "Quinta", inicio: "10:00", fim: "12:00" }] }
+                ]
+            },
+            {
+                nome: "Bioquímica Celular e Metabólica",
+                sigla: "BIOQ",
+                turmas: [
+                    { numero: 1, vagas: 10, solicitacoes: 18, horarios: [{ dia: "Segunda", inicio: "14:00", fim: "16:00" }, { dia: "Quarta", inicio: "14:00", fim: "16:00" }, { dia: "Sexta", inicio: "16:00", fim: "18:00" }] },
+                    { numero: 2, vagas: 10, solicitacoes: 20, horarios: [{ dia: "Segunda", inicio: "14:00", fim: "16:00" }, { dia: "Quarta", inicio: "14:00", fim: "16:00" }, { dia: "Sexta", inicio: "16:00", fim: "18:00" }] },
+                    { numero: 3, vagas: 10, solicitacoes: 4, horarios: [{ dia: "Segunda", inicio: "14:00", fim: "16:00" }, { dia: "Quarta", inicio: "16:00", fim: "18:00" }, { dia: "Sexta", inicio: "16:00", fim: "18:00" }] },
+                    { numero: 4, vagas: 10, solicitacoes: 5, horarios: [{ dia: "Segunda", inicio: "14:00", fim: "16:00" }, { dia: "Quarta", inicio: "16:00", fim: "18:00" }, { dia: "Sexta", inicio: "16:00", fim: "18:00" }] },
+                    { numero: 5, vagas: 10, solicitacoes: 17, horarios: [{ dia: "Segunda", inicio: "14:00", fim: "16:00" }, { dia: "Sexta", inicio: "16:00", fim: "18:00" }, { dia: "Sexta", inicio: "14:00", fim: "16:00" }] },
+                    { numero: 6, vagas: 10, solicitacoes: 19, horarios: [{ dia: "Segunda", inicio: "14:00", fim: "16:00" }, { dia: "Sexta", inicio: "16:00", fim: "18:00" }, { dia: "Sexta", inicio: "14:00", fim: "16:00" }] }
+                ]
+            },
+            {
+                nome: "Fundamentos do Ensino da Dor (Optativa)",
+                sigla: "DOR",
+                turmas: [
+                    { numero: 1, vagas: 40, solicitacoes: 10, horarios: [{ dia: "Terça", inicio: "18:00", fim: "20:00" }, { dia: "Quinta", inicio: "18:00", fim: "19:00" }] }
+                ]
+            },
+            {
+                nome: "Fundamentos de Bioética (Optativa)",
+                sigla: "BIOET",
+                turmas: [
+                    { numero: 1, vagas: 30, solicitacoes: 7, horarios: [{ dia: "Quarta", inicio: "14:00", fim: "16:00" }, { dia: "Quinta", inicio: "07:00", fim: "09:00" }] }
+                ]
+            },
+            {
+                nome: "Psicossomática (Optativa)",
+                sigla: "PSICO",
+                turmas: [
+                    { numero: 1, vagas: 40, solicitacoes: 5, horarios: [{ dia: "Quarta", inicio: "11:00", fim: "13:00" }, { dia: "Sexta", inicio: "08:00", fim: "10:00" }] }
+                ]
+            }
+        ];
+
+        // ===== ESTADO =====
+        let selecoes = {
+            1: {}, // opcao -> { disciplina: turmaNumero }
+            2: {}
+        };
+
+        let opcaoAtual = '1';
+
+        // ===== FUNÇÕES =====
+        function switchOpcao(opcao) {
+            opcaoAtual = opcao;
+            document.querySelectorAll('.opcao-card').forEach(el => {
+                el.classList.toggle('active', el.dataset.opcao === opcao);
+            });
+            document.querySelectorAll('.grade-wrapper').forEach(el => {
+                el.classList.toggle('active', el.id === 'grade' + opcao);
+            });
+            renderGrades();
+        }
+
+        function toggleDisciplina(id) {
+            const body = document.getElementById('body-' + id);
+            const icon = document.getElementById('icon-' + id);
+            body.classList.toggle('open');
+            icon.classList.toggle('rotated');
+        }
+
+        function toggleTurma(disciplinaNome, turmaNumero, opcao) {
+            const key = disciplinaNome;
+            const op = opcao || opcaoAtual;
+            
+            if (selecoes[op][key] === turmaNumero) {
+                delete selecoes[op][key];
+            } else {
+                selecoes[op][key] = turmaNumero;
+            }
+            
+            renderDisciplinas();
+            renderGrades();
+            updateStatus();
+        }
+
+        function getTurmaSelecionada(disciplinaNome, opcao) {
+            return selecoes[opcao]?.[disciplinaNome] || null;
+        }
+
+        function getHorariosSelecionados(opcao) {
+            const horariosSet = {};
+            const selected = selecoes[opcao] || {};
+            
+            Object.keys(selected).forEach(disciplinaNome => {
+                const turmaNum = selected[disciplinaNome];
+                const disc = disciplinasData.find(d => d.nome === disciplinaNome);
+                if (!disc) return;
+                const turma = disc.turmas.find(t => t.numero === turmaNum);
+                if (!turma) return;
+                
+                turma.horarios.forEach(h => {
+                    const key = `${h.dia}_${h.inicio}_${h.fim}`;
+                    if (!horariosSet[key]) {
+                        horariosSet[key] = [];
+                    }
+                    horariosSet[key].push(disciplinaNome);
+                });
+            });
+            
+            return horariosSet;
+        }
+
+        function renderGrades() {
+            ['1', '2'].forEach(op => {
+                const body = document.getElementById('gradeBody' + op);
+                const count = document.getElementById('count' + op);
+                const selected = selecoes[op] || {};
+                const total = Object.keys(selected).length;
+                count.textContent = total + ' disciplina' + (total !== 1 ? 's' : '');
+                
+                const horariosSet = getHorariosSelecionados(op);
+                
+                let html = '';
+                horarios.forEach(horario => {
+                    html += `<tr><td class="horario">${horario}</td>`;
+                    diasSemana.forEach(dia => {
+                        const key = `${dia}_${horario.replace('-', '_')}`;
+                        let encontrado = false;
+                        let nomes = [];
+                        
+                        // Verifica se algum horário cai neste slot
+                        Object.keys(horariosSet).forEach(hKey => {
+                            const [hDia, hInicio, hFim] = hKey.split('_');
+                            const hRange = `${hInicio}-${hFim}`;
+                            if (hDia === dia && hRange === horario) {
+                                encontrado = true;
+                                nomes = horariosSet[hKey];
+                            }
+                        });
+                        
+                        if (encontrado) {
+                            const isConflito = nomes.length > 1;
+                            const nomeExibicao = nomes.length === 1 ? nomes[0] : nomes.join(' / ');
+                            html += `<td><span class="ocupado ${isConflito ? 'ocupado-destaque' : ''}">${isConflito ? '⚠️ ' : ''}${nomeExibicao}</span></td>`;
+                        } else {
+                            html += `<td>-</td>`;
+                        }
+                    });
+                    html += '</tr>';
+                });
+                
+                body.innerHTML = html || '<tr><td colspan="6" style="text-align:center;color:var(--text-secondary);padding:1rem;">Nenhuma disciplina selecionada</td></tr>';
+            });
+        }
+
+        function renderDisciplinas() {
+            const container = document.getElementById('disciplinasContainer');
+            let html = '';
+            
+            disciplinasData.forEach((disc, idx) => {
+                const id = 'disc-' + idx;
+                const hasSelected1 = getTurmaSelecionada(disc.nome, '1');
+                const hasSelected2 = getTurmaSelecionada(disc.nome, '2');
+                
+                html += `
+                    <div class="disciplina-card">
+                        <div class="disciplina-header" onclick="toggleDisciplina('${id}')">
+                            <h3>${disc.nome}</h3>
+                            <div>
+                                ${hasSelected1 ? `<span class="selecionado-badge" style="margin-right:4px;">1ª</span>` : ''}
+                                ${hasSelected2 ? `<span class="selecionado-badge">2ª</span>` : ''}
+                                <i class="fas fa-chevron-down toggle-icon" id="icon-${id}"></i>
+                            </div>
+                        </div>
+                        <div class="disciplina-body" id="body-${id}">
+                            <div class="turmas-grid">
+                                ${disc.turmas.map(t => {
+                                    const sel1 = getTurmaSelecionada(disc.nome, '1');
+                                    const sel2 = getTurmaSelecionada(disc.nome, '2');
+                                    const isSelected1 = sel1 === t.numero;
+                                    const isSelected2 = sel2 === t.numero;
+                                    
+                                    return `
+                                        <div class="turma-item ${isSelected1 || isSelected2 ? 'selected' : ''}" 
+                                             onclick="toggleTurma('${disc.nome}', ${t.numero})">
+                                            <div class="check"><i class="fas fa-check-circle"></i></div>
+                                            <div>
+                                                <span class="turma-numero">Turma ${t.numero}</span>
+                                                ${isSelected1 ? '<span class="selecionado-badge" style="margin-left:4px;">1ª</span>' : ''}
+                                                ${isSelected2 ? '<span class="selecionado-badge" style="margin-left:4px;">2ª</span>' : ''}
+                                            </div>
+                                            <div class="vagas">Vagas: ${t.vagas} | Solicitações: ${t.solicitacoes}</div>
+                                            <div class="horarios">
+                                                ${t.horarios.map(h => `${h.dia} ${h.inicio}-${h.fim}`).join(' • ')}
+                                            </div>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+            
+            // Abrir primeira disciplina por padrão
+            const firstBody = document.querySelector('.disciplina-body');
+            if (firstBody) {
+                firstBody.classList.add('open');
+                const firstIcon = document.querySelector('.toggle-icon');
+                if (firstIcon) firstIcon.classList.add('rotated');
+            }
+        }
+
+        function updateStatus() {
+            const msg = document.getElementById('statusMsg');
+            const total1 = Object.keys(selecoes['1'] || {}).length;
+            const total2 = Object.keys(selecoes['2'] || {}).length;
+            
+            if (total1 === 0 && total2 === 0) {
+                msg.innerHTML = 'Selecione as turmas para montar seu horário';
+            } else {
+                let texto = '';
+                if (total1 > 0) texto += `1ª opção: ${total1} disciplina${total1 !== 1 ? 's' : ''}`;
+                if (total2 > 0) texto += (texto ? ' | ' : '') + `2ª opção: ${total2} disciplina${total2 !== 1 ? 's' : ''}`;
+                msg.innerHTML = `✅ ${texto}`;
+            }
+        }
+
+        function limparTudo() {
+            if (confirm('Tem certeza que deseja limpar todas as seleções?')) {
+                selecoes = { 1: {}, 2: {} };
+                renderDisciplinas();
+                renderGrades();
+                updateStatus();
+            }
+        }
+
+        // ===== NAVBAR MOBILE =====
+        document.getElementById('menuIcon').addEventListener('click', function() {
+            document.getElementById('navLinks').classList.toggle('active');
+        });
+
+        // ===== INICIAR =====
+        renderDisciplinas();
+        renderGrades();
+        updateStatus();
+    </script>
+</body>
+</html>
