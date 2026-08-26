@@ -137,7 +137,7 @@
 
         .weekdays {
             display: grid;
-            grid-template-columns: repeat(7, 1fr);
+            grid-template-columns: repeat(7, minmax(0, 1fr));
             background: var(--surface-raised);
             border-bottom: 1px solid var(--border-soft);
         }
@@ -153,7 +153,7 @@
 
         .calendar-days {
             display: grid;
-            grid-template-columns: repeat(7, 1fr);
+            grid-template-columns: repeat(7, minmax(0, 1fr));
         }
 
         .calendar-day {
@@ -754,7 +754,7 @@
 
                     const taskBadge = document.createElement('div');
                     taskBadge.className = `task-badge ${getTipoClass(task.tipo)}`;
-                    taskBadge.textContent = displayTitle + turmasLabel;
+                    taskBadge.textContent = displayTitle;
                     taskBadge.title = `${task.title} (${task.turmas.map(t => t === 't1-t3' ? 'T1-T3' : 'T4-T6').join(' e ')})`;
                     taskBadge.setAttribute('role', 'button');
                     taskBadge.setAttribute('tabindex', '-1');
