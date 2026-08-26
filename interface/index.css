@@ -1,38 +1,46 @@
+/* ============================================================
+   MedTasks — MED UFAM 116
+   Design concept: "plantão" (night shift). Um fundo verde-tinta
+   bem escuro, como uma sala de estudo de madrugada, um único
+   acento — o verde da turma — para o que precisa de atenção,
+   e uma sans só, macia, em vez de serifada ou monoespaçada.
+   ============================================================ */
+
 :root {
     /* --- Palette --- */
-    --ink: #0c120f;
-    --ink-soft: #121a15;
-    --surface: #161f19;
-    --surface-raised: #1d2921;
-    --border: #263129;
-    --border-soft: #1e2822;
+    --ink: #0b120e;
+    --ink-soft: #111a14;
+    --surface: #151f18;
+    --surface-raised: #1c2820;
+    --border: #263229;
+    --border-soft: #1d2721;
 
-    --accent: #e3a548;          /* lamp / highlighter — the one warm thing on the page */
-    --accent-strong: #f2be6c;
-    --accent-dim: rgba(227, 165, 72, 0.14);
+    --accent: #869c3f;           /* o verde da turma — o único destaque quente da página */
+    --accent-strong: #a3bb56;
+    --accent-dim: rgba(134, 156, 63, 0.16);
 
-    --teal: #4fa98c;            /* river — calm, resolved, "atividade" */
+    --teal: #4fa98c;             /* atividade */
     --teal-dim: rgba(79, 169, 140, 0.15);
 
-    --steel: #6f9cc4;           /* trabalho */
+    --steel: #6f9cc4;            /* trabalho */
     --steel-dim: rgba(111, 156, 196, 0.15);
 
-    --violet: #9b86d9;          /* seminário */
+    --violet: #9b86d9;           /* seminário */
     --violet-dim: rgba(155, 134, 217, 0.15);
 
-    --sand: #c2ab77;            /* leitura — parchment */
+    --sand: #c2ab77;             /* leitura — parchment */
     --sand-dim: rgba(194, 171, 119, 0.15);
 
-    --coral: #e2645a;           /* prova / urgente */
+    --coral: #e2645a;            /* prova / urgente */
     --coral-dim: rgba(226, 100, 90, 0.15);
 
-    --text: #f2efe6;
+    --text: #f0efe6;
     --text-dim: #9fab9f;
     --text-faint: #67746a;
 
-    --serif: 'Fraunces', ui-serif, Georgia, serif;
-    --sans: 'IBM Plex Sans', -apple-system, sans-serif;
-    --mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', monospace;
+    --serif: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
+    --sans: 'Inter', 'Plus Jakarta Sans', -apple-system, sans-serif;
+    --mono: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
 
     --radius-sm: 6px;
     --radius-md: 10px;
@@ -49,7 +57,7 @@ body {
     font-family: var(--sans);
     background: var(--ink);
     background-image:
-        radial-gradient(ellipse 900px 500px at 15% -10%, rgba(227, 165, 72, 0.06), transparent 60%),
+        radial-gradient(ellipse 900px 500px at 15% -10%, rgba(134, 156, 63, 0.07), transparent 60%),
         radial-gradient(ellipse 700px 500px at 100% 10%, rgba(79, 169, 140, 0.05), transparent 55%);
     background-attachment: fixed;
     color: var(--text);
@@ -146,19 +154,16 @@ a { color: inherit; }
 
 .med-text {
     font-family: var(--serif);
-    font-style: italic;
-    font-size: 1.35rem;
-    font-weight: 600;
+    font-size: 1.3rem;
+    font-weight: 700;
     color: var(--text);
 }
 
 .tasks-text {
-    font-family: var(--mono);
-    font-size: 0.95rem;
-    font-weight: 600;
-    letter-spacing: 0.06em;
+    font-family: var(--serif);
+    font-size: 1.3rem;
+    font-weight: 700;
     color: var(--accent);
-    text-transform: uppercase;
 }
 
 .turma-badge {
@@ -316,10 +321,10 @@ a { color: inherit; }
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    font-family: var(--mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+    font-family: var(--sans);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
     color: var(--accent);
     margin-bottom: 1rem;
 }
@@ -403,11 +408,9 @@ a { color: inherit; }
     border-bottom: 2px solid transparent;
     padding: 0 0 0.9rem;
     color: var(--text-faint);
-    font-family: var(--mono);
-    font-size: 0.78rem;
+    font-family: var(--sans);
+    font-size: 0.88rem;
     font-weight: 500;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
     cursor: pointer;
     transition: color 0.2s ease, border-color 0.2s ease;
     display: flex;
@@ -442,10 +445,9 @@ a { color: inherit; }
     display: flex;
     align-items: center;
     gap: 0.6rem;
-    font-family: var(--mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+    font-family: var(--sans);
+    font-size: 0.82rem;
+    font-weight: 500;
     color: var(--text-faint);
 }
 
@@ -530,7 +532,7 @@ a { color: inherit; }
 .section-header p {
     color: var(--text-faint);
     font-size: 0.85rem;
-    font-family: var(--mono);
+    font-family: var(--sans);
 }
 
 /* ---- toggle ---- */
@@ -582,10 +584,8 @@ a { color: inherit; }
 }
 
 .toggle-label {
-    font-family: var(--mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
+    font-family: var(--sans);
+    font-size: 0.82rem;
     color: var(--text-faint);
     display: flex;
     align-items: center;
@@ -614,10 +614,10 @@ a { color: inherit; }
         grid-template-columns: 108px 1.6fr 1.1fr 1.3fr 90px;
         gap: 1rem;
         padding: 0 1.1rem 0.6rem;
-        font-family: var(--mono);
-        font-size: 0.68rem;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
+        font-family: var(--sans);
+        font-size: 0.72rem;
+        font-weight: 500;
+        letter-spacing: 0.02em;
         color: var(--text-faint);
     }
 }
@@ -706,18 +706,16 @@ a { color: inherit; }
     .task-cell-nivel { justify-content: flex-end; }
 }
 
-/* Tipo chip — mono, quiet, colored only by a dot + hairline */
+/* Tipo chip — sans, quiet, colored only by a dot + hairline */
 .tipo-badge {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
     padding: 0.25rem 0.6rem;
     border-radius: 20px;
-    font-family: var(--mono);
-    font-size: 0.68rem;
+    font-family: var(--sans);
+    font-size: 0.72rem;
     font-weight: 500;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
     border: 1px solid var(--tipo-border, var(--border));
     color: var(--tipo-color, var(--text-dim));
     background: var(--tipo-bg, transparent);
@@ -738,7 +736,7 @@ a { color: inherit; }
 .tipo-seminario{ --tipo-color: var(--violet); --tipo-bg: var(--violet-dim); --tipo-border: rgba(155,134,217,0.35); }
 .tipo-atividade{ --tipo-color: var(--teal); --tipo-bg: var(--teal-dim); --tipo-border: rgba(79,169,140,0.35); }
 .tipo-leitura  { --tipo-color: var(--sand); --tipo-bg: var(--sand-dim); --tipo-border: rgba(194,171,119,0.35); }
-.tipo-pratica  { --tipo-color: var(--accent); --tipo-bg: var(--accent-dim); --tipo-border: rgba(227,165,72,0.35); }
+.tipo-pratica  { --tipo-color: var(--accent); --tipo-bg: var(--accent-dim); --tipo-border: rgba(134,156,63,0.35); }
 
 /* left rail picks up the same color as the tipo chip */
 .task-row.rail-prova     { --row-accent: var(--coral); }
@@ -762,10 +760,9 @@ a { color: inherit; }
 }
 
 .turma-badge-small {
-    font-family: var(--mono);
-    font-size: 0.65rem;
+    font-family: var(--sans);
+    font-size: 0.72rem;
     font-weight: 600;
-    letter-spacing: 0.03em;
     color: var(--text-dim);
     margin-right: 0;
     padding: 0;
@@ -774,8 +771,8 @@ a { color: inherit; }
 }
 
 .turma-entrega {
-    font-family: var(--mono);
-    font-size: 0.72rem;
+    font-family: var(--sans);
+    font-size: 0.75rem;
     color: var(--text-faint);
     display: inline-block;
 }
@@ -857,9 +854,8 @@ a { color: inherit; }
 
 .footer-content p {
     color: var(--text-faint);
-    font-family: var(--mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.04em;
+    font-family: var(--sans);
+    font-size: 0.8rem;
 }
 
 /* ============================================================
