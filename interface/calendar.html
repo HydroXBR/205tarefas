@@ -6,290 +6,453 @@
     <title>Calendário - MedTasks</title>
     <link rel="stylesheet" href="index.css">
     <link rel="icon" type="image/png" href="https://i.ibb.co/nqmZ9nGr/Logo-IG-Med-Ufam116-3x.png">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/index.css">
     <style>
+
         .calendar-container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 2.5rem 2rem 3rem;
         }
-        
+
+        .page-intro {
+            margin-bottom: 1.75rem;
+        }
+
+        .page-intro h1 {
+            font-family: var(--serif);
+            font-size: 1.6rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            color: var(--text);
+            margin-bottom: 0.3rem;
+        }
+
+        .page-intro h1 i { color: var(--accent); font-size: 1.25rem; }
+
+        .page-intro p {
+            color: var(--text-faint);
+            font-size: 0.9rem;
+        }
+
         .calendar-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             gap: 1rem;
-            margin-bottom: 2rem;
-            background: var(--bg-card);
-            padding: 1rem 2rem;
-            border-radius: 20px;
-            border: 1px solid var(--border-color);
+            margin-bottom: 1.5rem;
+            background: var(--surface);
+            padding: 1rem 1.25rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-soft);
         }
-        
+
         .calendar-nav {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.6rem;
         }
-        
+
         .calendar-nav button {
-            background: var(--bg-elevated);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 0.5rem 1rem;
-            color: var(--text-primary);
+            background: var(--surface-raised);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-dim);
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1rem;
+            transition: border-color 0.2s ease, color 0.2s ease;
+            font-size: 0.95rem;
+            font-family: var(--sans);
         }
-        
-        .calendar-nav button:hover {
-            border-color: var(--primary-green);
-            color: var(--primary-green);
+
+        #todayBtn {
+            width: auto;
+            padding: 0 0.9rem;
+            font-size: 0.85rem;
+            font-weight: 500;
         }
-        
+
+        .calendar-nav button:hover,
+        .calendar-nav button:focus-visible {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
         .current-month {
-            font-size: 1.5rem;
+            font-family: var(--serif);
+            font-size: 1.15rem;
             font-weight: 700;
-            color: var(--primary-green);
+            color: var(--text);
+            min-width: 11ch;
+            text-align: center;
         }
-        
+
         .turma-filter {
             display: flex;
             gap: 0.5rem;
         }
-        
+
         .filter-btn {
-            background: var(--bg-elevated);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 0.5rem 1rem;
-            color: var(--text-secondary);
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 0.5rem 0.9rem;
+            color: var(--text-dim);
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.85rem;
+            transition: all 0.2s ease;
+            font-family: var(--sans);
+            font-size: 0.82rem;
+            font-weight: 500;
         }
-        
+
+        .filter-btn:hover { border-color: var(--text-faint); color: var(--text); }
+
         .filter-btn.active {
-            background: var(--primary-green);
-            border-color: var(--primary-green);
-            color: white;
+            background: var(--accent-dim);
+            border-color: var(--accent);
+            color: var(--accent-strong);
         }
-        
+
         .calendar-grid {
-            background: var(--bg-card);
-            border-radius: 20px;
-            border: 1px solid var(--border-color);
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-soft);
             overflow: hidden;
         }
-        
+
         .weekdays {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            background: var(--bg-elevated);
-            border-bottom: 1px solid var(--border-color);
+            background: var(--surface-raised);
+            border-bottom: 1px solid var(--border-soft);
         }
-        
+
         .weekday {
-            padding: 1rem;
+            padding: 0.8rem 0.4rem;
             text-align: center;
+            font-family: var(--sans);
             font-weight: 600;
-            color: var(--primary-green);
+            font-size: 0.78rem;
+            color: var(--text-faint);
         }
-        
+
         .calendar-days {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
         }
-        
+
         .calendar-day {
-            min-height: 100px;
-            border-right: 1px solid var(--border-color);
-            border-bottom: 1px solid var(--border-color);
+            min-height: 108px;
+            border-right: 1px solid var(--border-soft);
+            border-bottom: 1px solid var(--border-soft);
             padding: 0.5rem;
-            transition: background 0.3s ease;
+            transition: background 0.2s ease;
             position: relative;
+            cursor: default;
         }
-        
-        .calendar-day:nth-child(7n) {
-            border-right: none;
-        }
-        
-        .calendar-day.other-month {
-            opacity: 0.4;
-        }
-        
+
+        .calendar-day:nth-child(7n) { border-right: none; }
+
+        .calendar-day.other-month { opacity: 0.42; }
+
         .calendar-day.today {
-            background: rgba(105, 120, 37, 0.1);
-            border: 1px solid var(--primary-green);
+            background: var(--accent-dim);
+            box-shadow: inset 0 0 0 1px var(--accent);
         }
-        
+
+        .calendar-day.has-tasks { cursor: pointer; }
+
+        .calendar-day.has-tasks:hover,
+        .calendar-day.has-tasks:focus-visible {
+            background: var(--surface-raised);
+        }
+
+        .calendar-day:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: -2px;
+        }
+
         .day-number {
-            font-size: 0.9rem;
+            font-family: var(--sans);
+            font-size: 0.85rem;
             font-weight: 600;
-            margin-bottom: 0.5rem;
-            display: inline-block;
-            padding: 0.2rem 0.5rem;
+            color: var(--text-dim);
+            margin-bottom: 0.4rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
         }
-        
+
         .today .day-number {
-            background: var(--primary-green);
-            color: white;
+            background: var(--accent);
+            color: var(--ink);
         }
-        
+
         .task-list {
             display: flex;
             flex-direction: column;
-            gap: 0.25rem;
+            gap: 0.28rem;
         }
-        
+
         .task-badge {
-            font-size: 0.7rem;
-            padding: 0.2rem 0.4rem;
+            font-family: var(--sans);
+            font-size: 0.72rem;
+            font-weight: 500;
+            padding: 0.28rem 0.4rem;
             border-radius: 6px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: filter 0.15s ease;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            display: block;
         }
-        
-        .task-badge:hover {
-            transform: scale(1.02);
-            filter: brightness(1.1);
-        }
-        
-        .task-badge.prova { background: rgba(239, 68, 68, 0.2); color: #ef4444; border-left: 3px solid #ef4444; }
-        .task-badge.trabalho { background: rgba(59, 130, 246, 0.2); color: #3b82f6; border-left: 3px solid #3b82f6; }
-        .task-badge.seminário { background: rgba(139, 92, 246, 0.2); color: #a855f7; border-left: 3px solid #a855f7; }
-        .task-badge.atividade { background: rgba(16, 185, 129, 0.2); color: #10b981; border-left: 3px solid #10b981; }
-        .task-badge.leitura { background: rgba(245, 158, 11, 0.2); color: #f59e0b; border-left: 3px solid #f59e0b; }
-        .task-badge.prática { background: rgba(236, 72, 153, 0.2); color: #ec489a; border-left: 3px solid #ec489a; }
-        
+
+        .task-badge:hover, .task-badge:focus-visible { filter: brightness(1.15); }
+
+        .task-badge.prova     { background: var(--coral-dim);  color: var(--coral);  border-left: 3px solid var(--coral); }
+        .task-badge.trabalho  { background: var(--steel-dim);  color: var(--steel);  border-left: 3px solid var(--steel); }
+        .task-badge.seminário { background: var(--violet-dim); color: var(--violet); border-left: 3px solid var(--violet); }
+        .task-badge.atividade { background: var(--teal-dim);   color: var(--teal);   border-left: 3px solid var(--teal); }
+        .task-badge.leitura   { background: var(--sand-dim);   color: var(--sand);   border-left: 3px solid var(--sand); }
+        .task-badge.prática   { background: var(--accent-dim); color: var(--accent-strong); border-left: 3px solid var(--accent); }
+
         .more-tasks {
-            font-size: 0.65rem;
-            color: var(--text-secondary);
+            font-family: var(--sans);
+            font-size: 0.68rem;
+            font-weight: 500;
+            color: var(--text-faint);
             cursor: pointer;
-            text-align: center;
-            padding: 0.2rem;
+            text-align: left;
+            padding: 0.15rem 0.3rem;
         }
-        
-        .more-tasks:hover {
-            color: var(--primary-green);
-        }
-        
+
+        .more-tasks:hover, .more-tasks:focus-visible { color: var(--accent); }
+
+        /* ---- Modal ---- */
         .modal {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            inset: 0;
+            background: rgba(6, 10, 8, 0.72);
+            backdrop-filter: blur(3px);
             z-index: 1000;
             justify-content: center;
             align-items: center;
+            padding: 1.25rem;
         }
-        
-        .modal.active {
-            display: flex;
-        }
-        
+
+        .modal.active { display: flex; }
+
         .modal-content {
-            background: var(--bg-card);
-            border-radius: 20px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 80vh;
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            max-width: 480px;
+            width: 100%;
+            max-height: 82vh;
             overflow-y: auto;
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--border);
         }
-        
+
         .modal-header {
-            background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-dark) 100%);
-            padding: 1rem 1.5rem;
+            background: var(--surface-raised);
+            border-bottom: 1px solid var(--border-soft);
+            padding: 1rem 1.25rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: sticky;
+            top: 0;
         }
-        
+
         .modal-header h3 {
             margin: 0;
+            font-family: var(--serif);
+            font-size: 1.05rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text);
         }
-        
+
+        .modal-header h3 i { color: var(--accent); font-size: 0.95rem; }
+
         .modal-close {
             background: none;
             border: none;
-            color: white;
-            font-size: 1.5rem;
+            color: var(--text-dim);
+            font-size: 1.4rem;
+            line-height: 1;
             cursor: pointer;
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-sm);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease, color 0.2s ease;
         }
-        
-        .modal-body {
-            padding: 1.5rem;
+
+        .modal-close:hover, .modal-close:focus-visible {
+            background: var(--surface);
+            color: var(--text);
         }
-        
+
+        .modal-body { padding: 0.5rem 1.25rem 1.25rem; }
+
+        .modal-date {
+            font-family: var(--sans);
+            font-size: 0.85rem;
+            color: var(--text-faint);
+            margin: 0.75rem 0 1rem;
+        }
+
+        .modal-date strong { color: var(--text-dim); }
+
         .modal-task-item {
-            padding: 0.75rem;
-            border-bottom: 1px solid var(--border-color);
+            padding: 0.85rem 0.25rem;
+            border-bottom: 1px solid var(--border-soft);
             cursor: pointer;
-            transition: background 0.3s ease;
+            transition: background 0.2s ease;
+            border-radius: var(--radius-sm);
         }
-        
-        .modal-task-item:hover {
-            background: var(--bg-elevated);
+
+        .modal-task-item:last-child { border-bottom: none; }
+
+        .modal-task-item:hover, .modal-task-item:focus-visible {
+            background: var(--surface-raised);
         }
-        
+
         .modal-task-title {
+            font-family: var(--sans);
             font-weight: 600;
-            margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+            color: var(--text);
+            margin-bottom: 0.3rem;
         }
-        
+
+        .modal-task-disc {
+            font-size: 0.8rem;
+            color: var(--text-faint);
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-task-meta {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
         .modal-task-type {
+            font-family: var(--sans);
             font-size: 0.7rem;
+            font-weight: 500;
             display: inline-block;
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
-            margin-top: 0.25rem;
+            padding: 0.2rem 0.55rem;
+            border-radius: 20px;
         }
-        
+
+        .modal-task-turmas {
+            font-size: 0.72rem;
+            color: var(--text-faint);
+        }
+
+        .modal-task-obs {
+            font-size: 0.75rem;
+            color: var(--text-faint);
+            margin-top: 0.5rem;
+            display: flex;
+            gap: 0.4rem;
+        }
+
         .loading-calendar {
             text-align: center;
-            padding: 3rem;
-            color: var(--text-secondary);
+            padding: 3.5rem 1.5rem;
+            color: var(--text-faint);
+            font-size: 0.9rem;
         }
-        
+
+        .loading-calendar .loader { margin-bottom: 0.75rem; }
+
+        /* ============================================================
+           Mobile — alvos de toque maiores e grade que não aperta
+           ============================================================ */
         @media (max-width: 768px) {
-            .calendar-container {
-                padding: 1rem;
-            }
-            
+            .calendar-container { padding: 1.75rem 1.1rem 2.5rem; }
+
             .calendar-header {
                 flex-direction: column;
                 align-items: stretch;
+                padding: 1rem;
             }
-            
-            .calendar-nav {
-                justify-content: center;
-            }
-            
-            .calendar-day {
-                min-height: 80px;
-                font-size: 0.7rem;
-            }
-            
-            .task-badge {
-                font-size: 0.6rem;
-                white-space: normal;
-                word-break: break-word;
-            }
-            
+
+            .calendar-nav { justify-content: center; }
+
+            .turma-filter { justify-content: center; }
+
+            .filter-btn { flex: 1; text-align: center; }
+
             .weekday {
-                font-size: 0.7rem;
-                padding: 0.5rem;
+                font-size: 0.62rem;
+                padding: 0.6rem 0.15rem;
+                letter-spacing: 0.02em;
+            }
+
+            .calendar-day {
+                min-height: 76px;
+                padding: 0.35rem 0.3rem;
+            }
+
+            .day-number {
+                font-size: 0.78rem;
+                width: 20px;
+                height: 20px;
+            }
+
+            .task-badge {
+                font-size: 0.62rem;
+                padding: 0.22rem 0.32rem;
+            }
+
+            .more-tasks { font-size: 0.6rem; }
+
+            .modal-content { max-height: 85vh; }
+        }
+
+        /* Telas muito estreitas: prioriza legibilidade sobre densidade —
+           mostra só uma pílula de contagem por dia, toque abre a lista */
+        @media (max-width: 420px) {
+            .calendar-day { min-height: 64px; }
+
+            .task-list { display: none; }
+
+            .calendar-day.has-tasks::after {
+                content: attr(data-task-count) ' tarefa(s)';
+                display: inline-block;
+                margin-top: 0.3rem;
+                font-family: var(--sans);
+                font-size: 0.6rem;
+                font-weight: 600;
+                color: var(--accent);
+                background: var(--accent-dim);
+                padding: 0.15rem 0.4rem;
+                border-radius: 20px;
             }
         }
     </style>
@@ -304,38 +467,43 @@
                 </div>
                 <div class="logo-text">
                     <span class="med-text">Med</span><span class="tasks-text">Tasks</span>
-                    <span class="turma-badge">Turma 116</span>
                 </div>
             </div>
-            <div class="menu-icon" id="menuIcon">
+            <div class="menu-icon" id="menuIcon" role="button" tabindex="0" aria-label="Abrir menu" aria-expanded="false" aria-controls="navLinks">
                 <i class="fas fa-bars"></i>
             </div>
             <div class="nav-links" id="navLinks">
-                <a href="/"><i class="fas fa-home"></i> Início</a>
+                <a href="/"><i class="fas fa-house"></i> Início</a>
+                <a href="/horarios"><i class="fas fa-clock"></i> Horários</a>
+                <a href="/calendar" class="active" aria-current="page"><i class="fas fa-calendar-week"></i> Calendário</a>
                 <a href="/ppc"><i class="fas fa-book-open"></i> PPC</a>
-                <a href="/sobre"><i class="fas fa-info-circle"></i> Sobre</a>
-                <a href="/horarios"><i class="fas fa-calendar-alt"></i> Horários</a>
-                <a href="/calendar" class="active"><i class="fas fa-calendar-week"></i> Calendário</a>
-                <a href="/add" class="btn-add"><i class="fas fa-plus"></i> Adicionar</a>
+                <a href="/sobre"><i class="fas fa-circle-info"></i> Sobre</a>
+                <a href="/add" class="btn-add"><i class="fas fa-plus"></i> Adicionar tarefa</a>
+                <a href="/addlembrete" class="btn-add" style="background: #3b82f6;"><i class="fas fa-bell"></i> Adicionar lembrete</a>
             </div>
         </div>
     </nav>
 
     <div class="calendar-container">
+        <div class="page-intro">
+            <h1><i class="fas fa-calendar-week"></i> Calendário</h1>
+            <p>Todas as entregas da turma, mês a mês</p>
+        </div>
+
         <div class="calendar-header">
             <div class="calendar-nav">
-                <button id="prevMonth"><i class="fas fa-chevron-left"></i></button>
-                <span class="current-month" id="currentMonth">Janeiro 2024</span>
-                <button id="nextMonth"><i class="fas fa-chevron-right"></i></button>
+                <button id="prevMonth" aria-label="Mês anterior"><i class="fas fa-chevron-left"></i></button>
+                <span class="current-month" id="currentMonth" aria-live="polite">Janeiro 2024</span>
+                <button id="nextMonth" aria-label="Próximo mês"><i class="fas fa-chevron-right"></i></button>
                 <button id="todayBtn">Hoje</button>
             </div>
-            <div class="turma-filter">
-                <button class="filter-btn active" data-turma="all">Todas</button>
-                <button class="filter-btn" data-turma="t1-t3">T1-T3</button>
-                <button class="filter-btn" data-turma="t4-t6">T4-T6</button>
+            <div class="turma-filter" role="group" aria-label="Filtrar por turma">
+                <button class="filter-btn active" data-turma="all" aria-pressed="true">Todas</button>
+                <button class="filter-btn" data-turma="t1-t3" aria-pressed="false">T1-T3</button>
+                <button class="filter-btn" data-turma="t4-t6" aria-pressed="false">T4-T6</button>
             </div>
         </div>
-        
+
         <div class="calendar-grid">
             <div class="weekdays">
                 <div class="weekday">Dom</div>
@@ -349,18 +517,18 @@
             <div class="calendar-days" id="calendarDays">
                 <div class="loading-calendar">
                     <div class="loader"></div>
-                    <p>Carregando calendário...</p>
+                    <p>Carregando calendário…</p>
                 </div>
             </div>
         </div>
     </div>
-    
+
     <!-- Modal de detalhes -->
-    <div class="modal" id="taskModal">
+    <div class="modal" id="taskModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><i class="fas fa-tasks"></i> Tarefas do dia</h3>
-                <button class="modal-close" id="closeModal">&times;</button>
+                <h3 id="modalTitle"><i class="fas fa-list-check"></i> Tarefas do dia</h3>
+                <button class="modal-close" id="closeModal" aria-label="Fechar">&times;</button>
             </div>
             <div class="modal-body" id="modalBody">
                 <!-- Tarefas serão inseridas aqui -->
@@ -370,7 +538,7 @@
 
     <footer class="footer">
         <div class="footer-content">
-            <p><i class="far fa-copyright"></i> 2026 MedTasks - Turma 116 - Faculdade de Medicina UFAM</p>
+            <p>&copy; 2026 MedTasks — MED UFAM 116, Faculdade de Medicina UFAM</p>
         </div>
     </footer>
 
@@ -378,9 +546,19 @@
         let currentDate = new Date();
         let allTasks = [];
         let currentTurma = 'all';
-        
+        let lastFocusedElement = null;
+
         const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-        
+
+        const disciplinas = [
+            { value: "isc", label: "Introdução à Saúde Coletiva" },
+            { value: "bcm", label: "Biologia Celular e Molecular" },
+            { value: "ah1", label: "Anatomia Humana I" },
+            { value: "emb", label: "Embriologia" },
+            { value: "metodologia", label: "Metodologia do Trabalho Científico" },
+            { value: "etica", label: "Ética Médica" }
+        ];
+
         // Função para formatar data em YYYY-MM-DD (UTC)
         function formatDateUTC(timestamp) {
             const date = new Date(timestamp);
@@ -389,13 +567,13 @@
             const day = String(date.getUTCDate()).padStart(2, '0');
             return `${year}-${month}-${day}`;
         }
-        
+
         // Função para obter a data atual em UTC
         function getTodayUTC() {
             const now = new Date();
             return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
         }
-        
+
         // Função para verificar se uma tarefa pertence à turma selecionada
         function taskBelongsToTurma(task, turma) {
             if (turma === 'all') return true;
@@ -404,19 +582,17 @@
             }
             return task.turma === turma;
         }
-        
-        // Função para obter tarefas de uma data específica
+
         // Função para obter tarefas de uma data específica (sem duplicar)
         function getTasksForDate(dateStr) {
             const tasksForDate = [];
-            const tasksMap = new Map(); // Para evitar duplicatas
-            
+            const tasksMap = new Map();
+
             allTasks.forEach(task => {
                 if (task.turmasInfo && task.turmasInfo.length > 0) {
                     task.turmasInfo.forEach(info => {
                         const entregaStr = formatDateUTC(info.entrega);
                         if (entregaStr === dateStr && taskBelongsToTurma(task, currentTurma)) {
-                            // Usar o ID da tarefa como chave para não duplicar
                             const key = task._id;
                             if (!tasksMap.has(key)) {
                                 tasksMap.set(key, {
@@ -428,7 +604,6 @@
                                     observacoes: info.observacao ? [info.observacao] : []
                                 });
                             } else {
-                                // Se já existe, adiciona a turma e observação
                                 const existing = tasksMap.get(key);
                                 if (!existing.turmas.includes(info.turma)) {
                                     existing.turmas.push(info.turma);
@@ -456,16 +631,11 @@
                     }
                 }
             });
-            
-            // Converter o Map para array
-            tasksMap.forEach((value, key) => {
-                tasksForDate.push(value);
-            });
-            
+
+            tasksMap.forEach((value) => tasksForDate.push(value));
             return tasksForDate;
         }
-        
-        // Função para obter o tipo de badge
+
         function getTipoClass(tipo) {
             const classes = {
                 'prova': 'prova',
@@ -477,8 +647,12 @@
             };
             return classes[tipo?.toLowerCase()] || 'atividade';
         }
-        
-        // Função para carregar o calendário
+
+        function getLabelByValue(value) {
+            const disc = disciplinas.find(d => d.value === value);
+            return disc ? disc.label : value;
+        }
+
         async function loadCalendar() {
             try {
                 const response = await fetch('/tasks');
@@ -486,30 +660,29 @@
                 renderCalendar();
             } catch (error) {
                 console.error('Erro ao carregar tarefas:', error);
-                document.getElementById('calendarDays').innerHTML = '<div class="loading-calendar"><i class="fas fa-exclamation-triangle"></i> Erro ao carregar calendário</div>';
+                document.getElementById('calendarDays').innerHTML =
+                    '<div class="loading-calendar"><i class="fas fa-triangle-exclamation"></i><p>Erro ao carregar calendário</p></div>';
             }
         }
-        
-        // Função para renderizar o calendário
+
         function renderCalendar() {
             const year = currentDate.getUTCFullYear();
             const month = currentDate.getUTCMonth();
-            
+
             document.getElementById('currentMonth').textContent = `${meses[month]} ${year}`;
-            
+
             const firstDayOfMonth = new Date(Date.UTC(year, month, 1));
             const startDay = firstDayOfMonth.getUTCDay();
-            
+
             const daysInMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
             const daysInPrevMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
-            
+
             const calendarDays = document.getElementById('calendarDays');
             calendarDays.innerHTML = '';
-            
+
             const todayUTC = getTodayUTC();
             const todayStr = formatDateUTC(todayUTC.getTime());
-            
-            // Dias do mês anterior
+
             for (let i = startDay - 1; i >= 0; i--) {
                 const day = daysInPrevMonth - i;
                 const date = new Date(Date.UTC(year, month - 1, day));
@@ -517,8 +690,7 @@
                 const tasks = getTasksForDate(dateStr);
                 calendarDays.appendChild(createDayCell(day, true, dateStr, tasks, false));
             }
-            
-            // Dias do mês atual
+
             for (let day = 1; day <= daysInMonth; day++) {
                 const date = new Date(Date.UTC(year, month, day));
                 const dateStr = formatDateUTC(date.getTime());
@@ -526,8 +698,7 @@
                 const isToday = dateStr === todayStr;
                 calendarDays.appendChild(createDayCell(day, false, dateStr, tasks, isToday));
             }
-            
-            // Dias do próximo mês
+
             const totalCells = Math.ceil((startDay + daysInMonth) / 7) * 7;
             const nextMonthDays = totalCells - (startDay + daysInMonth);
             for (let day = 1; day <= nextMonthDays; day++) {
@@ -537,151 +708,170 @@
                 calendarDays.appendChild(createDayCell(day, true, dateStr, tasks, false));
             }
         }
-        
-        // Função para criar uma célula do dia
+
         function createDayCell(day, isOtherMonth, dateStr, tasks, isToday) {
             const cell = document.createElement('div');
             cell.className = 'calendar-day';
             if (isOtherMonth) cell.classList.add('other-month');
             if (isToday) cell.classList.add('today');
-            
+
             const dayNumber = document.createElement('div');
             dayNumber.className = 'day-number';
             dayNumber.textContent = day;
             cell.appendChild(dayNumber);
-            
+
             if (tasks.length > 0) {
+                cell.classList.add('has-tasks');
+                cell.dataset.taskCount = tasks.length;
+                cell.setAttribute('role', 'button');
+                cell.setAttribute('tabindex', '0');
+                cell.setAttribute('aria-label', `${day}, ${tasks.length} tarefa${tasks.length > 1 ? 's' : ''}. Abrir detalhes.`);
+
                 const taskList = document.createElement('div');
                 taskList.className = 'task-list';
-                
+
                 const maxDisplay = 3;
                 const displayedTasks = tasks.slice(0, maxDisplay);
-                
+
                 displayedTasks.forEach(task => {
-                    // Formatar título com indicador de múltiplas turmas
                     const turmasLabel = task.turmas.length > 1 ? ' [Ambas]' : (task.turmas[0] === 't1-t3' ? ' [T1-T3]' : (task.turmas[0] === 't4-t6' ? ' [T4-T6]' : ''));
                     const displayTitle = task.title.length > 15 ? task.title.substring(0, 13) + '...' : task.title;
-                    
+
                     const taskBadge = document.createElement('div');
                     taskBadge.className = `task-badge ${getTipoClass(task.tipo)}`;
                     taskBadge.textContent = displayTitle + turmasLabel;
                     taskBadge.title = `${task.title} (${task.turmas.map(t => t === 't1-t3' ? 'T1-T3' : 'T4-T6').join(' e ')})`;
+                    taskBadge.setAttribute('role', 'button');
+                    taskBadge.setAttribute('tabindex', '-1');
                     taskBadge.onclick = (e) => {
                         e.stopPropagation();
                         window.location.href = `/tarefa?id=${task.id}`;
                     };
                     taskList.appendChild(taskBadge);
                 });
-                
+
                 if (tasks.length > maxDisplay) {
                     const moreBtn = document.createElement('div');
                     moreBtn.className = 'more-tasks';
                     moreBtn.textContent = `+ ${tasks.length - maxDisplay} mais`;
+                    moreBtn.setAttribute('tabindex', '-1');
                     moreBtn.onclick = (e) => {
                         e.stopPropagation();
-                        showModal(dateStr, tasks);
+                        showModal(dateStr, tasks, cell);
                     };
                     taskList.appendChild(moreBtn);
                 }
-                
+
                 cell.appendChild(taskList);
+
+                cell.addEventListener('click', () => showModal(dateStr, tasks, cell));
+                cell.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        showModal(dateStr, tasks, cell);
+                    }
+                });
             }
-            
-            cell.onclick = () => {
-                if (tasks.length > 0) {
-                    showModal(dateStr, tasks);
-                }
-            };
-            
+
             return cell;
         }
-        
-        // Função para mostrar modal com tarefas do dia
-        function showModal(dateStr, tasks) {
+
+        function showModal(dateStr, tasks, triggerEl) {
+            lastFocusedElement = triggerEl || document.activeElement;
+
             const modal = document.getElementById('taskModal');
             const modalBody = document.getElementById('modalBody');
-            
+
             const [year, month, day] = dateStr.split('-');
             const dateFormatted = `${day}/${month}/${year}`;
-            
+
             modalBody.innerHTML = `
-                <p style="margin-bottom: 1rem;"><strong>📅 ${dateFormatted}</strong> - ${tasks.length} tarefa(s)</p>
+                <p class="modal-date"><strong>${dateFormatted}</strong> — ${tasks.length} tarefa${tasks.length > 1 ? 's' : ''}</p>
                 ${tasks.map(task => {
-                    // Formatar as turmas
                     const turmasLabel = task.turmas.map(t => t === 't1-t3' ? 'T1-T3' : (t === 't4-t6' ? 'T4-T6' : 'Geral')).join(' e ');
                     const observacao = task.observacoes.length > 0 ? task.observacoes.join(' | ') : '';
-                    
+
                     return `
-                        <div class="modal-task-item" onclick="window.location.href='/tarefa?id=${task.id}'">
+                        <div class="modal-task-item" role="button" tabindex="0" onclick="window.location.href='/tarefa?id=${task.id}'" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.location.href='/tarefa?id=${task.id}'}">
                             <div class="modal-task-title">${task.title}</div>
-                            <div style="font-size: 0.8rem; color: var(--text-secondary);">${getLabelByValue(task.disciplina)}</div>
-                            <span class="modal-task-type ${getTipoClass(task.tipo)}" style="background: rgba(0,0,0,0.2);">${task.tipo}</span>
-                            <span style="font-size: 0.7rem; margin-left: 0.5rem;">${turmasLabel}</span>
-                            ${observacao ? `<div style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 0.25rem;"><i class="fas fa-info-circle"></i> ${observacao}</div>` : ''}
+                            <div class="modal-task-disc">${getLabelByValue(task.disciplina)}</div>
+                            <div class="modal-task-meta">
+                                <span class="modal-task-type ${getTipoClass(task.tipo)}">${task.tipo}</span>
+                                <span class="modal-task-turmas">${turmasLabel}</span>
+                            </div>
+                            ${observacao ? `<div class="modal-task-obs"><i class="fas fa-circle-info"></i> ${observacao}</div>` : ''}
                         </div>
                     `;
                 }).join('')}
             `;
-            
+
             modal.classList.add('active');
+            document.getElementById('closeModal').focus();
         }
-        
-        // Função auxiliar para pegar nome da disciplina
-        function getLabelByValue(value) {
-            const disciplinas = [
-                { value: "isc", label: "Introdução à Saúde Coletiva" },
-                { value: "bcm", label: "Biologia Celular e Molecular" },
-                { value: "ah1", label: "Anatomia Humana I" },
-                { value: "emb", label: "Embriologia" },
-                { value: "metodologia", label: "Metodologia do Trabalho Científico" },
-                { value: "etica", label: "Ética Médica" }
-            ];
-            const disc = disciplinas.find(d => d.value === value);
-            return disc ? disc.label : value;
+
+        function closeModal() {
+            document.getElementById('taskModal').classList.remove('active');
+            if (lastFocusedElement) lastFocusedElement.focus();
         }
-        
+
         // Navegação do calendário
         document.getElementById('prevMonth').addEventListener('click', () => {
             currentDate.setUTCMonth(currentDate.getUTCMonth() - 1);
             renderCalendar();
         });
-        
+
         document.getElementById('nextMonth').addEventListener('click', () => {
             currentDate.setUTCMonth(currentDate.getUTCMonth() + 1);
             renderCalendar();
         });
-        
+
         document.getElementById('todayBtn').addEventListener('click', () => {
             currentDate = new Date();
             renderCalendar();
         });
-        
+
         // Filtro por turma
         document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.filter-btn').forEach(b => {
+                    b.classList.remove('active');
+                    b.setAttribute('aria-pressed', 'false');
+                });
                 btn.classList.add('active');
+                btn.setAttribute('aria-pressed', 'true');
                 currentTurma = btn.dataset.turma;
                 renderCalendar();
             });
         });
-        
+
         // Modal
-        document.getElementById('closeModal').addEventListener('click', () => {
-            document.getElementById('taskModal').classList.remove('active');
-        });
-        
+        document.getElementById('closeModal').addEventListener('click', closeModal);
+
         document.getElementById('taskModal').addEventListener('click', (e) => {
-            if (e.target === document.getElementById('taskModal')) {
-                document.getElementById('taskModal').classList.remove('active');
+            if (e.target === document.getElementById('taskModal')) closeModal();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && document.getElementById('taskModal').classList.contains('active')) {
+                closeModal();
             }
         });
-        
+
         // Menu mobile
-        document.getElementById('menuIcon').addEventListener('click', () => {
-            document.getElementById('navLinks').classList.toggle('active');
+        const menuIcon = document.getElementById('menuIcon');
+        const navLinks = document.getElementById('navLinks');
+        function toggleMenu() {
+            const isOpen = navLinks.classList.toggle('active');
+            menuIcon.setAttribute('aria-expanded', isOpen);
+        }
+        menuIcon.addEventListener('click', toggleMenu);
+        menuIcon.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleMenu();
+            }
         });
-        
+
         // Inicializar
         loadCalendar();
     </script>
