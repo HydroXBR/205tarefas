@@ -122,15 +122,29 @@ app.get('/apagar', async function(req, res) {
 			try {
 				const hoje = new Date();
 				const trintaDiasAtras = new Date();
-				trintaDiasAtras.setDate(trintaDiasAtras.getDate() - 30);
+trintaDiasAtras.setDate(trintaDiasAtras.getDate() - 30);
+const timestampLimite = trintaDiasAtras.getTime();
 
-				const tarefasAntigas = await tarefa.find({
-					entrega: { $lt: trintaDiasAtras }
-				});
+// Encontra tarefas onde todas as turmas têm entrega < 30 dias
+const tarefasAntigas = await tarefa.find({
+  turmasInfo: {
+    $not: {
+      $elemMatch: {
+        entrega: { $gte: timestampLimite }  // NENHUMA turma tem entrega >= 30 dias
+      }
+    }
+  }
+});
 
-				await tarefa.deleteMany({
-					entrega: { $lt: trintaDiasAtras }
-				});
+await tarefa.deleteMany({
+  turmasInfo: {
+    $not: {
+      $elemMatch: {
+        entrega: { $gte: timestampLimite }
+      }
+    }
+  }
+});
 
 				console.log(`${tarefasAntigas.length} tarefas removidas com sucesso.`);
 				res.send(`${tarefasAntigas.length} tarefas removidas com sucesso.`);
