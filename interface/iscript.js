@@ -48,7 +48,7 @@ const aniversarios = [
 const urlParams = new URLSearchParams(window.location.search);
 const isAdmin = urlParams.get('admin');
 let currentTurma = 'all';
-let hideProvas = false; 
+let hideProvas = false;
 let cachedTasks = [];
 
 
@@ -86,14 +86,14 @@ const disciplinas = [
     { value: "emb", label: "Embriologia" },
     { value: "metodologia", label: "Metodologia do Trabalho Científico" },
     { value: "etica", label: "Ética Médica" },
-    
+
     // 2º Período
     { value: "histo", label: "Histologia" },
     { value: "bioq", label: "Bioquímica Celular e Metabólica" },
     { value: "ah2", label: "Anatomia Humana II" },
     { value: "genetica", label: "Genética" },
     { value: "ppgs", label: "Política, Planejamento e Gestão em Saúde" },
-    
+
     // 3º Período
     { value: "micro", label: "Microbiologia Médica" },
     { value: "para", label: "Parasitologia Médica" },
@@ -101,14 +101,14 @@ const disciplinas = [
     { value: "epidemio", label: "Epidemiologia e Bioestatística" },
     { value: "imuno", label: "Imunologia Médica" },
     { value: "fisio", label: "Fisiologia Humana" },
-    
+
     // 4º Período
     { value: "aps", label: "Atenção Primária em Saúde" },
     { value: "patolgeral", label: "Patologia Geral" },
     { value: "farmaco1", label: "Farmacologia I" },
     { value: "proped", label: "Propedêutica Médica" },
     { value: "tecop", label: "Técnica Operatória e Cirurgia Experimental" },
-    
+
     // 5º Período
     { value: "patoesp", label: "Patologia Especial" },
     { value: "farmaco2", label: "Farmacologia II" },
@@ -116,13 +116,13 @@ const disciplinas = [
     { value: "cirurgia_dig", label: "Cirurgia do Sistema Digestório e Anexos" },
     { value: "climed1", label: "Clínica Médica Integrada I" },
     { value: "trauma", label: "Atenção ao Trauma" },
-    
+
     // 6º Período
     { value: "climed2", label: "Clínica Médica Integrada II" },
     { value: "doencas_inf", label: "Doenças Infecciosas e Parasitárias" },
     { value: "cirurgia_int", label: "Cirurgia Integrada" },
     { value: "otorrino", label: "Otorrino e Cirurgia de Cabeça e Pescoço" },
-    
+
     // 7º Período
     { value: "climed3", label: "Clínica Médica Integrada III" },
     { value: "urologia", label: "Urologia" },
@@ -130,7 +130,7 @@ const disciplinas = [
     { value: "neuro", label: "Neurociências" },
     { value: "saude_mulher1", label: "Saúde da Mulher I - Ginecologia" },
     { value: "dermato", label: "Dermatologia" },
-    
+
     // 8º Período
     { value: "saude_mulher2", label: "Saúde da Mulher II - Obstetrícia" },
     { value: "saude_crianca", label: "Saúde da Criança" },
@@ -138,7 +138,7 @@ const disciplinas = [
     { value: "psiquiatria", label: "Psiquiatria" },
     { value: "medicina_legal", label: "Medicina Legal" },
     { value: "traumato", label: "Traumatologia e Ortopedia" },
-    
+
     // Estágios (Internato)
     { value: "estagio_climed", label: "Estágio em Clínica Médica" },
     { value: "estagio_cirurgica", label: "Estágio em Clínica Cirúrgica" },
@@ -177,6 +177,30 @@ function getTipoClass(tipo) {
     return classes[tipo.toLowerCase()] || 'tipo-atividade';
 }
 
+// Mesmo mapeamento, usado para colorir a régua lateral do card (rail-*)
+function getRailClass(tipo) {
+    return getTipoClass(tipo).replace('tipo-', 'rail-');
+}
+
+// Nível vira um pequeno medidor de pontos (1/3, 2/3, 3/3) em vez de um selo de texto
+function buildNivelMeter(nivel) {
+    const niveis = { 'fácil': 1, 'médio': 2, 'difícil': 3 };
+    const chave = (nivel || '').toLowerCase();
+    const preenchidos = niveis[chave] || 1;
+
+    const wrap = document.createElement('span');
+    wrap.className = `nivel-badge nivel-${chave}`;
+    wrap.title = pmaiuscula(nivel || '');
+
+    for (let i = 1; i <= 3; i++) {
+        const dot = document.createElement('span');
+        dot.className = 'nivel-dot';
+        dot.style.background = i <= preenchidos ? 'currentColor' : 'var(--border)';
+        wrap.appendChild(dot);
+    }
+    return wrap;
+}
+
 function formatarDataUTC(timestamp) {
     const data = new Date(timestamp);
     const dia = data.getUTCDate().toString().padStart(2, '0');
@@ -187,30 +211,25 @@ function formatarDataUTC(timestamp) {
 
 function formatTurmasInfo(turmasInfo) {
     if (!turmasInfo || turmasInfo.length === 0) return '<span class="turma-badge-small">Geral</span>';
-    
+
     const agora = new Date();
     const hojeUTC = Date.UTC(agora.getUTCFullYear(), agora.getUTCMonth(), agora.getUTCDate());
     const horaUTC = agora.getUTCHours();
-    
+
     return turmasInfo.map(info => {
         const turmaLabel = info.turma === 't1-t3' ? 'T1-T3' : 'T4-T6';
-        const turmaClass = info.turma === 't1-t3' ? 'turma-t1' : 'turma-t4';
         const entregaDate = new Date(info.entrega);
         const dataFormatada = `${entregaDate.getUTCDate().toString().padStart(2, '0')}/${(entregaDate.getUTCMonth() + 1).toString().padStart(2, '0')}`;
-        
-        // Só fica vermelho se for entrega hoje E antes das 12h Brasília (15h UTC)
+
+        // Só fica em destaque se for entrega hoje E antes das 12h Brasília (15h UTC)
         const isUrgent = info.entrega === hojeUTC && horaUTC < 15;
-        
+
         return `
-            <div class="turma-info-tooltip" title="${info.observacao || 'Sem observações específicas'}">
-                <span class="turma-badge-small ${turmaClass}">
-                    ${turmaLabel}
-                </span>
-                <span class="turma-entrega ${isUrgent ? 'urgent-date' : ''}">
-                    📅 ${dataFormatada}
-                </span>
-                ${info.observacao ? '<i class="fas fa-info-circle turma-info-icon"></i>' : ''}
-            </div>
+            <span class="turma-info-tooltip" title="${info.observacao || 'Sem observações específicas'}">
+                <span class="turma-badge-small">${turmaLabel}</span>
+                <span class="turma-entrega ${isUrgent ? 'urgent-date' : ''}">${dataFormatada}</span>
+                ${info.observacao ? '<i class="fas fa-circle-info turma-info-icon"></i>' : ''}
+            </span>
         `;
     }).join('');
 }
@@ -221,7 +240,7 @@ function isTaskPendingForTurma(entregaTimestamp, turma) {
     const todayOnlyDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const entregaDate = new Date(entregaTimestamp);
     const entregaOnlyDate = new Date(entregaDate.getFullYear(), entregaDate.getMonth(), entregaDate.getDate());
-    
+
     if (now.getHours() >= 12) {
         return entregaOnlyDate > todayOnlyDate;
     }
@@ -231,13 +250,11 @@ function isTaskPendingForTurma(entregaTimestamp, turma) {
 // Função para filtrar tarefas baseado nas turmasInfo
 function filterTasksByTurma(tasks, currentTurma) {
     if (currentTurma === 'all') return tasks;
-    
+
     return tasks.filter(task => {
-        // Se tiver turmasInfo (novo formato)
         if (task.turmasInfo && task.turmasInfo.length > 0) {
             return task.turmasInfo.some(info => info.turma === currentTurma);
         }
-        // Compatibilidade com formato antigo
         return task.turma === currentTurma;
     });
 }
@@ -247,25 +264,25 @@ function isTaskPending(task) {
     const agora = new Date();
     const hojeUTC = Date.UTC(agora.getUTCFullYear(), agora.getUTCMonth(), agora.getUTCDate());
     const horaUTC = agora.getUTCHours();
-    
+
     if (task.turmasInfo && task.turmasInfo.length > 0) {
         return task.turmasInfo.some(info => {
-            const entregaUTC = info.entrega; // Já é timestamp UTC
-            
+            const entregaUTC = info.entrega;
+
             if (entregaUTC === hojeUTC) {
                 return horaUTC < 15; // 15h UTC = 12h Brasília
             }
             return entregaUTC > hojeUTC;
         });
     }
-    
+
     if (task.entrega) {
         if (task.entrega === hojeUTC) {
             return horaUTC < 15;
         }
         return task.entrega > hojeUTC;
     }
-    
+
     return false;
 }
 
@@ -281,27 +298,26 @@ async function loadTasks() {
     try {
         const response = await fetch('/tasks');
         const tasks = await response.json();
-        
-        // Guarda as tarefas originais em cache
+
         cachedTasks = tasks;
-        
-        // Ordenar por data de entrega (a mais próxima primeiro)
         cachedTasks.sort((a, b) => getEarliestDelivery(a) - getEarliestDelivery(b));
-        
-        // Aplica os filtros e renderiza
+
         applyFiltersAndRender();
-        
+
     } catch (err) {
         console.error('Erro ao obter dados das tarefas:', err);
         const tableBody = document.getElementById('tabela-tarefas');
-        tableBody.innerHTML = '}<tr><td colspan="5" class="error-cell"><i class="fas fa-exclamation-triangle"></i> Erro ao carregar tarefas</td></tr>';
+        tableBody.innerHTML = `
+            <div class="error-cell">
+                <i class="fas fa-triangle-exclamation"></i>
+                Erro ao carregar tarefas
+            </div>`;
     }
 }
 
 function applyFiltersAndRender() {
     if (!cachedTasks || cachedTasks.length === 0) return;
-    
-    // Filtro por turma
+
     let tasksFiltradas = cachedTasks;
     if (currentTurma !== 'all') {
         tasksFiltradas = tasksFiltradas.filter(task => {
@@ -311,134 +327,111 @@ function applyFiltersAndRender() {
             return task.turma === currentTurma;
         });
     }
-    
-    // Filtro para ocultar provas (apenas esconde visualmente, não remove do cache)
+
     if (hideProvas) {
         tasksFiltradas = tasksFiltradas.filter(task => {
             return task.tipo?.toLowerCase() !== 'prova';
         });
     }
-    
-    // Separar pendentes e anteriores
+
     const tasksPendentes = tasksFiltradas.filter(task => isTaskPending(task));
     const tasksAnteriores = tasksFiltradas.filter(task => !isTaskPending(task));
-    
-    // Renderizar tabelas
-    renderTabelaPendentes(tasksPendentes);
-    renderTabelaAnteriores(tasksAnteriores);
+
+    renderBoard('tabela-tarefas', tasksPendentes, 'Nenhuma tarefa pendente', 'fa-champagne-glasses');
+    renderBoard('tabela-anteriores', tasksAnteriores, 'Nenhuma tarefa anterior', 'fa-inbox');
 }
 
-// Funções de renderização separadas para organizar
-function renderTabelaPendentes(tasks) {
-    const tableBody = document.getElementById('tabela-tarefas');
-    tableBody.innerHTML = '';
-    
-    if (tasks.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="5" class="empty-cell"><i class="fas fa-check-circle"></i> Nenhuma tarefa pendente!</td></tr>';
-        return;
-    }
-    
-    tasks.forEach(task => {
-        const row = tableBody.insertRow();
-        const tipoCell = row.insertCell(0);
-        const tituloCell = row.insertCell(1);
-        const disciplinaCell = row.insertCell(2);
-        const turmaCell = row.insertCell(3);
-        const nivelCell = row.insertCell(4);
-        
-        // Tipo
-        const tipoSpan = document.createElement("span");
-        tipoSpan.innerHTML = pmaiuscula(task.tipo);
-        tipoSpan.classList.add('tipo-badge', getTipoClass(task.tipo));
-        tipoCell.appendChild(tipoSpan);
-        
-        // Título com link
-        const id = task._id;
-        const link = document.createElement("a");
-        link.href = isAdmin ? `/tarefa?id=${id}&admin=true` : `/tarefa?id=${id}`;
-        link.innerHTML = pmaiuscula(task.title);
-        link.classList.add('task-link');
-        tituloCell.appendChild(link);
-        
-        // Disciplina
-        disciplinaCell.textContent = getLabelByValue(task.disc);
-        
-        // Turmas (já mostra a data de entrega)
-        turmaCell.innerHTML = formatTurmasInfo(task.turmasInfo);
-        
-        // Nível
-        nivelCell.innerHTML = `<span class="nivel-badge nivel-${task.nivel.toLowerCase()}">${task.nivel}</span>`;
-    });
+// Constrói um card de tarefa (linha do "board") com a mesma informação
+// que a tabela antiga mostrava, distribuída em 5 colunas.
+function buildTaskRow(task, index) {
+    const row = document.createElement('div');
+    row.className = `task-row ${getRailClass(task.tipo)}`;
+    row.style.animationDelay = `${Math.min(index, 12) * 0.03}s`;
+
+    // Tipo
+    const tipoCell = document.createElement('div');
+    tipoCell.className = 'task-cell-tipo';
+    const tipoSpan = document.createElement('span');
+    tipoSpan.textContent = pmaiuscula(task.tipo);
+    tipoSpan.classList.add('tipo-badge', getTipoClass(task.tipo));
+    tipoCell.appendChild(tipoSpan);
+
+    // Título com link
+    const mainCell = document.createElement('div');
+    mainCell.className = 'task-cell-main';
+    const link = document.createElement('a');
+    const id = task._id;
+    link.href = isAdmin ? `/tarefa?id=${id}&admin=true` : `/tarefa?id=${id}`;
+    link.textContent = pmaiuscula(task.title);
+    link.classList.add('task-title');
+    mainCell.appendChild(link);
+
+    // Disciplina
+    const discCell = document.createElement('div');
+    discCell.className = 'task-cell-disc';
+    discCell.textContent = getLabelByValue(task.disc);
+
+    // Turmas / entrega
+    const turmaCell = document.createElement('div');
+    turmaCell.className = 'task-cell-turma';
+    turmaCell.innerHTML = formatTurmasInfo(task.turmasInfo);
+
+    // Nível
+    const nivelCell = document.createElement('div');
+    nivelCell.className = 'task-cell-nivel';
+    nivelCell.appendChild(buildNivelMeter(task.nivel));
+
+    row.append(tipoCell, mainCell, discCell, turmaCell, nivelCell);
+    return row;
 }
 
-function renderTabelaAnteriores(tasks) {
-    const tableBody2 = document.getElementById('tabela-anteriores');
-    tableBody2.innerHTML = '';
-    
+function renderBoard(containerId, tasks, emptyText, emptyIcon) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+
     if (tasks.length === 0) {
-        tableBody2.innerHTML = '<tr><td colspan="5" class="empty-cell"><i class="fas fa-smile"></i> Nenhuma tarefa anterior</td></tr>';
+        container.innerHTML = `
+            <div class="empty-cell">
+                <i class="fas ${emptyIcon}"></i>
+                ${emptyText}
+            </div>`;
         return;
     }
-    
-    tasks.forEach(task => {
-        const row2 = tableBody2.insertRow();
-        const tipoCell2 = row2.insertCell(0);
-        const tituloCell2 = row2.insertCell(1);
-        const disciplinaCell2 = row2.insertCell(2);
-        const turmaCell2 = row2.insertCell(3);
-        const nivelCell2 = row2.insertCell(4);
-        
-        const tipoSpan2 = document.createElement("span");
-        tipoSpan2.innerHTML = pmaiuscula(task.tipo);
-        tipoSpan2.classList.add('tipo-badge', getTipoClass(task.tipo));
-        tipoCell2.appendChild(tipoSpan2);
-        
-        const id2 = task._id;
-        const link2 = document.createElement("a");
-        link2.href = isAdmin ? `/tarefa?id=${id2}&admin=true` : `/tarefa?id=${id2}`;
-        link2.innerHTML = pmaiuscula(task.title);
-        link2.classList.add('task-link');
-        tituloCell2.appendChild(link2);
-        
-        disciplinaCell2.textContent = getLabelByValue(task.disc);
-        turmaCell2.innerHTML = formatTurmasInfo(task.turmasInfo);
-        
-        nivelCell2.innerHTML = `<span class="nivel-badge nivel-${task.nivel.toLowerCase()}">${task.nivel}</span>`;
-    });
+
+    const fragment = document.createDocumentFragment();
+    tasks.forEach((task, index) => fragment.appendChild(buildTaskRow(task, index)));
+    container.appendChild(fragment);
 }
 
 async function loadLembretes() {
     try {
         const response = await fetch('/lembretes');
         const lembretes = await response.json();
-        
+
         const containerLembretes = document.getElementById('container-lembretes');
         containerLembretes.innerHTML = '';
-        
-        // Função para formatar data no padrão YYYY-MM-DD usando UTC
+
         function formatarDataUTC(data) {
             const ano = data.getUTCFullYear();
             const mes = String(data.getUTCMonth() + 1).padStart(2, '0');
             const dia = String(data.getUTCDate()).padStart(2, '0');
             return `${ano}-${mes}-${dia}`;
         }
-        
+
         function formatarDataDDMM(data) {
             const mes = String(data.getUTCMonth() + 1).padStart(2, '0');
             const dia = String(data.getUTCDate()).padStart(2, '0');
             return `${dia}/${mes}`;
         }
-        
-        // Data atual em UTC
+
         const agora = new Date();
         const hojeUTC = formatarDataUTC(agora);
         const hojeDDMM = formatarDataDDMM(agora);
-        
-        // Verificar se deve incluir ontem (antes das 7h no horário de Brasília)
+
         // Brasília é UTC-3
         const horaBrasilia = agora.getUTCHours() - 3;
         const incluirOntem = horaBrasilia < 7;
-        
+
         let ontemUTC = '';
         let ontemDDMM = '';
         if (incluirOntem) {
@@ -447,39 +440,36 @@ async function loadLembretes() {
             ontemUTC = formatarDataUTC(dataOntem);
             ontemDDMM = formatarDataDDMM(dataOntem);
         }
-        
-        // Filtrar lembretes do banco
+
         const lembretesHoje = lembretes.filter(lembrete => {
             const dataLembrete = lembrete.date;
             return dataLembrete === hojeUTC || (incluirOntem && dataLembrete === ontemUTC);
         });
-        
-        // Adicionar lembretes de aniversário
+
         const aniversariosHoje = aniversarios.filter(aniv => {
             return aniv.data === hojeDDMM || (incluirOntem && aniv.data === ontemDDMM);
         });
-        
-        // Combinar lembretes
+
         const todosLembretes = [...lembretesHoje];
-        
+
         aniversariosHoje.forEach(aniv => {
             todosLembretes.push({
-                title: "🎂 Aniversário! 🎉",
-                desc: `Hoje é aniversário de ${aniv.nome}! Desejamos um dia muito especial e cheio de alegrias! 🥳🎈`
+                title: "Aniversário",
+                desc: `Hoje é aniversário de ${aniv.nome}. Um dia muito especial para comemorar.`
             });
         });
-        
+
         if (todosLembretes.length > 0) {
             const alertDiv = document.createElement('div');
             alertDiv.className = 'alert alert-warning';
-            alertDiv.innerHTML = `<i class="fas fa-bell"></i> <strong>Lembretes importantes</strong>`;
+            alertDiv.innerHTML = `<i class="fas fa-bell"></i> Lembretes de hoje`;
             containerLembretes.appendChild(alertDiv);
-            
+
             todosLembretes.forEach(lembrete => {
                 const divLembrete = document.createElement('div');
                 divLembrete.className = 'lembrete-card';
                 divLembrete.innerHTML = `
-                    <i class="fas ${lembrete.title === '🎂 Aniversário! 🎉' ? 'fa-birthday-cake' : 'fa-sticky-note'}"></i>
+                    <i class="fas ${lembrete.title === 'Aniversário' ? 'fa-cake-candles' : 'fa-note-sticky'}"></i>
                     <div class="lembrete-content">
                         <strong>${lembrete.title}</strong>
                         <span style="white-space: pre-wrap;">${lembrete.desc}</span>
