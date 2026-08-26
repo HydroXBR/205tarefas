@@ -10,8 +10,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="/index.css">
     <style>
+        /* ============================================================
+           Página Calendário — reaproveita os tokens de index.css
+           (--ink, --surface, --accent, --serif/--sans...) e adiciona
+           só o que é específico da grade de dias e do modal.
+           ============================================================ */
 
         .calendar-container {
             max-width: 1200px;
@@ -435,24 +439,35 @@
             .modal-content { max-height: 85vh; }
         }
 
-        /* Telas muito estreitas: prioriza legibilidade sobre densidade —
-           mostra só uma pílula de contagem por dia, toque abre a lista */
+        /* Telas muito estreitas: a célula cresce em altura para caber os
+           títulos de verdade, só reduz a fonte — nada de agrupar/esconder */
         @media (max-width: 420px) {
-            .calendar-day { min-height: 64px; }
+            .calendar-day {
+                min-height: 118px;
+                padding: 0.4rem 0.3rem;
+            }
 
-            .task-list { display: none; }
+            .day-number {
+                font-size: 0.72rem;
+                width: 18px;
+                height: 18px;
+                margin-bottom: 0.3rem;
+            }
 
-            .calendar-day.has-tasks::after {
-                content: attr(data-task-count) ' tarefa(s)';
-                display: inline-block;
-                margin-top: 0.3rem;
-                font-family: var(--sans);
-                font-size: 0.6rem;
-                font-weight: 600;
-                color: var(--accent);
-                background: var(--accent-dim);
-                padding: 0.15rem 0.4rem;
-                border-radius: 20px;
+            .task-list { gap: 0.2rem; }
+
+            .task-badge {
+                font-size: 0.56rem;
+                line-height: 1.25;
+                padding: 0.2rem 0.28rem;
+                white-space: normal;
+                overflow: visible;
+                text-overflow: clip;
+            }
+
+            .more-tasks {
+                font-size: 0.56rem;
+                padding: 0.1rem 0.2rem;
             }
         }
     </style>
