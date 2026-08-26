@@ -6,7 +6,9 @@
     <title>MedTasks - MED UFAM 116</title>
     <link rel="stylesheet" href="index.css">
     <link rel="icon" type="image/png" href="https://i.ibb.co/nqmZ9nGr/Logo-IG-Med-Ufam116-3x.png">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,500;1,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -19,20 +21,19 @@
                 </div>
                 <div class="logo-text">
                     <span class="med-text">Med</span><span class="tasks-text">Tasks</span>
-                    <span class="turma-badge">MED UFAM 116</span>
                 </div>
             </div>
             <div class="menu-icon" id="menuIcon">
                 <i class="fas fa-bars"></i>
             </div>
             <div class="nav-links" id="navLinks">
-                <a href="/" class="active"><i class="fas fa-home"></i> Início</a>
-                <a href="/horarios"><i class="fas fa-calendar-alt"></i> Horários</a>
+                <a href="/" class="active"><i class="fas fa-house"></i> Início</a>
+                <a href="/horarios"><i class="fas fa-clock"></i> Horários</a>
                 <a href="/calendar"><i class="fas fa-calendar-week"></i> Calendário</a>
                 <a href="/ppc"><i class="fas fa-book-open"></i> PPC</a>
-                <a href="/sobre"><i class="fas fa-info-circle"></i> Sobre</a>
-                <a href="/add" class="btn-add"><i class="fas fa-plus"></i> Adicionar Tarefa</a>
-                <a href="/addlembrete" class="btn-add" style="background: #3b82f6;"><i class="fas fa-bell"></i>Adicionar Lembrete</a>
+                <a href="/sobre"><i class="fas fa-circle-info"></i> Sobre</a>
+                <a href="/add" class="btn-add"><i class="fas fa-plus"></i> Adicionar tarefa</a>
+                <a href="/addlembrete" class="btn-add" style="background: #3b82f6;"><i class="fas fa-bell"></i> Adicionar lembrete</a>
             </div>
         </div>
     </nav>
@@ -45,35 +46,40 @@
                 </div>
             </div>
             <div class="hero-content">
-                <h1>Controle Acadêmico</h1>
-                <p>Gerencie suas atividades e prazos de forma eficiente</p>
-                <div class="hero-badge">
-                    <i class="fas fa-stethoscope"></i> Medicina UFAM
-                </div>
+                <span class="hero-badge">Medicina UFAM — Turma 116</span>
+                <h1>Tudo o que falta entregar, num só lugar.</h1>
+                <p>Provas, trabalhos e leituras da turma, organizados por prazo — sem precisar vasculhar grupo de WhatsApp.</p>
             </div>
         </div>
     </div>
 
-    <div class="turma-selector">
+    <div class="hero-pulse" aria-hidden="true">
+        <svg viewBox="0 0 1200 34" preserveAspectRatio="none">
+            <path d="M0 17 H480 L505 4 L525 30 L545 17 H1200" fill="none" stroke-width="1.5" opacity="0.5"></path>
+            <path class="pulse-active" d="M0 17 H480 L505 4 L525 30 L545 17 H1200" fill="none" stroke-width="1.5"></path>
+        </svg>
+    </div>
+
+    <nav class="turma-selector" aria-label="Filtrar por turma">
         <button class="turma-btn active" data-turma="all">
-            <i class="fas fa-users"></i> Todas as Turmas
+            <i class="fas fa-layer-group"></i> Todas as turmas
         </button>
         <button class="turma-btn" data-turma="t1-t3">
-            <i class="fas fa-user-graduate"></i> Turmas T1 - T3
+            <i class="fas fa-user-graduate"></i> T1 – T3
         </button>
         <button class="turma-btn" data-turma="t4-t6">
-            <i class="fas fa-user-md"></i> Turmas T4 - T6
+            <i class="fas fa-user-doctor"></i> T4 – T6
         </button>
-    </div>
+    </nav>
 
     <div id="container-lembretes" class="lembretes-container"></div>
 
     <main class="main-container">
         <div class="tasks-section">
-            <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+            <div class="section-header">
                 <div>
-                    <h2><i class="fas fa-tasks"></i> Atividades Pendentes</h2>
-                    <p>Tarefas para entregar hoje ou nos próximos dias</p>
+                    <h2><i class="fas fa-list-check"></i> Pendentes</h2>
+                    <p>Para hoje e os próximos dias</p>
                 </div>
                 <div class="filter-provas-toggle">
                     <label class="toggle-switch">
@@ -83,61 +89,48 @@
                     <span class="toggle-label"><i class="fas fa-eye-slash"></i> Ocultar provas</span>
                 </div>
             </div>
+            <div class="board-head" aria-hidden="true">
+                <span>Tipo</span>
+                <span>Título</span>
+                <span>Disciplina</span>
+                <span>Turma / entrega</span>
+                <span>Nível</span>
+            </div>
             <div class="table-responsive">
-                <table class="tasks-table">
-                    <thead>
-                        <tr>
-                            <th>Tipo</th>
-                            <th>Título</th>
-                            <th>Disciplina</th>
-                            <th>Turma <i class="fas fa-info-circle" style="font-size: 0.7rem; cursor: help;" title="Tarefas podem ser para uma ou ambas as turmas com datas diferentes"></i></th>
-                            <th>Nível</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabela-tarefas">
-                        <tr>
-                            <td colspan="5" class="loading-cell">
-                                <div class="loader"></div>
-                                <span>Carregando tarefas...</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="board" id="tabela-tarefas">
+                    <div class="task-row" style="grid-template-columns: 1fr;">
+                        <div class="loading-cell">
+                            <div class="loader"></div>
+                            <span>Carregando tarefas…</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div class="tasks-section">
             <div class="section-header">
-                <h2><i class="fas fa-history"></i> Atividades Anteriores</h2>
-                <p>Tarefas já realizadas (apagadas após 30 dias)</p>
+                <div>
+                    <h2><i class="fas fa-clock-rotate-left"></i> Anteriores</h2>
+                    <p>Realizadas nos últimos 30 dias</p>
+                </div>
             </div>
             <div class="table-responsive">
-                <table class="tasks-table">
-                    <thead>
-                        <tr>
-                            <th>Tipo</th>
-                            <th>Título</th>
-                            <th>Disciplina</th>
-                            <th>Turma</th>
-                            <th>Nível</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabela-anteriores">
-                        <tr>
-                            <td colspan="5" class="loading-cell">
-                                <div class="loader"></div>
-                                <span>Carregando tarefas...</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="board" id="tabela-anteriores">
+                    <div class="task-row" style="grid-template-columns: 1fr;">
+                        <div class="loading-cell">
+                            <div class="loader"></div>
+                            <span>Carregando tarefas…</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
 
     <footer class="footer">
         <div class="footer-content">
-            <p><i class="far fa-copyright"></i> 2026 MedTasks - MED UFAM 116 - Faculdade de Medicina UFAM</p>
+            <p>&copy; 2026 MedTasks — MED UFAM 116, Faculdade de Medicina UFAM</p>
         </div>
     </footer>
 
