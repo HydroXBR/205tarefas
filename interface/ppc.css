@@ -1,0 +1,419 @@
+/* ============================================================
+   PPC — estilos da página /ppc
+   Carregar DEPOIS do index.css (usa as variáveis dele).
+   ============================================================ */
+:root {
+    --card: #f6f5ee;
+    --lime-wash: #f4f9d4;
+    --accent-deep: #566a1b;
+
+    /* aliases: o HTML/JS desta página usa estes nomes em estilos inline */
+    --bg-elevated: var(--paper-deep);
+    --bg-dark: var(--card);
+    --bg-card: var(--card);
+    --text-secondary: #3a423a;
+    --border-color: #b9b7a8;
+    --primary-green: #566a1b;
+    --primary-green-light: #869c3f;
+}
+
+/* ---- Hero desta página (sem .hero-container) ---- */
+.hero-section > .hero-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 0.5rem;
+}
+
+.hero-section .hero-content h1 {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: clamp(2rem, 6.5vw, 4.6rem);
+    line-height: 0.92;
+    margin-bottom: 1.1rem;
+}
+
+.hero-section .hero-content h1 i {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.3em;
+    height: 1.3em;
+    font-size: 0.5em;
+    background: var(--ink);
+    color: var(--accent-bright);
+    transform: rotate(-6deg);
+}
+
+/* ---- Layout ---- */
+.ppc-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem 2rem;
+}
+
+/* ---- Cabeçalho da matriz ---- */
+.ppc-header {
+    background: var(--card);
+    border: 3px solid var(--ink);
+    box-shadow: 8px 8px 0 var(--ink);
+    padding: 2rem;
+    margin: 0 8px 3rem 0;
+}
+
+.ppc-header h1 {
+    font-family: var(--display);
+    font-size: clamp(1.7rem, 4.5vw, 2.6rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 0.8rem;
+}
+
+.ppc-header h1 i {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.4em;
+    height: 1.4em;
+    font-size: 0.55em;
+    background: var(--ink);
+    color: var(--accent-bright);
+    transform: rotate(-6deg);
+    flex-shrink: 0;
+}
+
+.ppc-header > p {
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    max-width: 62ch;
+}
+
+/* ---- Botões de download ---- */
+.download-buttons {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.btn-download, .btn-download-pdf {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.8rem 1.2rem;
+    border: 2px solid var(--ink);
+    font-family: var(--mono);
+    font-size: 0.76rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.btn-download {
+    background: var(--card);
+    color: var(--ink);
+    box-shadow: 4px 4px 0 var(--steel);
+}
+
+.btn-download:hover { background: var(--accent-bright); transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--steel); }
+
+.btn-download-pdf {
+    background: var(--ink);
+    color: var(--accent-bright);
+    box-shadow: 4px 4px 0 var(--accent);
+}
+
+.btn-download-pdf:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--accent); }
+.btn-download:active, .btn-download-pdf:active { transform: translate(4px, 4px); box-shadow: none; }
+
+/* ---- Números grandes ---- */
+.ppc-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.25rem;
+    margin-top: 2rem;
+}
+
+.stat-card {
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    padding: 1.1rem 1.2rem 1.2rem;
+    text-align: left;
+    box-shadow: 4px 4px 0 var(--sh, var(--ink));
+}
+
+.stat-card:nth-child(1) { --sh: var(--accent); }
+.stat-card:nth-child(2) { --sh: var(--steel); }
+.stat-card:nth-child(3) { --sh: var(--violet); }
+.stat-card:nth-child(4) { --sh: var(--sand); }
+
+.stat-number {
+    font-family: var(--display);
+    font-size: clamp(2.3rem, 5vw, 3.2rem);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.06em;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+}
+
+.stat-label {
+    margin-top: 0.5rem;
+    font-family: var(--mono);
+    font-size: 0.66rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-soft);
+    line-height: 1.4;
+}
+
+/* ---- Períodos (sanfona) ---- */
+.period-section {
+    background: var(--card);
+    border: 2px solid var(--ink);
+    margin: 0 6px 1.25rem 0;
+    transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.period-section:hover { box-shadow: 6px 6px 0 var(--ink); transform: translate(-2px, -2px); }
+
+.period-header {
+    background: var(--paper);
+    padding: 1rem 1.25rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    transition: background 0.15s ease;
+    user-select: none;
+}
+
+.period-header:hover { background: var(--accent-bright); }
+
+.period-header h2 {
+    font-family: var(--display);
+    font-size: 1.35rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+}
+
+.period-header h2 i {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.9rem;
+    height: 1.9rem;
+    font-size: 0.8rem;
+    background: var(--ink);
+    color: var(--accent-bright);
+    transform: rotate(-5deg);
+    flex-shrink: 0;
+}
+
+.period-header > div { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+
+.period-badge {
+    display: inline-block;
+    padding: 0.25rem 0.55rem;
+    background: var(--accent);
+    color: var(--ink);
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    transform: rotate(-1.5deg);
+}
+
+/* a etiqueta de horas vem com fundo escuro inline */
+.period-badge[style*="--text-secondary"] { color: var(--paper); transform: rotate(1.5deg); }
+
+.period-header .fa-chevron-down { transition: transform 0.25s ease; }
+
+.period-content {
+    display: none;
+    padding: 1.25rem;
+    border-top: 2px solid var(--ink);
+    overflow-x: auto;
+}
+
+.period-content.active { display: block; }
+
+/* ---- Tabela ---- */
+.ppc-table {
+    width: 100%;
+    min-width: 680px;
+    border-collapse: collapse;
+}
+
+.internship-section .ppc-table { min-width: 520px; }
+
+.ppc-table th {
+    text-align: left;
+    padding: 0.7rem 0.8rem;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--mono);
+    font-size: 0.66rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+}
+
+.ppc-table td {
+    padding: 0.8rem;
+    border-bottom: 1px dashed var(--ink-faint);
+    font-size: 0.92rem;
+    vertical-align: top;
+}
+
+.ppc-table td strong { font-family: var(--mono); font-size: 0.8rem; }
+
+.ppc-table tr:hover td { background: var(--lime-wash); }
+
+.ppc-table tr[style*="font-weight"] td { border-top: 2px solid var(--ink); border-bottom: none; }
+
+.credit-badge {
+    display: inline-block;
+    padding: 0.15rem 0.45rem;
+    background: var(--ink);
+    color: var(--accent-bright);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.ch-detail {
+    font-family: var(--mono);
+    font-size: 0.76rem;
+    color: var(--ink-soft);
+}
+
+/* caixas de info com estilo inline (fundo var(--bg-dark)) */
+.period-content div[style*="--bg-dark"] {
+    border: 2px dashed var(--ink) !important;
+    border-radius: 0 !important;
+    background: var(--paper) !important;
+}
+
+/* ---- Internato ---- */
+.internship-section {
+    margin: 3rem 8px 0 0;
+    background: var(--card);
+    border: 3px solid var(--ink);
+    box-shadow: 8px 8px 0 var(--accent);
+}
+
+.internship-section:hover { box-shadow: 10px 10px 0 var(--accent); }
+
+.internship-section .period-header { background: var(--accent-bright); }
+.internship-section .period-header:hover { background: #d6ef6e; }
+.internship-section .period-header h2 i { background: var(--ink); }
+
+/* ---- Resumo do curso: bloco de tinta ---- */
+.total-section {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 2rem;
+    margin: 3rem 8px 0 0;
+    text-align: left;
+    box-shadow: 8px 8px 0 var(--accent);
+}
+
+.total-section h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-family: var(--display);
+    font-size: clamp(1.4rem, 3.5vw, 2rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    margin-bottom: 1.75rem;
+}
+
+.total-section h3 i { color: var(--accent-bright); }
+
+.total-grid {
+    display: flex;
+    justify-content: flex-start;
+    gap: 2rem 3.5rem;
+    flex-wrap: wrap;
+}
+
+.total-item { text-align: left; }
+
+.total-value {
+    font-family: var(--display);
+    font-size: clamp(2.4rem, 5vw, 3.6rem);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.06em;
+    color: var(--accent-bright);
+    font-variant-numeric: tabular-nums;
+}
+
+.total-label {
+    margin-top: 0.4rem;
+    font-family: var(--mono);
+    font-size: 0.66rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--paper);
+    opacity: 0.75;
+    max-width: 18ch;
+    line-height: 1.4;
+}
+
+/* caixa de detalhamento (inline: fundo var(--bg-dark)) vira cartão claro sobre o bloco escuro */
+.total-section div[style*="--bg-dark"] {
+    margin-top: 2rem !important;
+    padding: 1.1rem 1.25rem !important;
+    background: var(--card) !important;
+    color: var(--ink);
+    border: 2px solid var(--paper) !important;
+    border-radius: 0 !important;
+}
+
+.total-section div[style*="--bg-dark"] ul { margin-top: 0.5rem; }
+
+/* ---- Celular ---- */
+@media (max-width: 768px) {
+    .hero-section > .hero-content { padding: 0; }
+    .ppc-container { padding: 1.75rem 1rem 1rem; }
+    .ppc-header { padding: 1.25rem; box-shadow: 5px 5px 0 var(--ink); margin-right: 5px; }
+    .ppc-stats { grid-template-columns: 1fr 1fr; gap: 0.9rem; }
+    .stat-card { padding: 0.9rem; }
+
+    .download-buttons { flex-direction: column; align-items: stretch; }
+    .btn-download, .btn-download-pdf { justify-content: center; }
+
+    .period-section { margin-right: 4px; }
+    .period-header { padding: 0.9rem 1rem; }
+    .period-header h2 { font-size: 1.05rem; }
+    .period-content { padding: 0.9rem; }
+
+    .internship-section, .total-section { margin-right: 5px; box-shadow: 5px 5px 0 var(--accent); }
+    .total-section { padding: 1.4rem 1.25rem; }
+    .total-grid { gap: 1.5rem 2rem; }
+}
+
+@media (max-width: 420px) {
+    .ppc-stats { grid-template-columns: 1fr; }
+}
