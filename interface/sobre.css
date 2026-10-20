@@ -1,8 +1,4 @@
-/* ============================================================
-   Sobre — estilos da página /sobre
-   Carregar DEPOIS do index.css e REMOVER o <style> inline do HTML
-   (este arquivo substitui tudo o que estava lá).
-   ============================================================ */
+
 :root {
     --card: #f6f5ee;
     --lime-wash: #f4f9d4;
