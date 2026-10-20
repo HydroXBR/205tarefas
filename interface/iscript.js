@@ -216,21 +216,35 @@ function formatTurmasInfo(turmasInfo) {
     const hojeUTC = Date.UTC(agora.getUTCFullYear(), agora.getUTCMonth(), agora.getUTCDate());
     const horaUTC = agora.getUTCHours();
 
-    return turmasInfo.map(info => {
-        const turmaLabel = info.turma === 't1-t3' ? 'T1-T3' : 'T4-T6';
-        const entregaDate = new Date(info.entrega);
-        const dataFormatada = `${entregaDate.getUTCDate().toString().padStart(2, '0')}/${(entregaDate.getUTCMonth() + 1).toString().padStart(2, '0')}`;
+    const fmt = (ts) => {
+        const d = new Date(ts);
+        return `${d.getUTCDate().toString().padStart(2, '0')}/${(d.getUTCMonth() + 1).toString().padStart(2, '0')}`;
+    };
 
+    const bloco = (label, entrega, observacao, hasObs) => {
         // Só fica em destaque se for entrega hoje E antes das 12h Brasília (15h UTC)
-        const isUrgent = info.entrega === hojeUTC && horaUTC < 15;
-
+        const isUrgent = entrega === hojeUTC && horaUTC < 15;
         return `
-            <span class="turma-info-tooltip" title="${info.observacao || 'Sem observações específicas'}">
-                <span class="turma-badge-small">${turmaLabel}</span>
-                <span class="turma-entrega ${isUrgent ? 'urgent-date' : ''}">${dataFormatada}</span>
-                ${info.observacao ? '<i class="fas fa-circle-info turma-info-icon"></i>' : ''}
+            <span class="turma-info-tooltip" title="${observacao || 'Sem observações específicas'}">
+                <span class="turma-entrega ${isUrgent ? 'urgent-date' : ''}">${fmt(entrega)}</span>
+                <span class="turma-badge-small">${label}${hasObs ? ' <i class="fas fa-circle-info turma-info-icon"></i>' : ''}</span>
             </span>
         `;
+    };
+
+    // Mesma data para todas as turmas → mostra uma vez só, com "Todas"
+    const mesmaData = turmasInfo.length > 1 && turmasInfo.every(i => i.entrega === turmasInfo[0].entrega);
+    if (mesmaData) {
+        const obs = turmasInfo
+            .filter(i => i.observacao)
+            .map(i => (i.turma === 't1-t3' ? 'T1-T3: ' : 'T4-T6: ') + i.observacao)
+            .join(' | ');
+        return bloco('Todas', turmasInfo[0].entrega, obs, !!obs);
+    }
+
+    return turmasInfo.map(info => {
+        const turmaLabel = info.turma === 't1-t3' ? 'T1-T3' : 'T4-T6';
+        return bloco(turmaLabel, info.entrega, info.observacao, !!info.observacao);
     }).join('');
 }
 
@@ -342,7 +356,7 @@ function applyFiltersAndRender() {
 }
 
 // Constrói um card de tarefa (linha do "board") com a mesma informação
-// que a tabela antiga mostrava, distribuída em 5 colunas.
+// que a tabela antiga mostrava, distribuída em 4 colunas.
 function buildTaskRow(task, index) {
     const row = document.createElement('div');
     row.className = `task-row ${getRailClass(task.tipo)}`;
@@ -366,10 +380,14 @@ function buildTaskRow(task, index) {
     link.classList.add('task-title');
     mainCell.appendChild(link);
 
-    // Disciplina
-    const discCell = document.createElement('div');
-    discCell.className = 'task-cell-disc';
-    discCell.textContent = getLabelByValue(task.disc);
+    // Disciplina (pequena e clara, logo abaixo do título)
+    const discLabel = getLabelByValue(task.disc);
+    if (discLabel) {
+        const disc = document.createElement('span');
+        disc.className = 'task-disc';
+        disc.textContent = discLabel;
+        mainCell.appendChild(disc);
+    }
 
     // Turmas / entrega
     const turmaCell = document.createElement('div');
@@ -381,7 +399,7 @@ function buildTaskRow(task, index) {
     nivelCell.className = 'task-cell-nivel';
     nivelCell.appendChild(buildNivelMeter(task.nivel));
 
-    row.append(tipoCell, mainCell, discCell, turmaCell, nivelCell);
+    row.append(tipoCell, mainCell, turmaCell, nivelCell);
     return row;
 }
 
