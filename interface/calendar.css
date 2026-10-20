@@ -1,0 +1,601 @@
+:root {
+    --coral-dim:  color-mix(in srgb, var(--coral)  16%, var(--paper));
+    --steel-dim:  color-mix(in srgb, var(--steel)  16%, var(--paper));
+    --violet-dim: color-mix(in srgb, var(--violet) 16%, var(--paper));
+    --teal-dim:   color-mix(in srgb, var(--teal)   16%, var(--paper));
+    --sand-dim:   color-mix(in srgb, var(--sand)   24%, var(--paper));
+    --accent-dim: color-mix(in srgb, var(--accent) 22%, var(--paper));
+}
+
+.calendar-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 2rem 3rem;
+}
+
+.page-intro {
+    margin-bottom: 1.75rem;
+    padding-bottom: 1rem;
+    border-bottom: 3px solid var(--ink);
+}
+
+.page-intro h1 {
+    font-family: var(--display);
+    font-size: clamp(1.9rem, 5vw, 3rem);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+}
+
+.page-intro h1 i {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 2.1rem;
+    height: 2.1rem;
+    font-size: 0.95rem;
+    background: var(--ink);
+    color: var(--accent-bright);
+    transform: rotate(-6deg);
+}
+
+.page-intro p {
+    font-family: var(--mono);
+    font-size: 0.76rem;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+/* ---------- Barra de controles ---------- */
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 0.9rem 1rem;
+    background: var(--paper);
+    border: var(--rule);
+    box-shadow: 5px 5px 0 var(--ink);
+}
+
+.calendar-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.calendar-nav button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: var(--paper);
+    border: var(--rule);
+    box-shadow: 3px 3px 0 var(--ink);
+    color: var(--ink);
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+#todayBtn {
+    width: auto;
+    padding: 0 1rem;
+    font-size: 0.74rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.calendar-nav button:hover {
+    background: var(--accent-bright);
+    transform: translate(-1px, -1px);
+    box-shadow: 5px 5px 0 var(--ink);
+}
+
+.calendar-nav button:active {
+    transform: translate(3px, 3px);
+    box-shadow: 0 0 0 var(--ink);
+}
+
+.current-month {
+    font-family: var(--display);
+    font-size: 1.35rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    color: var(--ink);
+    min-width: 12ch;
+    text-align: center;
+}
+
+/* Filtro de turma — controle segmentado, igual ao .turma-selector */
+.turma-filter { display: flex; }
+
+.filter-btn {
+    min-height: 44px;
+    margin-left: -2px;
+    padding: 0.6rem 1rem;
+    background: var(--paper);
+    border: var(--rule);
+    color: var(--ink);
+    font-family: var(--mono);
+    font-size: 0.74rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.filter-btn:first-child { margin-left: 0; }
+
+.filter-btn:hover { background: var(--accent-bright); }
+
+.filter-btn.active,
+.filter-btn[aria-pressed="true"] {
+    background: var(--ink);
+    color: var(--accent-bright);
+}
+
+/* ---------- Grade ---------- */
+.calendar-grid {
+    background: var(--paper);
+    border: var(--rule);
+    box-shadow: 8px 8px 0 var(--ink);
+    overflow: hidden;
+}
+
+.weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    background: var(--ink);
+}
+
+.weekday {
+    padding: 0.75rem 0.4rem;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--paper);
+}
+
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.calendar-day {
+    position: relative;
+    min-height: 116px;
+    padding: 0.5rem;
+    border-right: var(--hair);
+    border-bottom: var(--hair);
+    cursor: default;
+    transition: background 0.15s ease;
+}
+
+.calendar-day:nth-child(7n) { border-right: none; }
+
+/* Dias de outros meses: sombreados (não só transparentes, para manter contraste do texto) */
+.calendar-day.other-month {
+    background: repeating-linear-gradient(135deg, transparent 0 8px, rgba(17, 22, 17, 0.06) 8px 16px);
+}
+
+.calendar-day.other-month .day-number { color: var(--ink-faint); }
+
+.calendar-day.today {
+    background: var(--accent-bright);
+    box-shadow: inset 0 0 0 3px var(--ink);
+}
+
+.calendar-day.has-tasks { cursor: pointer; }
+
+.calendar-day.has-tasks:hover {
+    background: var(--paper-deep);
+}
+
+.calendar-day.today.has-tasks:hover {
+    background: var(--accent-bright);
+}
+
+.calendar-day:focus-visible {
+    outline: 3px solid var(--ink);
+    outline-offset: -3px;
+    background: var(--accent-bright);
+}
+
+.day-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    margin-bottom: 0.4rem;
+    font-family: var(--display);
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+}
+
+.today .day-number {
+    padding: 0 0.35rem;
+    background: var(--ink);
+    color: var(--accent-bright);
+    transform: rotate(-3deg);
+}
+
+/* ---------- Etiquetas de tarefas ---------- */
+.task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.28rem;
+}
+
+.task-badge {
+    --tag: var(--ink);
+    display: block;
+    padding: 0.28rem 0.4rem;
+    background: var(--paper);
+    border: var(--hair);
+    border-left: 5px solid var(--tag);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 0.72rem;
+    font-weight: 600;
+    line-height: 1.25;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.task-badge:hover {
+    background: var(--paper-deep);
+    transform: translate(-1px, -1px);
+    box-shadow: 3px 3px 0 var(--ink);
+}
+
+.task-badge:focus-visible {
+    outline: 3px solid var(--ink);
+    outline-offset: 1px;
+    background: var(--accent-bright);
+}
+
+.task-badge.prova     { --tag: var(--coral); }
+.task-badge.trabalho  { --tag: var(--steel); }
+.task-badge.seminário { --tag: var(--violet); }
+.task-badge.atividade { --tag: var(--teal); }
+.task-badge.leitura   { --tag: var(--sand); }
+.task-badge.prática   { --tag: var(--accent); }
+
+.more-tasks {
+    padding: 0.2rem 0.3rem;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    text-align: left;
+    color: var(--ink-soft);
+    cursor: pointer;
+}
+
+.more-tasks:hover,
+.more-tasks:focus-visible {
+    color: var(--ink);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* ---------- Modal ---------- */
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1100;
+    justify-content: center;
+    align-items: center;
+    padding: 1.25rem;
+    background: rgba(17, 22, 17, 0.72);
+}
+
+.modal.active { display: flex; }
+
+.modal-content {
+    width: 100%;
+    max-width: 500px;
+    max-height: 85vh;
+    max-height: 85dvh;
+    overflow-y: auto;
+    background: var(--paper);
+    border: 3px solid var(--ink);
+    box-shadow: 8px 8px 0 var(--accent-bright);
+    animation: modalIn 0.2s ease;
+}
+
+@keyframes modalIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.modal-header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 0.75rem 0.75rem 1.25rem;
+    background: var(--ink);
+}
+
+.modal-header h3 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--display);
+    font-size: 1.1rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    color: var(--paper);
+}
+
+.modal-header h3 i { color: var(--accent-bright); font-size: 0.95rem; }
+
+.modal-close {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: transparent;
+    border: 2px solid var(--paper);
+    color: var(--paper);
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.modal-close:hover {
+    background: var(--accent-bright);
+    border-color: var(--accent-bright);
+    color: var(--ink);
+}
+
+.modal-close:focus-visible {
+    outline: 3px solid var(--accent-bright);
+    outline-offset: 2px;
+    background: var(--accent-bright);
+    color: var(--ink);
+}
+
+.modal-body { padding: 0.25rem 1.25rem 1.25rem; }
+
+.modal-date {
+    margin: 0.9rem 0 0.5rem;
+    font-family: var(--mono);
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+}
+
+.modal-date strong { color: var(--ink); }
+
+.modal-task-item {
+    padding: 0.9rem 0.5rem;
+    border-bottom: var(--hair);
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.modal-task-item:last-child { border-bottom: none; }
+
+.modal-task-item:hover { background: var(--paper-deep); }
+
+.modal-task-item:focus-visible {
+    outline: 3px solid var(--ink);
+    outline-offset: -3px;
+    background: var(--accent-bright);
+}
+
+.modal-task-title {
+    margin-bottom: 0.3rem;
+    font-family: var(--display);
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+}
+
+.modal-task-disc {
+    margin-bottom: 0.55rem;
+    font-size: 0.8rem;
+    line-height: 1.35;
+    color: var(--ink-soft);
+}
+
+.modal-task-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem;
+}
+
+/* Mesmo visual do .tipo-badge do index */
+.modal-task-type {
+    display: inline-block;
+    padding: 0.28rem 0.55rem;
+    font-family: var(--mono);
+    font-size: 0.66rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    line-height: 1.2;
+    white-space: nowrap;
+    border-radius: 0;
+    transform: rotate(-2deg);
+}
+
+.modal-task-turmas {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-soft);
+}
+
+.modal-task-obs {
+    display: flex;
+    gap: 0.4rem;
+    margin-top: 0.55rem;
+    font-size: 0.78rem;
+    line-height: 1.4;
+    color: var(--ink-soft);
+}
+
+/* ---------- Carregando ---------- */
+.loading-calendar {
+    padding: 3.5rem 1.5rem;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+    background: repeating-linear-gradient(135deg, transparent 0 10px, rgba(17, 22, 17, 0.05) 10px 20px);
+}
+
+.loading-calendar .loader { margin-bottom: 0.75rem; }
+
+/* ============================================================
+   Celular
+   ============================================================ */
+@media (max-width: 768px) {
+    .calendar-container { padding: 2rem 1.25rem 2.5rem; }
+
+    .calendar-header {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 0.9rem;
+        box-shadow: 4px 4px 0 var(--ink);
+    }
+
+    .calendar-nav { justify-content: space-between; }
+
+    .current-month {
+        flex: 1;
+        min-width: 0;
+        font-size: 1.15rem;
+    }
+
+    .turma-filter { width: 100%; }
+
+    .filter-btn { flex: 1; text-align: center; padding: 0.6rem 0.4rem; }
+
+    .calendar-grid { box-shadow: 5px 5px 0 var(--ink); }
+
+    .weekday {
+        padding: 0.6rem 0.1rem;
+        font-size: 0.6rem;
+        letter-spacing: 0.02em;
+    }
+
+    .calendar-day {
+        min-height: 84px;
+        padding: 0.35rem 0.25rem;
+    }
+
+    .day-number { min-width: 22px; height: 22px; font-size: 0.82rem; }
+
+    .task-badge {
+        padding: 0.22rem 0.3rem;
+        border-left-width: 4px;
+        font-size: 0.62rem;
+    }
+
+    .more-tasks { font-size: 0.6rem; }
+
+    /* Modal vira "folha" ancorada embaixo, mais fácil de alcançar com o polegar */
+    .modal { align-items: flex-end; padding: 0; }
+
+    .modal-content {
+        max-width: none;
+        max-height: 88vh;
+        max-height: 88dvh;
+        border-width: 3px 0 0;
+        box-shadow: none;
+    }
+
+    .modal-body { padding-bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px)); }
+}
+
+/* Telas muito estreitas: a célula cresce para os títulos caberem
+   inteiros — nada é escondido, só a fonte diminui */
+@media (max-width: 420px) {
+    .calendar-container { padding: 1.5rem 0.75rem 2rem; }
+
+    .calendar-day {
+        min-height: 124px;
+        padding: 0.35rem 0.2rem;
+    }
+
+    .day-number { min-width: 20px; height: 20px; font-size: 0.74rem; margin-bottom: 0.3rem; }
+
+    .task-list { gap: 0.2rem; }
+
+    .task-badge {
+        padding: 0.2rem 0.25rem;
+        border-left-width: 3px;
+        font-size: 0.58rem;
+        line-height: 1.25;
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+        overflow-wrap: anywhere;
+    }
+
+    .more-tasks { font-size: 0.56rem; padding: 0.1rem 0.15rem; }
+}
+
+/* Dispositivos de toque: sem "levantar" no hover (evita ficar preso) */
+@media (hover: none) {
+    .task-badge:hover,
+    .calendar-nav button:hover {
+        transform: none;
+        box-shadow: none;
+    }
+}
+
+/* Alto contraste / cores forçadas: garante que os estados ainda se distingam */
+@media (forced-colors: active) {
+    .calendar-day.today { outline: 3px solid Highlight; }
+    .task-badge { border-left-color: CanvasText; }
+    .filter-btn.active,
+    .filter-btn[aria-pressed="true"] { outline: 3px solid Highlight; }
+}
